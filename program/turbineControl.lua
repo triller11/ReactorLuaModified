@@ -60,12 +60,12 @@ function startAutoMode()
 
     --Display prints
     print("Getting all Turbines to " .. turbineTargetSpeed .. " RPM...")
-    mon.setBackgroundColor(backgroundColor)
-    mon.setTextColor(textColor)
-    mon.clear()
-    mon.setCursorPos(1, 1)
+    controlMonitor.setBackgroundColor(backgroundColor)
+    controlMonitor.setTextColor(textColor)
+    controlMonitor.clear()
+    controlMonitor.setCursorPos(1, 1)
 
-    mon.write("Getting Turbines to " .. (input.formatNumberComma(turbineTargetSpeed)) .. " RPM. Please wait...")
+    controlMonitor.write("Getting Turbines to " .. (input.formatNumberComma(turbineTargetSpeed)) .. " RPM. Please wait...")
 
     --Gets turbine to target speed
     --Init SpeedTables
@@ -75,33 +75,33 @@ function startAutoMode()
         sleep(1)
         term.setCursorPos(1, 2)
         for i = 0, amountTurbines, 1 do
-            local tSpeed = t[i].getRotorSpeed()
+            local tSpeed = turbines[i].getRotorSpeed()
 
             print("Speed: " .. tSpeed .. "     ")
 
             --formatting and printing status
-            mon.setTextColor(textColor)
-            mon.setCursorPos(1, (i + 3))
-            if i >= 16 then mon.setCursorPos(28, (i - 16 + 3)) end
+            controlMonitor.setTextColor(textColor)
+            controlMonitor.setCursorPos(1, (i + 3))
+            if i >= 16 then controlMonitor.setCursorPos(28, (i - 16 + 3)) end
             
             if (i + 1) < 10 then
-                mon.write("Turbine 0" .. (i + 1) .. ": " .. (input.formatNumberComma(math.floor(tSpeed))) .. " RPM")
+                controlMonitor.write("Turbine 0" .. (i + 1) .. ": " .. (input.formatNumberComma(math.floor(tSpeed))) .. " RPM")
             else
-                mon.write("Turbine " .. (i + 1) .. ": " .. (input.formatNumberComma(math.floor(tSpeed))) .. " RPM")
+                controlMonitor.write("Turbine " .. (i + 1) .. ": " .. (input.formatNumberComma(math.floor(tSpeed))) .. " RPM")
             end
 
             if tSpeed > turbineTargetSpeed then
-                mon.setTextColor(colors.green)
-                mon.write(" OK  ")
+                controlMonitor.setTextColor(colors.green)
+                controlMonitor.write(" OK  ")
             else
-                mon.setTextColor(colors.red)
-                mon.write(" ...  ")
+                controlMonitor.setTextColor(colors.red)
+                controlMonitor.write(" ...  ")
             end
         end
     end
 
     --Enable reactor and turbines
-    r.setActive(true)
+    reactor.setActive(true)
     allTurbinesOn()
 
     --Reset terminal
@@ -109,10 +109,10 @@ function startAutoMode()
     term.setCursorPos(1, 1)
 
     --Reset Monitor
-    mon.setBackgroundColor(backgroundColor)
-    mon.clear()
-    mon.setTextColor(textColor)
-    mon.setCursorPos(1, 1)
+    controlMonitor.setBackgroundColor(backgroundColor)
+    controlMonitor.clear()
+    controlMonitor.setTextColor(textColor)
+    controlMonitor.setCursorPos(1, 1)
 
     --Creates all buttons
     createAllButtons()
@@ -135,7 +135,7 @@ function startManualMode()
 
     --Sets all turbine flow rates to maximum (if set different in auto mode)
     for i = 0, #t do
-        t[i].setFluidFlowRateMax(targetSteam)
+        turbines[i].setFluidFlowRateMax(targetSteam)
     end
 
     --Displays the first turbine (default)
@@ -147,55 +147,70 @@ end
 
 --Checks if all required peripherals are attached
 function checkPeripherals()
-    mon.setBackgroundColor(colors.black)
-    mon.clear()
-    mon.setCursorPos(1, 1)
-    mon.setTextColor(colors.red)
+    controlMonitor.setBackgroundColor(colors.black)
+    controlMonitor.clear()
+    controlMonitor.setCursorPos(1, 1)
+    controlMonitor.setTextColor(colors.red)
     term.clear()
     term.setCursorPos(1, 1)
     term.setTextColor(colors.red)
     --No turbine found
-    if t[0] == nil then
-        mon.write("Turbines not found! Please check and reboot the computer (Press and hold Ctrl+R)")
+    if turbines[0] == nil then
+        controlMonitor.write("Turbines not found! Please check and reboot the computer (Press and hold Ctrl+R)")
         error("Turbines not found! Please check and reboot the computer (Press and hold Ctrl+R)")
     end
     --No reactor found
-    if r == "" then
-        mon.write("Reactor not found! Please check and reboot the computer (Press and hold Ctrl+R)")
+    if reactor == "" then
+        controlMonitor.write("Reactor not found! Please check and reboot the computer (Press and hold Ctrl+R)")
         error("Reactor not found! Please check and reboot the computer (Press and hold Ctrl+R)")
     end
     --No energy storage found
-    if v == "" then
-        mon.write("Energy Storage not found! Please check and reboot the computer (Press and hold Ctrl+R)")
+    if capacitors[0] == nill then
+        controlMonitor.write("Energy Storage not found! Please check and reboot the computer (Press and hold Ctrl+R)")
         error("Energy Storage not found! Please check and reboot the computer (Press and hold Ctrl+R)")
     end
 end
 
 function getEnergy()
-    return v.getEnergyStored()
+    local energyStore = 0
+
+    for i =0, amountCapacitors,1 do
+        local stored = math.floor(capacitors[i].getEnergyStored())
+        energyStore = energyStore + stored
+    end
+
+    return energyStore
 end
 
 function getEnergyMax()
-    return v.getMaxEnergyStored()
+    local energyStore = 0
+
+    for i =0, amountCapacitors,1 do
+        local maxStorage = math.floor(capacitors[i].getMaxEnergyStored())
+        energyStore = energyStore + maxStorage
+    end
+
+    return energyStore
 end
 
 function getEnergyPer()
     local en = getEnergy()
     local enMax = getEnergyMax()
+    print(en.." of "..enMax)
     local enPer = math.floor(en / enMax * 100)
     return enPer
 end
 
 --Returns the current energy fill status of a turbine
 function getTurbineEnergy(turbine)
-    return t[turbine].getEnergyStored()
+    return turbines[turbine].getEnergyStored()
 end
 
 --Toggles the reactor status and the button
 function toggleReactor()
-    r.setActive(not r.getActive())
+    reactor.setActive(not reactor.getActive())
     page:toggleButton("reactorOn")
-    if r.getActive() then
+    if reactor.getActive() then
         page:rename("reactorOn", rOn, true)
     else
         page:rename("reactorOn", rOff, true)
@@ -204,9 +219,9 @@ end
 
 --Toggles one turbine status and button
 function toggleTurbine(i)
-    t[i].setActive(not t[i].getActive())
+    turbines[i].setActive(not turbines[i].getActive())
     page:toggleButton("turbineOn")
-    if t[i].getActive() then
+    if turbines[i].getActive() then
         page:rename("turbineOn", tOn, true)
     else
         page:rename("turbineOn", tOff, true)
@@ -215,9 +230,9 @@ end
 
 --Toggles one turbine coils and button
 function toggleCoils(i)
-    t[i].setInductorEngaged(not t[i].getInductorEngaged())
+    turbines[i].setInductorEngaged(not turbines[i].getInductorEngaged())
     page:toggleButton("coilsOn")
-    if t[i].getInductorEngaged() then
+    if turbines[i].getInductorEngaged() then
         page:rename("coilsOn", cOn, true)
     else
         page:rename("coilsOn", cOff, true)
@@ -227,46 +242,46 @@ end
 --Enable all turbines (Coils engaged, FluidRate 2000mb/t)
 function allTurbinesOn()
     for i = 0, amountTurbines, 1 do
-        t[i].setActive(true)
-        t[i].setInductorEngaged(true)
-        t[i].setFluidFlowRateMax(targetSteam)
+        turbines[i].setActive(true)
+        turbines[i].setInductorEngaged(true)
+        turbines[i].setFluidFlowRateMax(targetSteam)
     end
 end
 
 --Disable all turbiens (Coils disengaged, FluidRate 0mb/t)
 function allTurbinesOff()
     for i = 0, amountTurbines, 1 do
-        t[i].setInductorEngaged(false)
-        t[i].setFluidFlowRateMax(0)
+        turbines[i].setInductorEngaged(false)
+        turbines[i].setFluidFlowRateMax(0)
     end
 end
 
 --Enable one turbine
 function turbineOn(i)
-    t[i].setInductorEngaged(true)
-    t[i].setFluidFlowRateMax(targetSteam)
+    turbines[i].setInductorEngaged(true)
+    turbines[i].setFluidFlowRateMax(targetSteam)
 end
 
 --Disable one turbine
 function turbineOff(i)
-    t[i].setInductorEngaged(false)
-    t[i].setFluidFlowRateMax(0)
+    turbines[i].setInductorEngaged(false)
+    turbines[i].setFluidFlowRateMax(0)
 end
 
 --Toggles all turbines (and buttons)
 function toggleAllTurbines()
     page:rename("aTurbinesOn", aTOff, true)
     local onOff
-    if t[0].getActive() then onOff = "off" else onOff = "on" end
+    if turbines[0].getActive() then onOff = "off" else onOff = "on" end
     for i = 0, amountTurbines do
         if onOff == "off" then
-            t[i].setActive(false)
+            turbines[i].setActive(false)
             if page.buttonList["aTurbinesOn"].active then
                 page:toggleButton("aTurbinesOn")
                 page:rename("aTurbinesOn", aTOff, true)
             end
         else
-            t[i].setActive(true)
+            turbines[i].setActive(true)
             if not page.buttonList["aTurbinesOn"].active then
                 page:toggleButton("aTurbinesOn")
                 page:rename("aTurbinesOn", aTOn, true)
@@ -280,15 +295,15 @@ end
 --Toggles all turbine coils (and buttons)
 function toggleAllCoils()
     local coilsOnOff
-    if t[0].getInductorEngaged() then coilsOnOff = "off" else coilsOnOff = "on" end
+    if turbines[0].getInductorEngaged() then coilsOnOff = "off" else coilsOnOff = "on" end
     for i = 0, amountTurbines do
         if coilsOnOff == "off" then
-            t[i].setInductorEngaged(false)
+            turbines[i].setInductorEngaged(false)
             if page.buttonList["Coils"].active then
                 page:toggleButton("Coils")
             end
         else
-            t[i].setInductorEngaged(true)
+            turbines[i].setInductorEngaged(true)
             if not page.buttonList["Coils"].active then
                 page:toggleButton("Coils")
             end
@@ -301,14 +316,13 @@ function findOptimalFuelRodLevel()
 
     --Load config?
     if not (math.floor(rodLevel) == 0) then
-        r.setAllControlRodLevels(rodLevel)
-
+        reactor.setAllControlRodLevels(rodLevel)
     else
         --Get reactor below 99c
         getTo99c()
 
         --Enable reactor + turbines
-        r.setActive(true)
+        reactor.setActive(true)
         allTurbinesOn()
 
         --Calculation variables
@@ -318,29 +332,29 @@ function findOptimalFuelRodLevel()
         local targetLevel = 99
 
         --Display
-        mon.setBackgroundColor(backgroundColor)
-        mon.setTextColor(textColor)
-        mon.clear()
+        controlMonitor.setBackgroundColor(backgroundColor)
+        controlMonitor.setTextColor(textColor)
+        controlMonitor.clear()
 
         print("TargetSteam: " .. targetSteamOutput)
 
-        mon.setCursorPos(1, 1)
-        mon.write("Finding optimal FuelRod Level...")
-        mon.setCursorPos(1, 3)
-        mon.write("Calculating Level...")
-        mon.setCursorPos(1, 5)
-        mon.write("Target Steam-Output: " .. (input.formatNumberComma(math.floor(targetSteamOutput))) .. "mb/t")
+        controlMonitor.setCursorPos(1, 1)
+        controlMonitor.write("Finding optimal FuelRod Level...")
+        controlMonitor.setCursorPos(1, 3)
+        controlMonitor.write("Calculating Level...")
+        controlMonitor.setCursorPos(1, 5)
+        controlMonitor.write("Target Steam-Output: " .. (input.formatNumberComma(math.floor(targetSteamOutput))) .. "mb/t")
 
         --Calculate Level based on 2 values
         local failCounter = 0
         while true do
-            r.setAllControlRodLevels(controlRodLevel)
+            reactor.setAllControlRodLevels(controlRodLevel)
             sleep(2)
-            local steamOutput1 = r.getHotFluidProducedLastTick()
+            local steamOutput1 = reactor.getHotFluidProducedLastTick()
             print("SO1: " .. steamOutput1)
-            r.setAllControlRodLevels(controlRodLevel - 1)
+            reactor.setAllControlRodLevels(controlRodLevel - 1)
             sleep(5)
-            local steamOutput2 = r.getHotFluidProducedLastTick()
+            local steamOutput2 = reactor.getHotFluidProducedLastTick()
             print("SO2: " .. steamOutput2)
             diff = steamOutput2 - steamOutput1
             print("Diff: " .. diff)
@@ -353,22 +367,22 @@ function findOptimalFuelRodLevel()
 
                 --Calculation failed 3 times?
                 if failCounter > 2 then
-                    mon.setBackgroundColor(colors.black)
-                    mon.clear()
-                    mon.setTextColor(colors.red)
-                    mon.setCursorPos(1, 1)
+                    controlMonitor.setBackgroundColor(colors.black)
+                    controlMonitor.clear()
+                    controlMonitor.setTextColor(colors.red)
+                    controlMonitor.setCursorPos(1, 1)
                     
-                    mon.write("RodLevel calculation failed!")
-                    mon.setCursorPos(1, 2)
-                    mon.write("Calculation would be < 0!")
-                    mon.setCursorPos(1, 3)
-                    mon.write("Please check Steam/Water input!")
+                    controlMonitor.write("RodLevel calculation failed!")
+                    controlMonitor.setCursorPos(1, 2)
+                    controlMonitor.write("Calculation would be < 0!")
+                    controlMonitor.setCursorPos(1, 3)
+                    controlMonitor.write("Please check Steam/Water input!")
 
                     --Disable reactor and turbines
-                    r.setActive(false)
+                    reactor.setActive(false)
                     allTurbinesOff()
                     for i = 1, amountTurbines do
-                        t[i].setActive(false)
+                        turbines[i].setActive(false)
                     end
 
 
@@ -391,27 +405,26 @@ function findOptimalFuelRodLevel()
 
         --RodLevel calculation successful
         print("RodLevel calculation successful!")
-        r.setAllControlRodLevels(targetLevel)
+        reactor.setAllControlRodLevels(targetLevel)
         controlRodLevel = targetLevel
 
         --Find precise level
         while true do
             sleep(5)
-            local steamOutput = r.getHotFluidProducedLastTick()
+            local steamOutput = reactor.getHotFluidProducedLastTick()
 
-            mon.setCursorPos(1, 3)
-            mon.write("FuelRod Level: " .. controlRodLevel .. "  ")
+            controlMonitor.setCursorPos(1, 3)
+            controlMonitor.write("FuelRod Level: " .. controlRodLevel .. "  ")
 
-            mon.setCursorPos(1, 6)
-            mon.write("Current Steam-Output: " .. (input.formatNumberComma(steamOutput)) .. "mb/t    ")
+            controlMonitor.setCursorPos(1, 6)
+            controlMonitor.write("Current Steam-Output: " .. (input.formatNumberComma(steamOutput)) .. "mb/t    ")
 
             --Level too big
             if steamOutput < targetSteamOutput then
                 controlRodLevel = controlRodLevel - 1
-                r.setAllControlRodLevels(controlRodLevel)
-
+                reactor.setAllControlRodLevels(controlRodLevel)
             else
-                r.setAllControlRodLevels(controlRodLevel)
+                reactor.setAllControlRodLevels(controlRodLevel)
                 rodLevel = controlRodLevel
                 saveOptionFile()
                 print("Target RodLevel: " .. controlRodLevel)
@@ -426,20 +439,20 @@ end
 
 --Gets the reactor below 99c
 function getTo99c()
-    mon.setBackgroundColor(backgroundColor)
-    mon.setTextColor(textColor)
-    mon.clear()
-    mon.setCursorPos(1, 1)
+    controlMonitor.setBackgroundColor(backgroundColor)
+    controlMonitor.setTextColor(textColor)
+    controlMonitor.clear()
+    controlMonitor.setCursorPos(1, 1)
 
-    mon.write("Getting Reactor below 99c ...")
+    controlMonitor.write("Getting Reactor below 99c ...")
 
     --Disables reactor and turbines
-    r.setActive(false)
+    reactor.setActive(false)
     allTurbinesOn()
 
     --Temperature variables
-    local fTemp = r.getFuelTemperature()
-    local cTemp = r.getCasingTemperature()
+    local fTemp = reactor.getFuelTemperature()
+    local cTemp = reactor.getCasingTemperature()
     local isNotBelow = true
 
     --Wait until both values are below 99
@@ -448,8 +461,8 @@ function getTo99c()
         print("CoreTemp: " .. fTemp .. "      ")
         print("CasingTemp: " .. cTemp .. "      ")
 
-        fTemp = r.getFuelTemperature()
-        cTemp = r.getCasingTemperature()
+        fTemp = reactor.getFuelTemperature()
+        cTemp = reactor.getCasingTemperature()
 
         if fTemp < 99 then
             if cTemp < 99 then
@@ -475,28 +488,28 @@ function checkEnergyLevel()
         elseif turbineOnOff == "off" then
             allTurbinesOff()
         end
-        r.setActive(false)
+        reactor.setActive(false)
         --Level < user setting (default: 50%)
     elseif getEnergyPer() <= reactorOnAt then
-        r.setActive(true)
+        reactor.setActive(true)
         for i = 0, amountTurbines do
-            t[i].setFluidFlowRateMax(targetSteam)
-            if t[i].getRotorSpeed() < turbineTargetSpeed * 0.98 then
-                t[i].setInductorEngaged(false)
+            turbines[i].setFluidFlowRateMax(targetSteam)
+            if turbines[i].getRotorSpeed() < turbineTargetSpeed * 0.98 then
+                turbines[i].setInductorEngaged(false)
             end
-            if t[i].getRotorSpeed() > turbineTargetSpeed * 1.02 then
-                t[i].setInductorEngaged(true)
+            if turbines[i].getRotorSpeed() > turbineTargetSpeed * 1.02 then
+                turbines[i].setInductorEngaged(true)
             end
         end
 
     else
-        if r.getActive() then
+        if reactor.getActive() then
             for i = 0, amountTurbines do
-                if t[i].getRotorSpeed() < turbineTargetSpeed * 0.98 then
-                    t[i].setInductorEngaged(false)
+                if turbines[i].getRotorSpeed() < turbineTargetSpeed * 0.98 then
+                    turbines[i].setInductorEngaged(false)
                 end
-                if t[i].getRotorSpeed() > turbineTargetSpeed * 1.02 then
-                    t[i].setInductorEngaged(true)
+                if turbines[i].getRotorSpeed() > turbineTargetSpeed * 1.02 then
+                    turbines[i].setInductorEngaged(true)
                 end
             end --for
         end --if
@@ -517,16 +530,16 @@ function getToTargetSpeed()
     for i = 0, amountTurbines, 1 do
 
         --Get the current speed of the turbine
-        local tspeed = t[i].getRotorSpeed()
+        local tspeed = turbines[i].getRotorSpeed()
 
         --Control turbines
         if tspeed <= turbineTargetSpeed then
-            r.setActive(true)
-            t[i].setActive(true)
-            t[i].setInductorEngaged(false)
-            t[i].setFluidFlowRateMax(targetSteam)
+            reactor.setActive(true)
+            turbines[i].setActive(true)
+            turbines[i].setInductorEngaged(false)
+            turbines[i].setFluidFlowRateMax(targetSteam)
         end
-        if t[i].getRotorSpeed() > turbineTargetSpeed then
+        if turbines[i].getRotorSpeed() > turbineTargetSpeed then
             turbineOff(i)
         end
 
@@ -542,13 +555,13 @@ function getToTargetSpeed()
         --
         --            --Return error message
         --            if speedFailCounter[i] >= 3 then
-        --                mon.setBackgroundColor(colors.black)
-        --                mon.clear()
-        --                mon.setTextColor(colors.red)
-        --                mon.setCursorPos(1, 1)
-        --                    mon.write("Turbines can't get to speed!")
-        --                    mon.setCursorPos(1,2)
-        --                    mon.write("Please check your Steam-Input!")
+        --                controlMonitor.setBackgroundColor(colors.black)
+        --                controlMonitor.clear()
+        --                controlMonitor.setTextColor(colors.red)
+        --                controlMonitor.setCursorPos(1, 1)
+        --                    controlMonitor.write("Turbines can't get to speed!")
+        --                    controlMonitor.setCursorPos(1,2)
+        --                    controlMonitor.write("Please check your Steam-Input!")
         --                    error("Turbines can't get to speed!")
         --            --increase speedFailCounter
         --            else
@@ -564,7 +577,7 @@ end
 --Returns true if all turbines are at targetSpeed
 function allAtTargetSpeed()
     for i = 0, amountTurbines do
-        if t[i].getRotorSpeed() < turbineTargetSpeed then
+        if turbines[i].getRotorSpeed() < turbineTargetSpeed then
             return false
         end
     end
@@ -632,7 +645,7 @@ function createManualButtons()
     page:rename("aTurbinesOn", aTN, true)
 
     --Switch reactor button?
-    if r.getActive() then
+    if reactor.getActive() then
         page:rename("reactorOn", rOn, true)
         page:toggleButton("reactorOn")
     else
@@ -641,7 +654,7 @@ function createManualButtons()
 
     --Turbine buttons on/off
     page:add("turbineOn", function() toggleTurbine(currStat) end, 20, 13, 24, 13)
-    if t[currStat].getActive() then
+    if turbines[currStat].getActive() then
         page:rename("turbineOn", tOn, true)
         page:toggleButton("turbineOn")
     else
@@ -650,7 +663,7 @@ function createManualButtons()
 
     -- Turbinen buttons (Coils)
     page:add("coilsOn", function() toggleCoils(currStat) end, 9, 15, 13, 15)
-    if t[currStat].getInductorEngaged() then
+    if turbines[currStat].getInductorEngaged() then
         page:rename("coilsOn", cOn, true)
     else
         page:rename("coilsOn", cOff, true)
@@ -676,7 +689,7 @@ function clickEvent()
         while true do
             --gets the event
             local event, p1 = page:handleEvents(os.pullEvent())
-            print(event .. ", " .. p1)
+            --print(event .. ", " .. p1)
 
             --execute a buttons function if clicked
             if event == "button_click" then
@@ -708,105 +721,101 @@ function printStatsAuto(turbine)
     --gets overall energy production
     local rfGen = 0
     for i = 0, amountTurbines, 1 do
-        rfGen = rfGen + t[i].getEnergyProducedLastTick()
+        rfGen = rfGen + turbines[i].getEnergyProducedLastTick()
     end
 
     --prints the energy level (in %)
-    mon.setBackgroundColor(tonumber(backgroundColor))
-    mon.setTextColor(tonumber(textColor))
+    controlMonitor.setBackgroundColor(tonumber(backgroundColor))
+    controlMonitor.setTextColor(tonumber(textColor))
 
-    mon.setCursorPos(2, 2)
+    controlMonitor.setCursorPos(2, 2)
     
-        mon.write("Energy: " .. getEnergyPer() .. "%  ")
+        controlMonitor.write("Energy: " .. getEnergyPer() .. "%  ")
 
 
     --prints the energy bar
     local part1 = getEnergyPer() / 5
-    mon.setCursorPos(2, 3)
-    mon.setBackgroundColor(colors.lightGray)
-    mon.write("                    ")
-    mon.setBackgroundColor(colors.green)
-    mon.setCursorPos(2, 3)
+    controlMonitor.setCursorPos(2, 3)
+    controlMonitor.setBackgroundColor(colors.lightGray)
+    controlMonitor.write("                    ")
+    controlMonitor.setBackgroundColor(colors.green)
+    controlMonitor.setCursorPos(2, 3)
     for i = 1, part1 do
-        mon.write(" ")
+        controlMonitor.write(" ")
     end
-    mon.setTextColor(textColor)
+    controlMonitor.setTextColor(textColor)
 
     --prints the overall energy production
-    mon.setBackgroundColor(tonumber(backgroundColor))
+    controlMonitor.setBackgroundColor(tonumber(backgroundColor))
 
-    mon.setCursorPos(2, 5)
+    controlMonitor.setCursorPos(2, 5)
     
-        mon.write("RF-Production: " .. (input.formatNumberComma(math.floor(rfGen))) .. " RF/t      ")
+        controlMonitor.write("RF-Production: " .. (input.formatNumberComma(math.floor(rfGen))) .. " RF/t      ")
 
     --Reactor status (on/off)
-    mon.setCursorPos(2, 7)
+    controlMonitor.setCursorPos(2, 7)
     
-    mon.write("Reactor: ")
-    if r.getActive() then
-        mon.setTextColor(colors.green)
-        mon.write("on ")
+    controlMonitor.write("Reactor: ")
+    if reactor.getActive() then
+        controlMonitor.setTextColor(colors.green)
+        controlMonitor.write("on ")
     end
-    if not r.getActive() then
-        mon.setTextColor(colors.red)
-        mon.write("off")
+    if not reactor.getActive() then
+        controlMonitor.setTextColor(colors.red)
+        controlMonitor.write("off")
     end
         
     --Prints all other informations (fuel consumption,steam,turbine amount,mode)
-    mon.setTextColor(tonumber(textColor))
-    mon.setCursorPos(2, 9)
-    local fuelCons = tostring(r.getFuelConsumedLastTick())
+    controlMonitor.setTextColor(tonumber(textColor))
+    controlMonitor.setCursorPos(2, 9)
+    local fuelCons = tostring(reactor.getFuelConsumedLastTick())
     local fuelCons2 = string.sub(fuelCons, 0, 4)
-    local eff = math.floor(rfGen / r.getFuelConsumedLastTick())
-    if not r.getActive() then eff = 0 end
+    local eff = math.floor(rfGen / reactor.getFuelConsumedLastTick())
+    if not reactor.getActive() then eff = 0 end
     
-    mon.write("Fuel Consumption: " .. fuelCons2 .. "mb/t     ")
-    mon.setCursorPos(2, 10)
-    mon.write("Steam: " .. (input.formatNumberComma(math.floor(r.getHotFluidProducedLastTick()))) .. "mb/t    ")
-    mon.setCursorPos(2, 11)
-    mon.write("Efficiency: " .. (input.formatNumberComma(eff)) .. " RF/mb       ")
-    mon.setCursorPos(40, 2)
-    mon.write("Turbines: " .. (amountTurbines + 1) .. "  ")
-    mon.setCursorPos(2, 13)
-    mon.write("-- Turbine " .. (turbine + 1) .. " --")
+    controlMonitor.write("Fuel Consumption: " .. fuelCons2 .. "mb/t     ")
+    controlMonitor.setCursorPos(2, 10)
+    controlMonitor.write("Steam: " .. (input.formatNumberComma(math.floor(reactor.getHotFluidProducedLastTick()))) .. "mb/t    ")
+    controlMonitor.setCursorPos(2, 11)
+    controlMonitor.write("Efficiency: " .. (input.formatNumberComma(eff)) .. " RF/mb       ")
+    controlMonitor.setCursorPos(40, 2)
+    controlMonitor.write("Turbines: " .. (amountTurbines + 1) .. "  ")
+    controlMonitor.setCursorPos(2, 13)
+    controlMonitor.write("-- Turbine " .. (turbine + 1) .. " --")
 
     --Currently selected turbine details
 
     --coils
-    mon.setCursorPos(2, 14)
-    mon.write("Coils: ")
+    controlMonitor.setCursorPos(2, 14)
+    controlMonitor.write("Coils: ")
 
-    if t[turbine].getInductorEngaged() then
-        mon.setTextColor(colors.green)
-        if lang == "de" then
-            mon.write("eingehaengt   ")
-        elseif lang == "en" then
-            mon.write("engaged     ")
-        end
+    if turbines[turbine].getInductorEngaged() then
+        controlMonitor.setTextColor(colors.green)
+        controlMonitor.write("engaged     ")
     end
-    if t[turbine].getInductorEngaged() == false then
-        mon.setTextColor(colors.red)
-            mon.write("disengaged")
+    if turbines[turbine].getInductorEngaged() == false then
+        controlMonitor.setTextColor(colors.red)
+        controlMonitor.write("disengaged")
     end
-    mon.setTextColor(tonumber(textColor))
+    controlMonitor.setTextColor(tonumber(textColor))
 
     --rotor speed/RF-production
-    mon.setCursorPos(2, 15)
+    controlMonitor.setCursorPos(2, 15)
 
-        mon.write("Rotor Speed: ")
-        mon.write((input.formatNumberComma(math.floor(t[turbine].getRotorSpeed()))) .. " RPM    ")
-        mon.setCursorPos(2, 15)
-        mon.write("RF-Production: " .. (input.formatNumberComma(math.floor(t[turbine].getEnergyProducedLastTick()))) .. " RF/t           ")
+    controlMonitor.write("Rotor Speed: ")
+    controlMonitor.write((input.formatNumberComma(math.floor(turbines[turbine].getRotorSpeed()))) .. " RPM    ")
+    controlMonitor.setCursorPos(2, 15)
+    controlMonitor.write("RF-Production: " .. (input.formatNumberComma(math.floor(turbines[turbine].getEnergyProducedLastTick()))) .. " RF/t           ")
 
     --Internal buffer of the turbine
-    mon.setCursorPos(2, 16)
+    controlMonitor.setCursorPos(2, 16)
     
-        mon.write("Internal Energy: ")
-        mon.write(input.formatNumberComma(math.floor(getTurbineEnergy(turbine))) .. " RF          ")
+    controlMonitor.write("Internal Energy: ")
+    controlMonitor.write(input.formatNumberComma(math.floor(getTurbineEnergy(turbine))) .. " RF          ")
 
     --prints the current program version
-    mon.setCursorPos(2, 25)
-    mon.write("Version " .. version)
+    controlMonitor.setCursorPos(2, 25)
+    controlMonitor.write("Version " .. version)
 
     --refreshes the last turbine id
     lastStat = turbine
@@ -828,77 +837,77 @@ function printStatsMan(turbine)
     end
 
     --On/Off buttons
-    if t[currStat].getActive() and not page.buttonList["turbineOn"].active then
+    if turbines[currStat].getActive() and not page.buttonList["turbineOn"].active then
         page:rename("turbineOn", tOn, true)
         page:toggleButton("turbineOn")
     end
-    if not t[currStat].getActive() and page.buttonList["turbineOn"].active then
+    if not turbines[currStat].getActive() and page.buttonList["turbineOn"].active then
         page:rename("turbineOn", tOff, true)
         page:toggleButton("turbineOn")
     end
-    if t[currStat].getInductorEngaged() and not page.buttonList["coilsOn"].active then
+    if turbines[currStat].getInductorEngaged() and not page.buttonList["coilsOn"].active then
         page:rename("coilsOn", cOn, true)
         page:toggleButton("coilsOn")
     end
-    if not t[currStat].getInductorEngaged() and page.buttonList["coilsOn"].active then
+    if not turbines[currStat].getInductorEngaged() and page.buttonList["coilsOn"].active then
         page:rename("coilsOn", cOff, true)
         page:toggleButton("coilsOn")
     end
 
     --prints the energy level (in %)
-    mon.setBackgroundColor(tonumber(backgroundColor))
-    mon.setTextColor(tonumber(textColor))
+    controlMonitor.setBackgroundColor(tonumber(backgroundColor))
+    controlMonitor.setTextColor(tonumber(textColor))
 
-    mon.setCursorPos(2, 2)
+    controlMonitor.setCursorPos(2, 2)
     
-    mon.write("Energy: " .. getEnergyPer() .. "%  ")
+    controlMonitor.write("Energy: " .. getEnergyPer() .. "%  ")
 
     --prints the energy bar
     local part1 = getEnergyPer() / 5
-    mon.setCursorPos(2, 3)
-    mon.setBackgroundColor(colors.lightGray)
-    mon.write("                    ")
-    mon.setBackgroundColor(colors.green)
-    mon.setCursorPos(2, 3)
+    controlMonitor.setCursorPos(2, 3)
+    controlMonitor.setBackgroundColor(colors.lightGray)
+    controlMonitor.write("                    ")
+    controlMonitor.setBackgroundColor(colors.green)
+    controlMonitor.setCursorPos(2, 3)
     for i = 1, part1 do
-        mon.write(" ")
+        controlMonitor.write(" ")
     end
-    mon.setTextColor(textColor)
+    controlMonitor.setTextColor(textColor)
 
     --prints the overall energy production
     local rfGen = 0
     for i = 0, amountTurbines, 1 do
-        rfGen = rfGen + t[i].getEnergyProducedLastTick()
+        rfGen = rfGen + turbines[i].getEnergyProducedLastTick()
     end
 
-    mon.setBackgroundColor(tonumber(backgroundColor))
+    controlMonitor.setBackgroundColor(tonumber(backgroundColor))
 
     --Other status informations
-    mon.setCursorPos(2, 5)
-    mon.write("RF-Production: " .. (input.formatNumberComma(math.floor(rfGen))) .. " RF/t      ")
-    mon.setCursorPos(2, 7)
-    local fuelCons = tostring(r.getFuelConsumedLastTick())
+    controlMonitor.setCursorPos(2, 5)
+    controlMonitor.write("RF-Production: " .. (input.formatNumberComma(math.floor(rfGen))) .. " RF/t      ")
+    controlMonitor.setCursorPos(2, 7)
+    local fuelCons = tostring(reactor.getFuelConsumedLastTick())
     local fuelCons2 = string.sub(fuelCons, 0, 4)
-    mon.write("Fuel Consumption: " .. fuelCons2 .. "mb/t     ")
-    mon.setCursorPos(2, 9)
-    mon.write("Rotor Speed: ")
-    mon.write((input.formatNumberComma(math.floor(t[turbine].getRotorSpeed()))) .. " RPM     ")
-    mon.setCursorPos(2, 11)
-    mon.write("Reactor: ")
-    mon.setCursorPos(2, 13)
-    mon.write("Current Turbine: ")
-    mon.setCursorPos(2, 17)
-    mon.write("All Turbines: ")
+    controlMonitor.write("Fuel Consumption: " .. fuelCons2 .. "mb/t     ")
+    controlMonitor.setCursorPos(2, 9)
+    controlMonitor.write("Rotor Speed: ")
+    controlMonitor.write((input.formatNumberComma(math.floor(turbines[turbine].getRotorSpeed()))) .. " RPM     ")
+    controlMonitor.setCursorPos(2, 11)
+    controlMonitor.write("Reactor: ")
+    controlMonitor.setCursorPos(2, 13)
+    controlMonitor.write("Current Turbine: ")
+    controlMonitor.setCursorPos(2, 17)
+    controlMonitor.write("All Turbines: ")
         
-    mon.setCursorPos(2, 15)
-    mon.write("Coils: ")
+    controlMonitor.setCursorPos(2, 15)
+    controlMonitor.write("Coils: ")
 
-    mon.setCursorPos(40, 2)
-    mon.write("Turbines: " .. (amountTurbines + 1) .. "  ")
+    controlMonitor.setCursorPos(40, 2)
+    controlMonitor.write("Turbines: " .. (amountTurbines + 1) .. "  ")
 
     --prints the current program version
-    mon.setCursorPos(2, 25)
-    mon.write("Version " .. version)
+    controlMonitor.setCursorPos(2, 25)
+    controlMonitor.write("Version " .. version)
 
     --refreshes the last turbine id
     lastStat = turbine

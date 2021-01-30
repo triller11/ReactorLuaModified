@@ -8,9 +8,10 @@
   reactorOnAt = 50,
   targetSteam = 2000,
   turbineTargetSpeed = 1820,
-  version = "2.6-release",
+  version = "1.0-release",
   textColor = 1,
   program = "turbine",
   turbineOnOff = "off",
-  lang = "de",
+  controlMonitor = "",
+  debug = 1,
 }
