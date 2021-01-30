@@ -3,7 +3,7 @@
 -- Version 1.0 --
 
 -- Loads the Touchpoint API (by Lyqyd)
-shell.run("cp /reactor-turbine-program/config/touchpoint.lua /touchpoint")
+shell.run("cp /extreme-reactors-control/config/touchpoint.lua /touchpoint")
 os.loadAPI("touchpoint")
 shell.run("rm touchpoint")
 
@@ -24,8 +24,8 @@ function _G.createButtons()
   page:add("Automatic",nil,23,9,35,9)
   page:add("Manual",nil,23,11,35,11)
   page:add("Options",displayOptions,3,16,20,16)
-  page:add("Quit program",exit,3,18,20,18)
-  page:add("Reboot",restart,3,20,20,20)
+  page:add("Quit program",exit,3,17,20,17)
+  page:add("Reboot",restart,3,18,20,18)
   page:add("menuOn",nil,39,7,49,7)
   startOn = {"   On    ",label = "menuOn"}
   startOff = {"   Off   ",label = "menuOn"}
@@ -52,12 +52,12 @@ function _G.createButtons()
 end
 
 function _G.exit()
-  mon.clear()
-  mon.setCursorPos(27,8)
-  mon.write("Program terminated!")    
+  controlMonitor.clear()
+  controlMonitor.setCursorPos(27,8)
+  controlMonitor.write("Program terminated!")    
   term.clear()
   term.setCursorPos(1,1)
-  shell.completeProgram("/reactor-turbine-program/start/menu.lua")
+  shell.completeProgram("/extreme-reactors-control/start/menu.lua")
 end
 
 function _G.switchProgram(currBut)
@@ -90,14 +90,14 @@ end
 
 function _G.startTC()
   if program == "turbine" then
-    shell.run("/reactor-turbine-program/program/turbineControl.lua")
+    shell.run("/extreme-reactors-control/program/turbineControl.lua")
   elseif program == "reactor" then
-    shell.run("/reactor-turbine-program/program/reactorControl.lua")
+    shell.run("/extreme-reactors-control/program/reactorControl.lua")
   end
 end
 
 function displayOptions()
-  shell.run("/reactor-turbine-program/program/editOptions.lua")
+  shell.run("/extreme-reactors-control/program/editOptions.lua")
 end
 
 function reboot()
@@ -160,21 +160,21 @@ local function getClick(funct)
 end
 
 function _G.displayMenu()
-  mon.clear()
+  controlMonitor.clear()
   page:draw()
-  mon.setBackgroundColor(backgroundColor)
-  mon.setTextColor(textColor)
+  controlMonitor.setBackgroundColor(backgroundColor)
+  controlMonitor.setTextColor(textColor)
 
-  mon.setCursorPos(3,2)
-  mon.write("-- Main Menu --")
-  mon.setCursorPos(39,5)
-  mon.write("Show this screen on startup: ")
-  mon.setCursorPos(39,9)
-  mon.write("Language: ")
-  mon.setCursorPos(3,7)
-  mon.write("Program: ")
-  mon.setCursorPos(23,7)
-  mon.write("Mode:")
+  controlMonitor.setCursorPos(3,2)
+  controlMonitor.write("-- Main Menu --")
+  controlMonitor.setCursorPos(39,5)
+  controlMonitor.write("Show this screen on startup: ")
+  controlMonitor.setCursorPos(39,9)
+  controlMonitor.write("Language: ")
+  controlMonitor.setCursorPos(3,7)
+  controlMonitor.write("Program: ")
+  controlMonitor.setCursorPos(23,7)
+  controlMonitor.write("Mode:")
 
   getClick(displayMenu)
 end

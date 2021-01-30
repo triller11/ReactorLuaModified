@@ -32,22 +32,10 @@ function saveConfigFile()
   shell.completeProgram("/extreme-reactors-control/program/editOptions.lua")
 end
 
---Go back to the program -- deprecated
-function exit()
-  mon.clear()
-  continue = false
-  if program == "turbine" then
-    shell.run("/extreme-reactors-control/program/turbineControl.lua")
-  elseif program == "reactor" then
-    shell.run("/extreme-reactors-control/program/reactorControl.lua")
-  end
-  shell.completeProgram("/extreme-reactors-control/program/editOptions.lua")
-end
-
 --Go back to the main menu
 function displayMenu()
   loadOptionFile()
-  mon.clear()
+  controlMonitor.clear()
   shell.run("/extreme-reactors-control/start/menu.lua")
   shell.completeProgram("/extreme-reactors-control/program/editOptions.lua")
 end
@@ -108,100 +96,100 @@ end
 
 --Display the overwiew
 function backToMainMenu()
-  mon.clear()
+  controlMonitor.clear()
   currPage=touch1
   currPage:draw()
-  mon.setCursorPos(2,2)
-  mon.setTextColor(tonumber(optionList["textColor"]))
-  mon.setBackgroundColor(tonumber(optionList["backgroundColor"]))
-  mon.setCursorPos(4,2)
+  controlMonitor.setCursorPos(2,2)
+  controlMonitor.setTextColor(textColor)
+  controlMonitor.setBackgroundColor(backgroundColor)
+  controlMonitor.setCursorPos(4,2)
 
-  mon.write("-- Options --")
+  controlMonitor.write("-- Options --")
 
   --Set text of all the options
-  mon.setCursorPos(24,4)
-  local col = printColor(tonumber(optionList["backgroundColor"]))
+  controlMonitor.setCursorPos(24,4)
+  local col = printColor(tonumber(_G.optionList["backgroundColor"]))
   local col2 = printColor(backgroundColor)
-  if tonumber(optionList["backgroundColor"]) ~= backgroundColor then
+  if tonumber(_G.optionList["backgroundColor"]) ~= backgroundColor then
 
-      mon.write("BackgroundColor: "..col.." -> "..col2.."   ")
+      controlMonitor.write("BackgroundColor: "..col.." -> "..col2.."   ")
 
   else
-      mon.write("BackgroundColor: "..col2.."    ")
+      controlMonitor.write("BackgroundColor: "..col2.."    ")
   end
 
-  mon.setCursorPos(24,6)
-  local col3 = printColor(tonumber(optionList["textColor"]))
+  controlMonitor.setCursorPos(24,6)
+  local col3 = printColor(tonumber(_G.optionList["textColor"]))
   local col4 = printColor(textColor)
-  if tonumber(optionList["textColor"]) ~= textColor then
-      mon.write("TextColor: "..col3.." -> "..col4.."   ")
+  if tonumber(_G.optionList["textColor"]) ~= textColor then
+      controlMonitor.write("TextColor: "..col3.." -> "..col4.."   ")
   else
-      mon.write("TextColor: "..col4.."   ")
+      controlMonitor.write("TextColor: "..col4.."   ")
   end
 
-  mon.setCursorPos(24,8)
-  if math.floor(tonumber(optionList["reactorOffAt"])) ~= math.floor(reactorOffAt) then
-      mon.write("Reactor off above "..math.floor(tonumber(optionList["reactorOffAt"])).."% -> "..math.floor(reactorOffAt).."%   ")
+  controlMonitor.setCursorPos(24,8)
+  if math.floor(tonumber(_G.optionList["reactorOffAt"])) ~= math.floor(reactorOffAt) then
+      controlMonitor.write("Reactor off above "..math.floor(tonumber(_G.optionList["reactorOffAt"])).."% -> "..math.floor(reactorOffAt).."%   ")
   else
-      mon.write("Reactor off above "..math.floor(reactorOffAt).."%   ")
+      controlMonitor.write("Reactor off above "..math.floor(reactorOffAt).."%   ")
   end
 
-  mon.setCursorPos(24,10)
-  if math.floor(tonumber(optionList["reactorOnAt"])) ~= math.floor(reactorOnAt) then
-      mon.write("Reactor on below "..math.floor(tonumber(optionList["reactorOnAt"])).."% -> "..math.floor(reactorOnAt).."%   ")
+  controlMonitor.setCursorPos(24,10)
+  if math.floor(tonumber(_G.optionList["reactorOnAt"])) ~= math.floor(reactorOnAt) then
+      controlMonitor.write("Reactor on below "..math.floor(tonumber(_G.optionList["reactorOnAt"])).."% -> "..math.floor(reactorOnAt).."%   ")
 
   else
-      mon.write("Reactor on below "..math.floor(reactorOnAt).."%   ")
+      controlMonitor.write("Reactor on below "..math.floor(reactorOnAt).."%   ")
   end
   
-  mon.setCursorPos(24,12)
-  if tonumber(optionList["turbineTargetSpeed"]) ~= turbineTargetSpeed then
-      mon.write("Turbines Max. Speed: "..(input.formatNumberComma(math.floor(tonumber(optionList["turbineTargetSpeed"])))).." -> "..(input.formatNumberComma(turbineTargetSpeed)).."RPM      ")
+  controlMonitor.setCursorPos(24,12)
+  if tonumber(_G.optionList["turbineTargetSpeed"]) ~= turbineTargetSpeed then
+      controlMonitor.write("Turbines Max. Speed: "..(input.formatNumberComma(math.floor(tonumber(_G.optionList["turbineTargetSpeed"])))).." -> "..(input.formatNumberComma(turbineTargetSpeed)).."RPM      ")
 
   else
-      mon.write("Turbines Max. Speed: "..(input.formatNumberComma(turbineTargetSpeed)).."RPM     ")
+      controlMonitor.write("Turbines Max. Speed: "..(input.formatNumberComma(turbineTargetSpeed)).."RPM     ")
 
   end
 
-  mon.setCursorPos(24,14)
-  if tonumber(optionList["targetSteam"]) ~= targetSteam then
-      mon.write("Turbines Steam Input: "..(input.formatNumberComma(math.floor(tonumber(optionList["targetSteam"])))).." -> "..(input.formatNumberComma(targetSteam)).."mb/t      ")
+  controlMonitor.setCursorPos(24,14)
+  if tonumber(_G.optionList["targetSteam"]) ~= targetSteam then
+      controlMonitor.write("Turbines Steam Input: "..(input.formatNumberComma(math.floor(tonumber(_G.optionList["targetSteam"])))).." -> "..(input.formatNumberComma(targetSteam)).."mb/t      ")
 
 
   else
-      mon.write("Turbines Steam Input: "..(input.formatNumberComma(targetSteam)).."mb/t     ")
+      controlMonitor.write("Turbines Steam Input: "..(input.formatNumberComma(targetSteam)).."mb/t     ")
 
   end
 
-  mon.setCursorPos(24,16)
+  controlMonitor.setCursorPos(24,16)
   local turbineOnOffString1 = ""
   local turbineOnOffString2 = ""
-  if optionList["turbineOnOff"] ~= turbineOnOff then
-      if optionList["turbineOnOff"] == "off" then
+  if _G.optionList["turbineOnOff"] ~= turbineOnOff then
+      if _G.optionList["turbineOnOff"] == "off" then
         turbineOnOffString1 = "no   "
         turbineOnOffString2 = "yes"
-      elseif optionList["turbineOnOff"] == "on" then
+      elseif _G.optionList["turbineOnOff"] == "on" then
         turbineOnOffString1 = "yes   "
         turbineOnOffString2 = "no"
       end
-      mon.write("Disable turbine at "..reactorOffAt.."%: "..turbineOnOffString2.." -> "..turbineOnOffString1)
+      controlMonitor.write("Disable turbine at "..reactorOffAt.."%: "..turbineOnOffString2.." -> "..turbineOnOffString1)
 
   else
-      if optionList["turbineOnOff"] == "off" then turbineOnOffString2 = "yes"
-      elseif optionList["turbineOnOff"] == "on" then turbineOnOffString2 = "no" end
-      mon.write("Disable turbine at "..reactorOffAt.."%: "..turbineOnOffString2.."   ")
+      if _G.optionList["turbineOnOff"] == "off" then turbineOnOffString2 = "yes"
+      elseif _G.optionList["turbineOnOff"] == "on" then turbineOnOffString2 = "no" end
+      controlMonitor.write("Disable turbine at "..reactorOffAt.."%: "..turbineOnOffString2.."   ")
 
   end
 
-  mon.setCursorPos(24,18)
-    mon.write("Config available: ")
-  if math.floor(tonumber(optionList["rodLevel"])) ~= math.floor(rodLevel) then
-      mon.write("yes -> no")
+  controlMonitor.setCursorPos(24,18)
+    controlMonitor.write("Config available: ")
+  if math.floor(tonumber(_G.optionList["rodLevel"])) ~= math.floor(rodLevel) then
+      controlMonitor.write("yes -> no")
   else
     if math.floor(rodLevel) == 0 then
-        mon.write("no     ")
+        controlMonitor.write("no     ")
     else
-        mon.write("yes   ")
+        controlMonitor.write("yes   ")
     end
   end
   getClick(backToMainMenu)
@@ -210,68 +198,68 @@ end
 --Function for setting the background color
 function setBackground()
   mode = "background"
-  mon.clear()
+  controlMonitor.clear()
   currPage = touch2
   currPage:draw()
-  mon.setBackgroundColor(backgroundColor)
-  mon.setTextColor(textColor)
-  mon.setCursorPos(3,2)
-    mon.write("-- Change BackgroundColor --")
-    mon.setCursorPos(3,5)
-    mon.write("BackgroundColor: ")
+  controlMonitor.setBackgroundColor(backgroundColor)
+  controlMonitor.setTextColor(textColor)
+  controlMonitor.setCursorPos(3,2)
+    controlMonitor.write("-- Change BackgroundColor --")
+    controlMonitor.setCursorPos(3,5)
+    controlMonitor.write("BackgroundColor: ")
   local col = printColor(backgroundColor)
-  mon.write(col)
-  --refreshOptionList()
+  controlMonitor.write(col)
+  --refresh_G.optionList()
   getClick(setBackground)
 end
 
 --Function for setting the text color
 function setText()
   mode = "text"
-  mon.clear()
+  controlMonitor.clear()
   currPage = touch2
   currPage:draw()
-  mon.setBackgroundColor(backgroundColor)
-  mon.setTextColor(textColor)
-  mon.setCursorPos(3,2)
-    mon.write("-- Change TextColor --")
-    mon.setCursorPos(3,5)
-    mon.write("TextColor: ")
+  controlMonitor.setBackgroundColor(backgroundColor)
+  controlMonitor.setTextColor(textColor)
+  controlMonitor.setCursorPos(3,2)
+    controlMonitor.write("-- Change TextColor --")
+    controlMonitor.setCursorPos(3,5)
+    controlMonitor.write("TextColor: ")
   local col = printColor(textColor)
-  mon.write(col)
-  --refreshOptionList()
+  controlMonitor.write(col)
+  --refresh_G.optionList()
   getClick(setText)
 end
 
 --Function for setting the shutdown level (high)
 function setOffAt()
   mode2 = "off"
-  mon.clear()
+  controlMonitor.clear()
   currPage = touch3
   currPage:draw()
-  mon.setBackgroundColor(backgroundColor)
-  mon.setTextColor(textColor)
-  mon.setCursorPos(3,2)
-    mon.write("-- Reactor off --")
-    mon.setCursorPos(3,5)
-    mon.write("Reactor off above "..math.floor(reactorOffAt).."%  ")
-  --refreshOptionList()
+  controlMonitor.setBackgroundColor(backgroundColor)
+  controlMonitor.setTextColor(textColor)
+  controlMonitor.setCursorPos(3,2)
+    controlMonitor.write("-- Reactor off --")
+    controlMonitor.setCursorPos(3,5)
+    controlMonitor.write("Reactor off above "..math.floor(reactorOffAt).."%  ")
+  --refresh_G.optionList()
   getClick(setOffAt)
 end
 
 --Function for setting the shutdown level (low)
 function setOnAt()
   mode2 = "on"
-  mon.clear()
+  controlMonitor.clear()
   currPage = touch3
   currPage:draw()
-  mon.setBackgroundColor(backgroundColor)
-  mon.setTextColor(textColor)
-  mon.setCursorPos(3,2)
-    mon.write("-- Reactor on --")
-    mon.setCursorPos(3,5)
-    mon.write("Reactor on below "..math.floor(reactorOnAt).."%  ")
-  --refreshOptionList()
+  controlMonitor.setBackgroundColor(backgroundColor)
+  controlMonitor.setTextColor(textColor)
+  controlMonitor.setCursorPos(3,2)
+    controlMonitor.write("-- Reactor on --")
+    controlMonitor.setCursorPos(3,5)
+    controlMonitor.write("Reactor on below "..math.floor(reactorOnAt).."%  ")
+  --refresh_G.optionList()
   getClick(setOnAt)
 end
 
@@ -346,18 +334,18 @@ end
 --Sets the max. turbine speed
 function setTurbineSpeed()
 mode2 = "speed"
-  mon.clear()
+  controlMonitor.clear()
   currPage = touch4
   currPage:draw()
-  mon.setBackgroundColor(backgroundColor)
-  mon.setTextColor(textColor)
-  mon.setCursorPos(3,2)
+  controlMonitor.setBackgroundColor(backgroundColor)
+  controlMonitor.setTextColor(textColor)
+  controlMonitor.setCursorPos(3,2)
 
-    mon.write("-- Turbine Speed --")
-    mon.setCursorPos(3,5)
-    mon.write("Maximum Turbine speed: "..(input.formatNumberComma(turbineTargetSpeed)).."RPM      ")
+    controlMonitor.write("-- Turbine Speed --")
+    controlMonitor.setCursorPos(3,5)
+    controlMonitor.write("Maximum Turbine speed: "..(input.formatNumberComma(turbineTargetSpeed)).."RPM      ")
 
-  --refreshOptionList()
+  --refresh_G.optionList()
   getClick(setTurbineSpeed)
   setTurbineSpeed()
 end
@@ -365,18 +353,18 @@ end
 --Sets the max. turbine steam input
 function setTurbineSteamRate()
   mode2 = "steam"
-  mon.clear()
+  controlMonitor.clear()
   currPage = touch4
   currPage:draw()
-  mon.setBackgroundColor(backgroundColor)
-  mon.setTextColor(textColor)
-  mon.setCursorPos(3,2)
+  controlMonitor.setBackgroundColor(backgroundColor)
+  controlMonitor.setTextColor(textColor)
+  controlMonitor.setCursorPos(3,2)
 
-    mon.write("-- Turbine Steam Input --")
-    mon.setCursorPos(3,5)
-    mon.write("Turbine Steam Input-Rate: "..(input.formatNumberComma(targetSteam)).."mb/t      ")
+    controlMonitor.write("-- Turbine Steam Input --")
+    controlMonitor.setCursorPos(3,5)
+    controlMonitor.write("Turbine Steam Input-Rate: "..(input.formatNumberComma(targetSteam)).."mb/t      ")
 
-  --refreshOptionList()
+  --refresh_G.optionList()
   getClick(setTurbineSteamRate)
   setTurbineSteamRate()
 end
@@ -408,6 +396,7 @@ function getClick(funct)
 end
 
 --Run
-mon.clear()
+controlMonitor.clear()
+
 createAllButtons()
 backToMainMenu()

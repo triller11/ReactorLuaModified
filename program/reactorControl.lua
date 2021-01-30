@@ -50,7 +50,7 @@ function createButtonsMan()
     rOff = { " Off ", label = "reactorOn" }
 
     page:add("reactorOn", toggleReactor, 11, 10, 15, 10)
-    if r.getActive() then
+    if reactor.getActive() then
         page:rename("reactorOn", rOn, true)
         page:toggleButton("reactorOn")
     else
@@ -63,15 +63,15 @@ end
 
 --Checks, if all peripherals were setup correctly
 function checkPeripherals()
-    mon.setBackgroundColor(colors.black)
-    mon.clear()
-    mon.setCursorPos(1, 1)
-    mon.setTextColor(colors.red)
+    controlMonitor.setBackgroundColor(colors.black)
+    controlMonitor.clear()
+    controlMonitor.setCursorPos(1, 1)
+    controlMonitor.setTextColor(colors.red)
     term.clear()
     term.setCursorPos(1, 1)
     term.setTextColor(colors.red)
     if r == "" then
-        mon.write("Reactor not found! Please check and reboot the computer (Press and hold Ctrl+R)")
+        controlMonitor.write("Reactor not found! Please check and reboot the computer (Press and hold Ctrl+R)")
         error("Reactor not found! Please check and reboot the computer (Press and hold Ctrl+R)")
     end
     if v == "" then
@@ -84,9 +84,9 @@ end
 
 --Toggles the reactor on/off
 function toggleReactor()
-    r.setActive(not r.getActive())
+    reactor.setActive(not reactor.getActive())
     page:toggleButton("reactorOn")
-    if r.getActive() then
+    if reactor.getActive() then
         page:rename("reactorOn", rOn, true)
     else
         page:rename("reactorOn", rOff, true)
@@ -95,7 +95,7 @@ end
 
 --Adjusts the control rods
 function setControlRods(operation, value)
-    local targetValue = r.getControlRodLevel(0)
+    local targetValue = reactor.getControlRodLevel(0)
     if operation == "-" then
         targetValue = targetValue - value
         if targetValue < 1 then targetValue = 0 end
@@ -103,38 +103,58 @@ function setControlRods(operation, value)
         targetValue = targetValue + value
         if targetValue > 98 then targetValue = 99 end
     end
-    r.setAllControlRodLevels(targetValue)
+    reactor.setAllControlRodLevels(targetValue)
 end
 
 --Returns the current energy level (energy storage)
 function getEnergy()
-    local en = v.getEnergyStored()
-    local enMax
-    if v == r then enMax = 10000000
-    else
-        enMax = v.getMaxEnergyStored()
+    local energyStore = 0
+
+    for i =0, amountCapacitors,1 do
+        local stored = math.floor(capacitors[i].getEnergyStored())
+        energyStore = energyStore + stored
     end
-    return math.floor(en / enMax * 100)
+
+    return energyStore
+end
+
+function getEnergyMax()
+    local energyStore = 0
+
+    for i =0, amountCapacitors,1 do
+        local maxStorage = math.floor(capacitors[i].getMaxEnergyStored())
+        energyStore = energyStore + maxStorage
+    end
+
+    return energyStore
+end
+
+function getEnergyPer()
+    local en = getEnergy()
+    local enMax = getEnergyMax()
+    print(en.." of "..enMax)
+    local enPer = math.floor(en / enMax * 100)
+    return enPer
 end
 
 --Returns the current energy level (reactor)
 function getEnergyR()
-    local en = r.getEnergyStored()
+    local en = reactor.getEnergyStored()
     local enMax = 10000000
     return math.floor(en / enMax * 100)
 end
 
 --Reads all the reactors data
 function getReactorData()
-    rodLevel = r.getControlRodLevel(0)
-    enPer = getEnergy()
+    rodLevel = reactor.getControlRodLevel(0)
+    enPer = getEnergyPer()
     enPerR = getEnergyR()
-    fuel = r.getFuelAmount()
-    local fuelMax = r.getFuelAmountMax()
+    fuel = reactor.getFuelAmount()
+    local fuelMax = reactor.getFuelAmountMax()
     fuelPer = math.floor(fuel / fuelMax * 100)
-    rfGen = r.getEnergyProducedLastTick()
-    fuelCons = r.getFuelConsumedLastTick()
-    isOn = r.getActive()
+    rfGen = reactor.getEnergyProducedLastTick()
+    fuelCons = reactor.getFuelConsumedLastTick()
+    isOn = reactor.getActive()
 end
 
 --Checks for button clicks
@@ -175,126 +195,126 @@ end
 --Displays the data on the screen (auto mode)
 function displayDataAuto()
     if enPer <= reactorOnAt then
-        r.setActive(true)
+        reactor.setActive(true)
     elseif enPer > reactorOffAt then
-        r.setActive(false)
+        reactor.setActive(false)
     end
 
     --Print all buttons
     page:draw()
 
-    mon.setBackgroundColor(tonumber(backgroundColor))
-    mon.setTextColor(tonumber(textColor))
+    controlMonitor.setBackgroundColor(tonumber(backgroundColor))
+    controlMonitor.setTextColor(tonumber(textColor))
 
     --Print the energy bar
-    mon.setCursorPos(2, 2)
+    controlMonitor.setCursorPos(2, 2)
 
-    mon.write("Energy: " .. enPer .. "%  ")
+    controlMonitor.write("Energy: " .. enPer .. "%  ")
 
-    mon.setCursorPos(2, 3)
+    controlMonitor.setCursorPos(2, 3)
     local part1 = enPer / 5
-    mon.setCursorPos(2, 3)
-    mon.setBackgroundColor(colors.lightGray)
-    mon.write("                    ")
-    mon.setBackgroundColor(colors.green)
-    mon.setCursorPos(2, 3)
+    controlMonitor.setCursorPos(2, 3)
+    controlMonitor.setBackgroundColor(colors.lightGray)
+    controlMonitor.write("                    ")
+    controlMonitor.setBackgroundColor(colors.green)
+    controlMonitor.setCursorPos(2, 3)
     for i = 1, part1 do
-        mon.write(" ")
+        controlMonitor.write(" ")
     end
 
-    mon.setTextColor(textColor)
-    mon.setBackgroundColor(tonumber(backgroundColor))
+    controlMonitor.setTextColor(textColor)
+    controlMonitor.setBackgroundColor(tonumber(backgroundColor))
 
     --Print the reactor energy bar
-    mon.setCursorPos(2, 5)
-    mon.write("Energy (Reactor): " .. enPerR .. "%  ")
+    controlMonitor.setCursorPos(2, 5)
+    controlMonitor.write("Energy (Reactor): " .. enPerR .. "%  ")
 
-    mon.setCursorPos(2, 6)
+    controlMonitor.setCursorPos(2, 6)
     local part2 = enPerR / 5
-    mon.setCursorPos(2, 6)
-    mon.setBackgroundColor(colors.lightGray)
-    mon.write("                    ")
-    mon.setBackgroundColor(colors.green)
-    mon.setCursorPos(2, 6)
+    controlMonitor.setCursorPos(2, 6)
+    controlMonitor.setBackgroundColor(colors.lightGray)
+    controlMonitor.write("                    ")
+    controlMonitor.setBackgroundColor(colors.green)
+    controlMonitor.setCursorPos(2, 6)
     for i = 1, part2 do
-        mon.write(" ")
+        controlMonitor.write(" ")
     end
 
-    mon.setTextColor(textColor)
-    mon.setBackgroundColor(tonumber(backgroundColor))
+    controlMonitor.setTextColor(textColor)
+    controlMonitor.setBackgroundColor(tonumber(backgroundColor))
 
     --Print the RodLevel bar
-    mon.setCursorPos(30, 2)
-    mon.write("RodLevel: " .. rodLevel .. "  ")
-    mon.setCursorPos(30, 3)
+    controlMonitor.setCursorPos(30, 2)
+    controlMonitor.write("RodLevel: " .. rodLevel .. "  ")
+    controlMonitor.setCursorPos(30, 3)
 
     local part3 = rodLevel / 5
-    mon.setCursorPos(30, 3)
-    mon.setBackgroundColor(colors.lightGray)
-    mon.write("                    ")
-    mon.setBackgroundColor(colors.green)
-    mon.setCursorPos(30, 3)
+    controlMonitor.setCursorPos(30, 3)
+    controlMonitor.setBackgroundColor(colors.lightGray)
+    controlMonitor.write("                    ")
+    controlMonitor.setBackgroundColor(colors.green)
+    controlMonitor.setCursorPos(30, 3)
     for i = 1, part3 do
-        mon.write(" ")
+        controlMonitor.write(" ")
     end
 
-    mon.setTextColor(textColor)
-    mon.setBackgroundColor(tonumber(backgroundColor))
+    controlMonitor.setTextColor(textColor)
+    controlMonitor.setBackgroundColor(tonumber(backgroundColor))
 
-    mon.setCursorPos(2, 8)
+    controlMonitor.setCursorPos(2, 8)
     
-    mon.write("RF-Production: " .. input.formatNumberComma(math.floor(rfGen)) .. " RF/t      ")
+    controlMonitor.write("RF-Production: " .. input.formatNumberComma(math.floor(rfGen)) .. " RF/t      ")
 
-    mon.setCursorPos(2, 10)
+    controlMonitor.setCursorPos(2, 10)
     
-    mon.write("Reactor: ")
-    if r.getActive() then
-        mon.setTextColor(colors.green)
-        mon.write("on ")
+    controlMonitor.write("Reactor: ")
+    if reactor.getActive() then
+        controlMonitor.setTextColor(colors.green)
+        controlMonitor.write("on ")
     end
-    if not r.getActive() then
-        mon.setTextColor(colors.red)
-        mon.write("off")
+    if not reactor.getActive() then
+        controlMonitor.setTextColor(colors.red)
+        controlMonitor.write("off")
     end
 
-    mon.setTextColor(tonumber(textColor))
+    controlMonitor.setTextColor(tonumber(textColor))
 
     --Display Fuel Consumption
-    mon.setCursorPos(2, 12)
+    controlMonitor.setCursorPos(2, 12)
     local fuelCons2 = string.sub(fuelCons, 0, 4)
 
-    mon.write("Fuel Consumption: " .. fuelCons2 .. "mb/t     ")
+    controlMonitor.write("Fuel Consumption: " .. fuelCons2 .. "mb/t     ")
 
     --Display Reactor Efficiency (RF/mb)
-    mon.setCursorPos(2, 14)
+    controlMonitor.setCursorPos(2, 14)
 
     --Calculation and formatting of the efficiency
     local fuelEfficiency = rfGen / fuelCons
     if tonumber(fuelCons) == 0 then fuelEfficiency = 0 end
     local fuelEfficiency2 = math.floor(fuelEfficiency)
 
-    mon.write("Efficiency: " .. input.formatNumberComma(fuelEfficiency2) .. " RF/mb    ")
+    controlMonitor.write("Efficiency: " .. input.formatNumberComma(fuelEfficiency2) .. " RF/mb    ")
 
     --Display the current Casing/Core Temperature
-    local caT = tostring(r.getCasingTemperature())
+    local caT = tostring(reactor.getCasingTemperature())
     local caseTemp = string.sub(caT, 0, 6)
-    local coT = tostring(r.getFuelTemperature())
+    local coT = tostring(reactor.getFuelTemperature())
     local coreTemp = string.sub(coT, 0, 6)
 
-    mon.setCursorPos(2, 16)
+    controlMonitor.setCursorPos(2, 16)
 
-    mon.write("Casing Temperature: " .. caseTemp .. "C    ")
-    mon.setCursorPos(2, 17)
-    mon.write("Core Temperature: " .. coreTemp .. "C    ")
+    controlMonitor.write("Casing Temperature: " .. caseTemp .. "C    ")
+    controlMonitor.setCursorPos(2, 17)
+    controlMonitor.write("Core Temperature: " .. coreTemp .. "C    ")
 
-    mon.setCursorPos(2, 25)
-    mon.write("Version " .. version)
+    controlMonitor.setCursorPos(2, 25)
+    controlMonitor.write("Version " .. version)
 end
 
 --Displays the data on the screen (manual mode)
 function displayDataMan()
 
-    if r.getActive() then
+    if reactor.getActive() then
         if not page.buttonList["reactorOn"].active then
             page:toggleButton("reactorOn")
             page:rename("reactorOn", rOn, true)
@@ -308,108 +328,108 @@ function displayDataMan()
 
     page:draw()
 
-    mon.setBackgroundColor(tonumber(backgroundColor))
-    mon.setTextColor(tonumber(textColor))
+    controlMonitor.setBackgroundColor(tonumber(backgroundColor))
+    controlMonitor.setTextColor(tonumber(textColor))
 
     --Print the energy bar
-    mon.setCursorPos(2, 2)
+    controlMonitor.setCursorPos(2, 2)
 
-    mon.write("Energy: " .. enPer .. "%  ")
+    controlMonitor.write("Energy: " .. enPer .. "%  ")
 
-    mon.setCursorPos(2, 3)
+    controlMonitor.setCursorPos(2, 3)
     local part1 = enPer / 5
-    mon.setCursorPos(2, 3)
-    mon.setBackgroundColor(colors.lightGray)
-    mon.write("                    ")
-    mon.setBackgroundColor(colors.green)
-    mon.setCursorPos(2, 3)
+    controlMonitor.setCursorPos(2, 3)
+    controlMonitor.setBackgroundColor(colors.lightGray)
+    controlMonitor.write("                    ")
+    controlMonitor.setBackgroundColor(colors.green)
+    controlMonitor.setCursorPos(2, 3)
     for i = 1, part1 do
-        mon.write(" ")
+        controlMonitor.write(" ")
     end
 
-    mon.setTextColor(textColor)
-    mon.setBackgroundColor(tonumber(backgroundColor))
+    controlMonitor.setTextColor(textColor)
+    controlMonitor.setBackgroundColor(tonumber(backgroundColor))
 
     --Print the reactor energy bar
-    mon.setCursorPos(2, 5)
+    controlMonitor.setCursorPos(2, 5)
     
-    mon.write("Energy (Reactor): " .. enPerR .. "%  ")
+    controlMonitor.write("Energy (Reactor): " .. enPerR .. "%  ")
 
-    mon.setCursorPos(2, 6)
+    controlMonitor.setCursorPos(2, 6)
     local part2 = enPerR / 5
-    mon.setCursorPos(2, 6)
-    mon.setBackgroundColor(colors.lightGray)
-    mon.write("                    ")
-    mon.setBackgroundColor(colors.green)
-    mon.setCursorPos(2, 6)
+    controlMonitor.setCursorPos(2, 6)
+    controlMonitor.setBackgroundColor(colors.lightGray)
+    controlMonitor.write("                    ")
+    controlMonitor.setBackgroundColor(colors.green)
+    controlMonitor.setCursorPos(2, 6)
     for i = 1, part2 do
-        mon.write(" ")
+        controlMonitor.write(" ")
     end
 
-    mon.setTextColor(textColor)
-    mon.setBackgroundColor(tonumber(backgroundColor))
+    controlMonitor.setTextColor(textColor)
+    controlMonitor.setBackgroundColor(tonumber(backgroundColor))
 
     --Print the RodLevel bar
-    mon.setCursorPos(30, 2)
-    mon.write("RodLevel: " .. rodLevel .. "  ")
-    mon.setCursorPos(30, 3)
+    controlMonitor.setCursorPos(30, 2)
+    controlMonitor.write("RodLevel: " .. rodLevel .. "  ")
+    controlMonitor.setCursorPos(30, 3)
 
     local part3 = rodLevel / 5
-    mon.setCursorPos(30, 3)
-    mon.setBackgroundColor(colors.lightGray)
-    mon.write("                    ")
-    mon.setBackgroundColor(colors.green)
-    mon.setCursorPos(30, 3)
+    controlMonitor.setCursorPos(30, 3)
+    controlMonitor.setBackgroundColor(colors.lightGray)
+    controlMonitor.write("                    ")
+    controlMonitor.setBackgroundColor(colors.green)
+    controlMonitor.setCursorPos(30, 3)
     for i = 1, part3 do
-        mon.write(" ")
+        controlMonitor.write(" ")
     end
 
-    mon.setTextColor(textColor)
-    mon.setBackgroundColor(tonumber(backgroundColor))
+    controlMonitor.setTextColor(textColor)
+    controlMonitor.setBackgroundColor(tonumber(backgroundColor))
 
     --Print the current RF Production of the reactor
-    mon.setCursorPos(2, 8)
+    controlMonitor.setCursorPos(2, 8)
     
-    mon.write("RF-Production: " .. input.formatNumberComma(math.floor(rfGen)) .. " RF/t      ")
+    controlMonitor.write("RF-Production: " .. input.formatNumberComma(math.floor(rfGen)) .. " RF/t      ")
 
     --Print the current status of the reactor
-    mon.setCursorPos(2, 10)
+    controlMonitor.setCursorPos(2, 10)
 
-    mon.write("Reactor: ")        
+    controlMonitor.write("Reactor: ")        
 
-    mon.setTextColor(tonumber(textColor))
+    controlMonitor.setTextColor(tonumber(textColor))
 
     --Display Fuel Consumption
-    mon.setCursorPos(2, 12)
+    controlMonitor.setCursorPos(2, 12)
     local fuelCons2 = string.sub(tostring(fuelCons), 0, 4)
 
-    mon.write("Fuel Consumption: " .. fuelCons2 .. "mb/t     ")
+    controlMonitor.write("Fuel Consumption: " .. fuelCons2 .. "mb/t     ")
 
     --Display Reactor Efficiency (RF/mb)
-    mon.setCursorPos(2, 14)
+    controlMonitor.setCursorPos(2, 14)
 
     --Calculation and formatting of the efficiency
     local fuelEfficiency = rfGen / fuelCons
     if tonumber(fuelCons) == 0 then fuelEfficiency = 0 end
     local fuelEfficiency2 = math.floor(fuelEfficiency)
 
-    mon.write("Efficiency: " .. input.formatNumberComma(fuelEfficiency2) .. " RF/mb    ")
+    controlMonitor.write("Efficiency: " .. input.formatNumberComma(fuelEfficiency2) .. " RF/mb    ")
 
     --Display the current Casing/Core temperature of the reactor
-    local caT = tostring(r.getCasingTemperature())
+    local caT = tostring(reactor.getCasingTemperature())
     local caseTemp = string.sub(caT, 0, 6)
-    local coT = tostring(r.getFuelTemperature())
+    local coT = tostring(reactor.getFuelTemperature())
     local coreTemp = string.sub(coT, 0, 6)
 
-    mon.setCursorPos(2, 16)
+    controlMonitor.setCursorPos(2, 16)
 
-    mon.write("Casing Temperature: " .. caseTemp .. "C    ")
-    mon.setCursorPos(2, 17)
-    mon.write("Core Temperature: " .. coreTemp .. "C    ")
+    controlMonitor.write("Casing Temperature: " .. caseTemp .. "C    ")
+    controlMonitor.setCursorPos(2, 17)
+    controlMonitor.write("Core Temperature: " .. coreTemp .. "C    ")
 
     --Print the current version
-    mon.setCursorPos(2, 25)
-    mon.write("Version " .. version)
+    controlMonitor.setCursorPos(2, 25)
+    controlMonitor.write("Version " .. version)
 end
 
 --Runs another program
@@ -425,7 +445,7 @@ if overallMode == "auto" then
 elseif overallMode == "manual" then
     createButtonsMan()
 end
-mon.setBackgroundColor(tonumber(backgroundColor))
-mon.setTextColor(tonumber(textColor))
-mon.clear()
+controlMonitor.setBackgroundColor(tonumber(backgroundColor))
+controlMonitor.setTextColor(tonumber(textColor))
+controlMonitor.clear()
 getClick()
