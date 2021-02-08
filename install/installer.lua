@@ -16,24 +16,23 @@ if #arg == 0 then
 
   --No update
   update = false
-  branch = "master"
+  branch = "main"
 
 elseif #arg == 2 then
 
+ --Select branch
+ if arg[2] == "stable" then branch = "main"
+ elseif arg[2] == "main" then branch = "main"
+ elseif arg[2] == "develop" then branch = "develop"
+ elseif arg[2] == "unstable" then branch = "develop"
+ else
+   error("Invalid 2nd argument!")
+ end
   if arg[1] == "update" then
-
     --Update!
     update = true
-
-    --Select update branch
-    if arg[2] == "stable" then branch = "main"
-    elseif arg[2] == "main" then branch = "main"
-    elseif arg[2] == "develop" then branch = "develop"
-    elseif arg[2] == "unstable" then branch = "develop"
-    else
-      error("Invalid 2nd argument!")
-    end
-
+  elseif arg[1] == "install" then
+    update = false
   else
     error("Invalid 1st argument!")
   end
@@ -75,11 +74,11 @@ if not update then
   --Description
   term.clear()
   term.setCursorPos(1,1)
-  print("Reactor- and Turbine control by Thor_s_Crafter")
-  print("Version 2.6")
+  print("Extreme Reactors Control by SeekerOfHonjo")
+  print("Version 1.0")
   print()
   print("About this program:")
-  print("The program controls one BigReactors reactor.")
+  print("The program controls one ExtremeReactors reactor.")
   print("You can also attach up to 32 turbines.")
   print("You must connect the computer with Wired Modems to the reactor (and the turbines).")
   print("Additionally some kind of Energy Storage and a monitor is required.")
@@ -100,9 +99,9 @@ if not update then
     local input = read()
     if input == "y" then
       print()
-      shell.run("label set \"TurbineComputer\"")
+      shell.run("label set \"ReactorControlComputer\"")
       print()
-      print("ComputerLabel set to \"TurbineComputer\".")
+      print("ComputerLabel set to \"ReactorControlComputer\".")
       print()
       sleep(2)
       out = false
@@ -155,13 +154,7 @@ if fs.exists("/extreme-reactors-control/program/") then
 end
 
 --Download all program parts
-print("Lade neue Programmteile...")
 print("Getting new files...")
---Changelog
-term.write("Downloading Changelog files...")
-writeFile(getURL("changelog/changelogDE.txt"),"changelog/changelogDE.txt")
-writeFile(getURL("changelog/changelogEn.txt"),"changelog/changelogEn.txt")
-print("     Done.")
 --Config
 term.write("Config files...")
 writeFile(getURL("config/input.lua"),"config/input.lua")
@@ -170,7 +163,7 @@ writeFile(getURL("config/touchpoint.lua"),"config/touchpoint.lua")
 print("     Done.")
 --Install
 term.write("Install files...")
-writeFile(getURL("install/installerEn.lua"),"install/installer.lua")
+writeFile(getURL("install/installer.lua"),"install/installer.lua")
 print("     Done.")
 --Program
 term.write("Program files...")
@@ -183,8 +176,6 @@ term.write("Start files...")
 writeFile(getURL("start/menu.lua"),"start/menu.lua")
 writeFile(getURL("start/start.lua"),"start/start.lua")
 print("     Done.")
-print()
-print("Fertig!")
 
 term.clear()
 term.setCursorPos(1,1)
@@ -210,8 +201,8 @@ if not update then
   print("Thanks for using my program! ;)")
   print("I hope you like it.")
   print()
-  print("Thor_s_Crafter")
-  print("(c) 2016")
+  print("SeekerOfHonjo")
+  print("(c) 2021")
 
   local x,y = term.getSize()
   term.setTextColor(colors.yellow)
