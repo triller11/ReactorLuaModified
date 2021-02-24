@@ -1,6 +1,7 @@
 {
   mainMenu = true,
   rodLevel = 0,
+  skipControlRodCheck = true,
   targetSpeed = 2000,
   overallMode = "auto",
   reactorOffAt = 80,
@@ -8,7 +9,7 @@
   reactorOnAt = 50,
   targetSteam = 2000,
   turbineTargetSpeed = 1820,
-  version = "1.0-release",
+  version = "1.1-release",
   textColor = 1,
   program = "turbine",
   turbineOnOff = "off",
