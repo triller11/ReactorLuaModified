@@ -21,12 +21,13 @@ _G.turbineTargetSpeed = 0
 _G.targetSteam = 0
 _G.turbineOnOff = ""
 _G.debug = 0
+_G.skipControlRodCheck = 0
 
 
 --Peripherals
 _G.monitors = {} --Monitor
 _G.controlMonitor = "" --Monitor
-_G.reactor = "" --Reactor
+_G.reactors = {} --Reactor
 _G.capacitors = {} --Energy Storage
 _G.turbines = {} --Turbines
 
@@ -34,6 +35,7 @@ _G.turbines = {} --Turbines
 _G.amountTurbines = 0
 _G.amountMonitors = 0
 _G.amountCapacitors = 0
+_G.amountReactors = 0
 
 --TouchpointLocation (same as the monitor)
 _G.touchpointLocation = {}
@@ -75,6 +77,7 @@ function _G.loadOptionFile()
 	_G.targetSteam  = optionList["targetSteam"]
 	_G.turbineOnOff = optionList["turbineOnOff"]
 	_G.debug = optionList["debug"]
+	_G.skipControlRodCheck = optionList["skipControlRodCheck"]
 end
 
 --Refreshes the options list
@@ -104,6 +107,8 @@ function _G.refreshOptionList()
 	optionList["targetSteam"] = targetSteam
 	debugOutput("Variable: turbineOnOff")
 	optionList["turbineOnOff"] = turbineOnOff
+	debugOutput("Variable: skipControlRodCheck")
+	optionList["skipControlRodCheck"] = skipControlRodCheck
 end
 
 --Saves all data basck to the options.txt file
@@ -276,7 +281,8 @@ function _G.initPeripherals()
 			--Reactor
 		elseif peripheral.getType(peripheralList[i]) == "BigReactors-Reactor" then
 			print("Reactor - "..peripheralList[i])
-			_G.reactor = peripheral.wrap(peripheralList[i])
+			_G.reactors[amountReactors] = peripheral.wrap(peripheralList[i])
+			_G.amountReactors = amountReactors + 1
 			--Monitor & Touchpoint
 		elseif peripheral.getType(peripheralList[i]) == "monitor" then
 			print("Monitor - "..peripheralList[i])
@@ -320,6 +326,7 @@ function _G.initPeripherals()
 		error("Monitor too small.\nMust be at least 7 in length and 4 in height.\nPlease check and reboot the computer (Press and hold Ctrl+R)")
 	end
 
+	_G.amountReactors = amountReactors - 1
 	_G.amountTurbines = amountTurbines - 1
 	_G.amountCapacitors = amountCapacitors - 1
 end

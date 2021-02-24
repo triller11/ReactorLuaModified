@@ -50,7 +50,8 @@ function createButtonsMan()
     rOff = { " Off ", label = "reactorOn" }
 
     page:add("reactorOn", toggleReactor, 11, 10, 15, 10)
-    if reactor.getActive() then
+
+    if getReactorsActive() then
         page:rename("reactorOn", rOn, true)
         page:toggleButton("reactorOn")
     else
@@ -82,20 +83,53 @@ function checkPeripherals()
     end
 end
 
---Toggles the reactor on/off
+--Toggles the reactor status and the button
 function toggleReactor()
-    reactor.setActive(not reactor.getActive())
+    if getReactorsActive() then
+        allReactorsOff()
+    else
+        allReactorsOn()
+    end
+
     page:toggleButton("reactorOn")
-    if reactor.getActive() then
+    if getReactorsActive() then
         page:rename("reactorOn", rOn, true)
     else
         page:rename("reactorOn", rOff, true)
     end
 end
 
+function getReactorsActive()
+    local reactorStatus = false
+
+    for i = 0, amountReactors, 1 do
+        if reactors[i].getActive() then
+            reactorStatus = true
+        else
+            reactorStatus = false
+        end
+    end
+
+    return reactorStatus
+end
+
+--Enable all reactors
+function allReactorsOn()
+    for i = 0, amountReactors, 1 do
+        reactors[i].setActive(true)
+    end
+end
+
+--Disable all reactor
+function allReactorsOff()
+    for i = 0, amountReactors, 1 do
+        reactors[i].setActive(false)
+    end
+end
+
 --Adjusts the control rods
 function setControlRods(operation, value)
-    local targetValue = reactor.getControlRodLevel(0)
+    local targetValue = reactors[0].getControlRodLevel(0)
     if operation == "-" then
         targetValue = targetValue - value
         if targetValue < 1 then targetValue = 0 end
@@ -103,14 +137,16 @@ function setControlRods(operation, value)
         targetValue = targetValue + value
         if targetValue > 98 then targetValue = 99 end
     end
-    reactor.setAllControlRodLevels(targetValue)
+
+    for i = 0, amountReactors, 1 do
+        en = en + reactors[i].setAllControlRodLevels(targetValue)
+    end
 end
 
---Returns the current energy level (energy storage)
 function getEnergy()
     local energyStore = 0
 
-    for i =0, amountCapacitors,1 do
+    for i = 0, amountCapacitors, 1 do
         local stored = math.floor(capacitors[i].getEnergyStored())
         energyStore = energyStore + stored
     end
@@ -121,7 +157,7 @@ end
 function getEnergyMax()
     local energyStore = 0
 
-    for i =0, amountCapacitors,1 do
+    for i = 0, amountCapacitors, 1 do
         local maxStorage = math.floor(capacitors[i].getMaxEnergyStored())
         energyStore = energyStore + maxStorage
     end
@@ -132,29 +168,73 @@ end
 function getEnergyPer()
     local en = getEnergy()
     local enMax = getEnergyMax()
-    print(en.." of "..enMax)
+    print(en .. " of " .. enMax)
     local enPer = math.floor(en / enMax * 100)
     return enPer
 end
 
 --Returns the current energy level (reactor)
 function getEnergyR()
-    local en = reactor.getEnergyStored()
-    local enMax = 10000000
+    local en = 0
+
+    for i = 0, amountReactors, 1 do
+        en = en + reactors[i].getEnergyStored()
+    end
+
+    local enMax = 10000000 * (amountReactors + 1)
     return math.floor(en / enMax * 100)
 end
 
+
+function getFuelAmount()
+    local en = 0
+
+    for i = 0, amountReactors, 1 do
+        en = en + reactors[i].getFuelAmount()
+    end
+
+    return en
+end
+
+function getFuelAmountMax()
+    local en = 0
+
+    for i = 0, amountReactors, 1 do
+        en = en + reactors[i].getFuelAmountMax()
+    end
+
+    return en
+end
+
+function getEnergyProducedLastTick()
+    local en = 0
+
+    for i = 0, amountReactors, 1 do
+        en = en + reactors[i].getEnergyProducedLastTick()
+    end
+
+    return en
+end
+function getFuelConsumedLastTick()
+    local en = 0
+
+    for i = 0, amountReactors, 1 do
+        en = en + reactors[i].getFuelConsumedLastTick()
+    end
+
+    return en
+end
 --Reads all the reactors data
 function getReactorData()
-    rodLevel = reactor.getControlRodLevel(0)
+    rodLevel = reactors[0].getControlRodLevel(0)
     enPer = getEnergyPer()
     enPerR = getEnergyR()
-    fuel = reactor.getFuelAmount()
-    local fuelMax = reactor.getFuelAmountMax()
+    fuel = getFuelAmount()
+    local fuelMax = getFuelAmountMax()
     fuelPer = math.floor(fuel / fuelMax * 100)
-    rfGen = reactor.getEnergyProducedLastTick()
-    fuelCons = reactor.getFuelConsumedLastTick()
-    isOn = reactor.getActive()
+    rfGen = getEnergyProducedLastTick()
+    fuelCons = getFuelConsumedLastTick()
+    isOn = reactors[0].getActive()
 end
 
 --Checks for button clicks
@@ -195,9 +275,9 @@ end
 --Displays the data on the screen (auto mode)
 function displayDataAuto()
     if enPer <= reactorOnAt then
-        reactor.setActive(true)
+        allReactorsOn()
     elseif enPer > reactorOffAt then
-        reactor.setActive(false)
+        allReactorsOff()
     end
 
     --Print all buttons
@@ -267,12 +347,12 @@ function displayDataAuto()
 
     controlMonitor.setCursorPos(2, 10)
     
-    controlMonitor.write("Reactor: ")
-    if reactor.getActive() then
+    controlMonitor.write((amountReactors + 1) .. " Reactors: ")
+    if getReactorsActive() then
         controlMonitor.setTextColor(colors.green)
         controlMonitor.write("on ")
     end
-    if not reactor.getActive() then
+    if not getReactorsActive() then
         controlMonitor.setTextColor(colors.red)
         controlMonitor.write("off")
     end
@@ -296,9 +376,9 @@ function displayDataAuto()
     controlMonitor.write("Efficiency: " .. input.formatNumberComma(fuelEfficiency2) .. " RF/mb    ")
 
     --Display the current Casing/Core Temperature
-    local caT = tostring(reactor.getCasingTemperature())
+    local caT = tostring(reactors[0].getCasingTemperature())
     local caseTemp = string.sub(caT, 0, 6)
-    local coT = tostring(reactor.getFuelTemperature())
+    local coT = tostring(reactors[0].getFuelTemperature())
     local coreTemp = string.sub(coT, 0, 6)
 
     controlMonitor.setCursorPos(2, 16)
@@ -314,7 +394,7 @@ end
 --Displays the data on the screen (manual mode)
 function displayDataMan()
 
-    if reactor.getActive() then
+    if getReactorsActive() then
         if not page.buttonList["reactorOn"].active then
             page:toggleButton("reactorOn")
             page:rename("reactorOn", rOn, true)
@@ -416,9 +496,9 @@ function displayDataMan()
     controlMonitor.write("Efficiency: " .. input.formatNumberComma(fuelEfficiency2) .. " RF/mb    ")
 
     --Display the current Casing/Core temperature of the reactor
-    local caT = tostring(reactor.getCasingTemperature())
+    local caT = tostring(reactors[0].getCasingTemperature())
     local caseTemp = string.sub(caT, 0, 6)
-    local coT = tostring(reactor.getFuelTemperature())
+    local coT = tostring(reactors[0].getFuelTemperature())
     local coreTemp = string.sub(coT, 0, 6)
 
     controlMonitor.setCursorPos(2, 16)
