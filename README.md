@@ -5,8 +5,7 @@
 ***Description:***
 
 The following list shows the features of the program:
-- Control up to 32 Turbines (per Reactor)
-- Supports multiple languages (currently English and German)
+- Control up to 180 Turbines + Multiple Reactors (Tested with 384 Turbines and 16 Reactors on FTB Rev 3.4)
 - Automatic and manual Control of Reactor and attached Turbines
 - Energy-based automatic Control
     - Switches Reactor and Turbines on/off if energy level is low/high
