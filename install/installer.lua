@@ -82,7 +82,7 @@ if not update then
   print("You can also attach up to 32 turbines.")
   print("You must connect the computer with Wired Modems to the reactor (and the turbines).")
   print("Additionally some kind of Energy Storage and a monitor is required.")
-  print("The size of the monitor has to be at least 7 wide and 4 high.")
+  print("The size of the monitor has to be at least 8 wide and 6 high.")
   print("If set up with turbines, the reactor must be able to produce at least 2000mb/t of steam per turbine.")
   print()
   write("Press Enter...")

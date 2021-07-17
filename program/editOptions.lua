@@ -324,7 +324,7 @@ function setOnOffAt(vorz,anz)
       turbineTargetSpeed = turbineTargetSpeed + anz
     elseif mode2 == "steam" then
       targetSteam = targetSteam + anz
-      if targetSteam >2000 then targetSteam = 2000 end
+      if targetSteam > turbines[0].maxInputSteam then targetSteam = turbines[0].maxInputSteam end
     end
   end
   if mode2 == "off" then setOffAt()
@@ -379,7 +379,7 @@ end
 --Reset the config file
 function resetConfig()
   rodLevel = 0
-  targetSteam = 2000
+  targetSteam = turbines[0].maxInputSteam
   backToMainMenu()
 end
 
