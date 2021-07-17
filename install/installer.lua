@@ -161,6 +161,17 @@ writeFile(getURL("config/input.lua"),"config/input.lua")
 writeFile(getURL("config/options.txt"),"config/options.txt")
 writeFile(getURL("config/touchpoint.lua"),"config/touchpoint.lua")
 print("     Done.")
+
+--Classes
+print("Classes files...")
+writeFile(getURL("classes/Peripherals.lua"),"classes/Peripherals.lua")
+writeFile(getURL("classes/base/EnergyStorage.lua"),"classes/base/EnergyStorage.lua")
+writeFile(getURL("classes/base/Reactor.lua"),"classes/base/Reactor.lua")
+writeFile(getURL("classes/base/Turbine.lua"),"classes/base/Turbine.lua")
+writeFile(getURL("classes/mekanism/EnergyStorage.lua"),"classes/mekanism/EnergyStorage.lua")
+writeFile(getURL("classes/bigger_reactors/Reactor.lua"),"classes/bigger_reactors/Reactor.lua")
+writeFile(getURL("classes/bigger_reactors/Turbine.lua"),"classes/bigger_reactors/Turbine.lua")
+
 --Install
 term.write("Install files...")
 writeFile(getURL("install/installer.lua"),"install/installer.lua")
