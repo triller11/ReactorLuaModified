@@ -23,20 +23,6 @@ _G.turbineOnOff = ""
 _G.debug = 0
 _G.skipControlRodCheck = 0
 
-
---Peripherals
-_G.monitors = {} --Monitor
-_G.controlMonitor = "" --Monitor
-_G.reactors = {} --Reactor
-_G.capacitors = {} --Energy Storage
-_G.turbines = {} --Turbines
-
---Total count of all turbines
-_G.amountTurbines = 0
-_G.amountMonitors = 0
-_G.amountCapacitors = 0
-_G.amountReactors = 0
-
 --TouchpointLocation (same as the monitor)
 _G.touchpointLocation = {}
 
@@ -151,7 +137,7 @@ function _G.checkUpdates()
 	print("remoteVer: "..remoteVer)
 	print("localVer: "..version)
 	print("Update? -> "..tostring(remoteVer > version))
-	print("Cells: "..#capacitors)
+	print("Cells: "..(#capacitors + 1))
 	
 	--Update if available
 	if remoteVer > version then
@@ -267,71 +253,6 @@ function _G.downloadFile(relUrl,path)
 end
 
 
---===== Initialization of all peripherals =====
-
-function _G.initPeripherals()
-	--Get all peripherals
-	local peripheralList = peripheral.getNames()
-	for i = 1, #peripheralList do
-		--Turbines
-		if peripheral.getType(peripheralList[i]) == "BigReactors-Turbine" then
-			print("Turbine - "..peripheralList[i])
-			_G.turbines[amountTurbines] = peripheral.wrap(peripheralList[i])
-			_G.amountTurbines = amountTurbines + 1
-			--Reactor
-		elseif peripheral.getType(peripheralList[i]) == "BigReactors-Reactor" then
-			print("Reactor - "..peripheralList[i])
-			_G.reactors[amountReactors] = peripheral.wrap(peripheralList[i])
-			_G.amountReactors = amountReactors + 1
-			--Monitor & Touchpoint
-		elseif peripheral.getType(peripheralList[i]) == "monitor" then
-			print("Monitor - "..peripheralList[i])
-			if(peripheralList[i] == controlMonitor) then
-				--add to output monitors
-				_G.monitors[amountMonitors] = peripheral.wrap(peripheralList[i])
-				_G.amountMonitors = amountMonitors + 1
-			else
-				_G.controlMonitor = peripheral.wrap(peripheralList[i])
-				_G.touchpointLocation = peripheralList[i]	
-			end
-
-			--Capacitorbank / Energycell / Energy Core
-		else
-			local tmp = peripheral.wrap(peripheralList[i])
-			local stat,err = pcall(function() tmp.getEnergyStored() end)
-			if stat then
-				print("EnergyCell - "..peripheralList[i])
-				_G.capacitors[amountCapacitors] = tmp
-				_G.amountCapacitors = amountCapacitors + 1
-			end
-		end
-	end
-	
-	--Check for errors
-	term.clear()
-	term.setCursorPos(1,1)
-	--No Monitor
-	if controlMonitor == "" then
-			error("Monitor not found!\nPlease check and reboot the computer (Press and hold Ctrl+R)")
-	end
-	--Monitor clear
-	controlMonitor.setBackgroundColor(colors.black)
-	controlMonitor.setTextColor(colors.red)
-	controlMonitor.clear()
-	controlMonitor.setCursorPos(1,1)
-	--Monitor too small
-	local monX,monY = controlMonitor.getSize()
-	if monX < 71 or monY < 26 then
-		controlMonitor.write("Monitor too small\n Must be at least 7 in length and 4 in height.\nPlease check and reboot the computer (Press and hold Ctrl+R)")
-		error("Monitor too small.\nMust be at least 7 in length and 4 in height.\nPlease check and reboot the computer (Press and hold Ctrl+R)")
-	end
-
-	_G.amountReactors = amountReactors - 1
-	_G.amountTurbines = amountTurbines - 1
-	_G.amountCapacitors = amountCapacitors - 1
-end
-
-
 --===== Shutdown and restart the computer =====
 
 function _G.reactorestart()
@@ -343,6 +264,18 @@ function _G.reactorestart()
 end
 
 
+function initClasses()
+    --Execute necessary class files
+    local binPath = "/extreme-reactors-control/classes/"
+    shell.run(binPath.."base/Reactor.lua")
+    shell.run(binPath.."base/Turbine.lua")
+    shell.run(binPath.."base/EnergyStorage.lua")
+    shell.run(binPath.."bigger_reactors/Reactor.lua")
+    shell.run(binPath.."bigger_reactors/Turbine.lua")
+    shell.run(binPath.."mekanism/EnergyStorage.lua")
+    shell.run(binPath.."Peripherals.lua")
+end
+
 --=========== Run the program ==========
 
 --Load the option file and initialize the peripherals
@@ -350,9 +283,11 @@ end
 debugOutput("Loading Options File")
 loadOptionFile()
 
+debugOutput("Initializing Classes")
+initClasses()
 
 debugOutput("Initializing Network Devices")
-initPeripherals()
+_G.initPeripherals()
 
 debugOutput("Checking for Updates")
 checkUpdates()

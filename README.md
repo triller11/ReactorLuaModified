@@ -9,19 +9,24 @@ The following list shows the features of the program:
 - Automatic and manual Control of Reactor and attached Turbines
 - Energy-based automatic Control
     - Switches Reactor and Turbines on/off if energy level is low/high
-    - Supports multiple Energy Storage typesm like Capacitorbanks (EnderIO), Energy Core (Draconic Evolution), etc.
+    - Supports multiple Energy Storage typesm like Capacitorbanks (EnderIO), Energy Core (Draconic Evolution), Mekanism, etc.
 - Large option menu
     - Change Background and Text Color
     - Set energy level for activating/deactivating the reactor
     - Set Reactor Steam Output Level
     
+*** Mod Packs Tested Against ***
+
+- FTB Revelations (v3.4)
+- All The Mods (v6)
+
 ## How To Install
 - Set up a Computer, connect all parts (Reactor, Energy Storage, Turbines) with ***Wired Modems***
 - ***Activate*** all modems
 - Type in the following into the computer:
 
     ```
-    pastebin get GENAkSUA git
+    pastebin get Ge9yhF1K git
     git
     ```
         
