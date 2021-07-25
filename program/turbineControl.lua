@@ -59,8 +59,8 @@ function startAutoMode()
     end
 
     --Clear display
-    --term.clear()
-    --term.setCursorPos(1, 1)
+    term.clear()
+    term.setCursorPos(1, 1)
 
     --Display prints
     print("Getting all Turbines to " .. turbineTargetSpeed .. " RPM...")
@@ -136,10 +136,11 @@ function startAutoMode()
     --Enable reactor and turbines
     allReactorsOn()
     allTurbinesOn()
+    maintainSpeedMaxInAuto()
 
     --Reset terminal
-    --term.clear()
-    --term.setCursorPos(1, 1)
+    term.clear()
+    term.setCursorPos(1, 1)
 
     --Reset Monitor
     controlMonitor.setBackgroundColor(backgroundColor)
@@ -184,8 +185,8 @@ function checkPeripherals()
     controlMonitor.clear()
     controlMonitor.setCursorPos(1, 1)
     controlMonitor.setTextColor(colors.red)
-    --term.clear()
-    --term.setCursorPos(1, 1)
+    term.clear()
+    term.setCursorPos(1, 1)
     term.setTextColor(colors.red)
     --No turbine found
     if turbines[0] == nil then
@@ -510,8 +511,8 @@ function findOptimalFuelRodLevel()
                         turbines[i]:setOn(false)
                     end
 
-                    --term.clear()
-                    --term.setCursorPos(1, 1)
+                    term.clear()
+                    term.setCursorPos(1, 1)
                     print("Target RodLevel: " .. targetLevel)
                     error("Failed to calculate RodLevel!")
                 else
@@ -535,7 +536,9 @@ function findOptimalFuelRodLevel()
             if (controlRodLevel <= 0) then
                 -- prevent controlRodLevel from going negative in case the reactor cannot produce enough steam to reach targetSteamOutput
                 controlRodLevel = 0
-                r.setAllControlRodLevels(controlRodLevel)
+                for i = 0, amountReactors, 1 do
+                    reactors[i]:setControlRods(controlRodLevel)
+                end
                 rodLevel = controlRodLevel
                 saveOptionFile()
                 print("Target RodLevel: " .. controlRodLevel)
@@ -952,6 +955,27 @@ function clickEvent()
                 break
             elseif event == "timer" and p1 == timer1 then
                 break
+            end
+        end
+    end
+end
+
+function maintainSpeedMaxInAuto()
+    for i = 0, amountTurbines, 1 do
+        local lTurbine = turbines[i]
+        local currentRPM = lTurbine:rotorSpeed()
+        if currentRPM < _G.turbineTargetSpeed+20 and currentRPM > _G.turbineTargetSpeed-20 then
+            -- do nothing
+            -- speed is good
+        else
+            while currentRPM > _G.turbineTargetSpeed do
+                local newSteamAmount = lTurbine:steamIn() - lTurbine.decrementAmount
+                if(newSteamAmount > 0) then
+                    lTurbine:setSteamIn(newSteamAmount)
+                else
+                    --cant go any lower will be lower then 0 and cant have that
+                    break
+                end
             end
         end
     end

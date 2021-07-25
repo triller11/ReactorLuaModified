@@ -55,8 +55,8 @@ function _G.exit()
   controlMonitor.clear()
   controlMonitor.setCursorPos(27,8)
   controlMonitor.write("Program terminated!")    
-  --term.clear()
-  --term.setCursorPos(1,1)
+  term.clear()
+  term.setCursorPos(1,1)
   shell.completeProgram("/extreme-reactors-control/start/menu.lua")
 end
 

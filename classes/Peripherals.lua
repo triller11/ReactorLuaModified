@@ -77,8 +77,8 @@ end
 
 local function checkPeripherals()
 	--Check for errors
-	--term.clear()
-	--term.setCursorPos(1,1)
+	term.clear()
+	term.setCursorPos(1,1)
 
     if _G.reactors[0] == nil then
         error("No reactor found!")
