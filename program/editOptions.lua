@@ -27,7 +27,7 @@ local currFunct = backToMainMenu
 
 --Save the changes and reopen the options menu
 function saveConfigFile()
-  saveOptionFile()
+  _G.saveOptionFile()
   shell.run("/extreme-reactors-control/program/editOptions.lua")
   shell.completeProgram("/extreme-reactors-control/program/editOptions.lua")
 end
@@ -36,7 +36,7 @@ end
 function displayMenu()
   loadOptionFile()
   controlMonitor.clear()
-  shell.run("/extreme-reactors-control/start/menu.lua")
+  shell.run("reboot")
   shell.completeProgram("/extreme-reactors-control/program/editOptions.lua")
 end
 
@@ -175,22 +175,18 @@ function backToMainMenu()
       controlMonitor.write("Disable turbine at "..reactorOffAt.."%: "..turbineOnOffString2.." -> "..turbineOnOffString1)
 
   else
-      if _G.optionList["turbineOnOff"] == "off" then turbineOnOffString2 = "yes"
-      elseif _G.optionList["turbineOnOff"] == "on" then turbineOnOffString2 = "no" end
+      if _G.optionList["turbineOnOff"] == "off" then _G.turbineOnOffString2 = "yes"
+      elseif _G.optionList["turbineOnOff"] == "on" then _G.turbineOnOffString2 = "no" end
       controlMonitor.write("Disable turbine at "..reactorOffAt.."%: "..turbineOnOffString2.."   ")
 
   end
 
   controlMonitor.setCursorPos(24,18)
-    controlMonitor.write("Config available: ")
-  if math.floor(tonumber(_G.optionList["rodLevel"])) ~= math.floor(rodLevel) then
-      controlMonitor.write("yes -> no")
+  controlMonitor.write("Config available: ")
+  if _G.optionList["version"] == "" then
+    controlMonitor.write("no     ")
   else
-    if math.floor(rodLevel) == 0 then
-        controlMonitor.write("no     ")
-    else
-        controlMonitor.write("yes   ")
-    end
+    controlMonitor.write("yes     ")
   end
   getClick(backToMainMenu)
 end
@@ -265,10 +261,10 @@ end
 
 function setColor(id)
   if mode == "background" then
-    backgroundColor = id
+    _G.backgroundColor = id
     setBackground()
   elseif mode == "text" then
-    textColor = id
+    _G.textColor = id
     setText()
   end
 end
@@ -301,30 +297,40 @@ end
 function setOnOffAt(vorz,anz)
   if vorz == "-" then
     if mode2 == "off" then
-      reactorOffAt = reactorOffAt - anz
-      if reactorOffAt < 0 then reactorOffAt = 0 end
+      _G.reactorOffAt = reactorOffAt - anz
+      if reactorOffAt < 0 then 
+        _G.reactorOffAt = 0
+      end
     elseif mode2 == "on" then
-      reactorOnAt = reactorOnAt - anz
-      if reactorOnAt < 0 then reactorOnAt = 0 end
+      _G.reactorOnAt = reactorOnAt - anz
+      if reactorOnAt < 0 then 
+        _G.reactorOnAt = 0 
+      end
     elseif mode2 == "speed" then
-      turbineTargetSpeed = turbineTargetSpeed - anz
-      if turbineTargetSpeed < 0 then turbineTargetSpeed = 0 end
+      _G.turbineTargetSpeed = turbineTargetSpeed - anz
+      if turbineTargetSpeed < 0 then 
+        _G.turbineTargetSpeed = 0 
+      end
     elseif mode2 == "steam" then
-      targetSteam = targetSteam - anz
-      if targetSteam < 0 then targetSteam = 0 end
+      _G.targetSteam = targetSteam - anz
+      if targetSteam < 0 then 
+        _G.targetSteam = 0 
+      end
     end
   elseif vorz == "+" then
     if mode2 == "off" then
-      reactorOffAt = reactorOffAt + anz
-      if reactorOffAt >100 then reactorOffAt = 100 end
+      _G.reactorOffAt = reactorOffAt + anz
+      if reactorOffAt >100 then _G.reactorOffAt = 100 end
     elseif mode2 == "on" then
-      reactorOnAt = reactorOnAt + anz
-      if reactorOnAt >100 then reactorOnAt = 100 end
+      _G.reactorOnAt = reactorOnAt + anz
+      if reactorOnAt >100 then _G.reactorOnAt = 100 end
     elseif mode2 == "speed" then
       turbineTargetSpeed = turbineTargetSpeed + anz
     elseif mode2 == "steam" then
-      targetSteam = targetSteam + anz
-      if targetSteam > turbines[0].maxInputSteam then targetSteam = turbines[0].maxInputSteam end
+      _G.targetSteam = targetSteam + anz
+      if targetSteam > turbines[0].maxInputSteam then 
+        _G.targetSteam = turbines[0].maxInputSteam 
+      end
     end
   end
   if mode2 == "off" then setOffAt()
@@ -371,15 +377,15 @@ end
 
 --Enable/Disable turbine at targetSpeed?
 function changeTurbineBehaviour()
-  if turbineOnOff == "off" then turbineOnOff = "on"
-  elseif turbineOnOff == "on" then turbineOnOff = "off" end
+  if turbineOnOff == "off" then _G.turbineOnOff = "on"
+  elseif turbineOnOff == "on" then _G.turbineOnOff = "off" end
   backToMainMenu()
 end
 
 --Reset the config file
 function resetConfig()
   rodLevel = 0
-  targetSteam = turbines[0].maxInputSteam
+  _G.targetSteam = turbines[0].maxInputSteam
   backToMainMenu()
 end
 
