@@ -53,7 +53,7 @@ local function searchPeripherals()
             local successGetEnergyStored, errGetEnergyStored = pcall(function() peri.getEnergyStored() end)
             local successGetEnergy, errGetEnergy = pcall(function() peri.getEnergy() end)
 
-            if successGetEnergyStored then
+            if successGetEnergyStored and (successGetEnergy == false) then
 			    --Capacitorbank / Energycell / Energy Core
                 print("getEnergyStored() device - "..peripheralList[i])
                 _G.capacitors[amountCapacitors] = newEnergyStorage("e" .. tostring(amountCapacitors), peri, periItem, periType)
