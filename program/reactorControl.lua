@@ -138,8 +138,9 @@ function setControlRods(operation, value)
         if targetValue > 98 then targetValue = 99 end
     end
 
+    -- loop reactors and set control rod levels
     for i = 0, amountReactors, 1 do
-        en = en + reactors[i]:setRodLevel(targetValue)
+        reactors[i]:setRodLevel(targetValue)
     end
 end
 
@@ -158,8 +159,11 @@ function getEnergyMax()
     local energyStore = 0
 
     for i = 0, amountCapacitors, 1 do
-        local maxStorage = math.floor(capacitors[i]:capacity())
-        energyStore = energyStore + maxStorage
+        if (capacitors[i] == nil) then            
+        else
+            local maxStorage = math.floor(capacitors[i]:capacity())
+            energyStore = energyStore + maxStorage
+        end
     end
 
     return energyStore
