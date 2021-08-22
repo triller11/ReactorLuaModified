@@ -104,17 +104,20 @@ function startAutoMode()
                 --dont diplay
             else
                 badReactor = badReactor + 1
-
+                local columnMax = 24
+                if _G.smallMonitor == 0 then
+                    columnMax = 36
+                end
                 --formatting and printing status
                 controlMonitor.setTextColor(textColor)
                 controlMonitor.setCursorPos(1, (badReactor + 3))
-                if badReactor < 144 then
-                    if badReactor >= 108 then
-                        controlMonitor.setCursorPos(54, (badReactor - 108 + 3))
-                    elseif badReactor >= 72 then
-                        controlMonitor.setCursorPos(36, (badReactor - 72 + 3))
-                    elseif badReactor >= 36 then
-                        controlMonitor.setCursorPos(18, (badReactor - 36 + 3))
+                if badReactor < (columnMax*4) then
+                    if badReactor >= (columnMax*3) then
+                        controlMonitor.setCursorPos(54, (badReactor - (columnMax*3) + 3))
+                    elseif badReactor >= (columnMax*2) then
+                        controlMonitor.setCursorPos(36, (badReactor - (columnMax*2) + 3))
+                    elseif badReactor >= columnMax then
+                        controlMonitor.setCursorPos(18, (badReactor - columnMax + 3))
                     end
 
                     if (i + 1) < 10 then
@@ -739,141 +742,184 @@ end
 
 --Creates all required buttons
 function createAllButtons()
-    local x1 = 30
-    local x2 = 37
-    local x3 = 44
-    local x4 = 51
-    local x5 = 58
-    local x6 = 65
-    local x7 = 72
-    local y = 4
+    if _G.smallMonitor == 0 then
+        local x1 = 30
+        local x2 = 37
+        local x3 = 44
+        local x4 = 51
+        local x5 = 58
+        local x6 = 65
+        local x7 = 72
+        local y = 4
 
-    --Turbine buttons
-    for i = 0, amountTurbines, 1 do
-        if i <= 18 then
-            page:add(
-                "#" .. (i + 1),
-                function()
-                    if overallMode == "manual" then
-                        printStatsMan(i)
-                    else
-                        printStatsAuto(i)
-                    end
-                end,
-                x1,
-                y,
-                x1 + 5,
-                y
-            )
-        elseif (i > 18 and i <= 37) then
-            page:add(
-                "#" .. (i + 1),
-                function()
-                    if overallMode == "manual" then
-                        printStatsMan(i)
-                    else
-                        printStatsAuto(i)
-                    end
-                end,
-                x2,
-                y,
-                x2 + 5,
-                y
-            )
-        elseif (i > 37 and i <= 56) then
-            page:add(
-                "#" .. (i + 1),
-                function()
-                    if overallMode == "manual" then
-                        printStatsMan(i)
-                    else
-                        printStatsAuto(i)
-                    end
-                end,
-                x3,
-                y,
-                x3 + 5,
-                y
-            )
-        elseif (i > 56 and i <= 75) then
-            page:add(
-                "#" .. (i + 1),
-                function()
-                    if overallMode == "manual" then
-                        printStatsMan(i)
-                    else
-                        printStatsAuto(i)
-                    end
-                end,
-                x4,
-                y,
-                x4 + 5,
-                y
-            )
-        elseif (i > 75 and i <= 94) then
-            page:add(
-                "#" .. (i + 1),
-                function()
-                    if overallMode == "manual" then
-                        printStatsMan(i)
-                    else
-                        printStatsAuto(i)
-                    end
-                end,
-                x5,
-                y,
-                x5 + 5,
-                y
-            )
-        elseif (i > 94 and i <= 113) then
-            page:add(
-                "#" .. (i + 1),
-                function()
-                    if overallMode == "manual" then
-                        printStatsMan(i)
-                    else
-                        printStatsAuto(i)
-                    end
-                end,
-                x6,
-                y,
-                x6 + 5,
-                y
-            )
-        elseif (i > 113 and i <= 132) then
-            page:add(
-                "#" .. (i + 1),
-                function()
-                    if overallMode == "manual" then
-                        printStatsMan(i)
-                    else
-                        printStatsAuto(i)
-                    end
-                end,
-                x7,
-                y,
-                x7 + 5,
-                y
-            )
-        end
-        if (i == 18 or i == 37 or i == 56 or i == 75 or i == 94 or i == 113) then
-            y = 4
-        else
-            y = y + 2
-        end
-    end --for
+        --Turbine buttons
+        for i = 0, amountTurbines, 1 do
+            if i <= 18 then
+                page:add(
+                    "#" .. (i + 1),
+                    function()
+                        if overallMode == "manual" then
+                            printStatsMan(i)
+                        else
+                            printStatsAuto(i)
+                        end
+                    end,
+                    x1,
+                    y,
+                    x1 + 5,
+                    y
+                )
+            elseif (i > 18 and i <= 37) then
+                page:add(
+                    "#" .. (i + 1),
+                    function()
+                        if overallMode == "manual" then
+                            printStatsMan(i)
+                        else
+                            printStatsAuto(i)
+                        end
+                    end,
+                    x2,
+                    y,
+                    x2 + 5,
+                    y
+                )
+            elseif (i > 37 and i <= 56) then
+                page:add(
+                    "#" .. (i + 1),
+                    function()
+                        if overallMode == "manual" then
+                            printStatsMan(i)
+                        else
+                            printStatsAuto(i)
+                        end
+                    end,
+                    x3,
+                    y,
+                    x3 + 5,
+                    y
+                )
+            elseif (i > 56 and i <= 75) then
+                page:add(
+                    "#" .. (i + 1),
+                    function()
+                        if overallMode == "manual" then
+                            printStatsMan(i)
+                        else
+                            printStatsAuto(i)
+                        end
+                    end,
+                    x4,
+                    y,
+                    x4 + 5,
+                    y
+                )
+            elseif (i > 75 and i <= 94) then
+                page:add(
+                    "#" .. (i + 1),
+                    function()
+                        if overallMode == "manual" then
+                            printStatsMan(i)
+                        else
+                            printStatsAuto(i)
+                        end
+                    end,
+                    x5,
+                    y,
+                    x5 + 5,
+                    y
+                )
+            elseif (i > 94 and i <= 113) then
+                page:add(
+                    "#" .. (i + 1),
+                    function()
+                        if overallMode == "manual" then
+                            printStatsMan(i)
+                        else
+                            printStatsAuto(i)
+                        end
+                    end,
+                    x6,
+                    y,
+                    x6 + 5,
+                    y
+                )
+            elseif (i > 113 and i <= 132) then
+                page:add(
+                    "#" .. (i + 1),
+                    function()
+                        if overallMode == "manual" then
+                            printStatsMan(i)
+                        else
+                            printStatsAuto(i)
+                        end
+                    end,
+                    x7,
+                    y,
+                    x7 + 5,
+                    y
+                )
+            end
+            if (i == 18 or i == 37 or i == 56 or i == 75 or i == 94 or i == 113) then
+                y = 4
+            else
+                y = y + 2
+            end
+        end --for
 
-    --Other buttons
-    page:add(
-        "Main Menu",
-        function()
-            run("/extreme-reactors-control/start/menu.lua")
-        end,
-        2,
-        37,
-        17,
-        37
-    )
+        --Other buttons
+        page:add(
+            _G.language:getText("wordMainMenu"),
+            function()
+                run("/extreme-reactors-control/start/menu.lua")
+            end,
+            2,
+            37,
+            17,
+            37
+        )
+    else
+        local x1 = 40
+        local x2 = 47
+        local x3 = 54
+        local x4 = 61
+        local y = 4
+    
+        --Turbine buttons
+        for i = 0, amountTurbines, 1 do
+            if overallMode == "auto" then
+                if i <= 7 then
+                    page:add("#" .. (i + 1), function() printStatsAuto(i) end, x1, y, x1 + 5, y)
+                elseif (i > 7 and i <= 15) then
+                    page:add("#" .. (i + 1), function() printStatsAuto(i) end, x2, y, x2 + 5, y)
+                elseif (i > 15 and i <= 23) then
+                    page:add("#" .. (i + 1), function() printStatsAuto(i) end, x3, y, x3 + 5, y)
+                elseif i > 23 then
+                    page:add("#" .. (i + 1), function() printStatsAuto(i) end, x4, y, x4 + 5, y)
+                end
+                if (i == 7 or i == 15 or i == 23) then y = 4
+                else y = y + 2
+                end
+    
+            elseif overallMode == "manual" then
+                if i <= 7 then
+                    page:add("#" .. (i + 1), function() printStatsMan(i) end, x1, y, x1 + 5, y)
+                elseif (i > 7 and i <= 15) then
+                    page:add("#" .. (i + 1), function() printStatsMan(i) end, x2, y, x2 + 5, y)
+                elseif (i > 15 and i <= 23) then
+                    page:add("#" .. (i + 1), function() printStatsMan(i) end, x3, y, x3 + 5, y)
+                elseif i > 23 then
+                    page:add("#" .. (i + 1), function() printStatsMan(i) end, x4, y, x4 + 5, y)
+                end
+                if (i == 7 or i == 15 or i == 23) then y = 4
+                else y = y + 2
+                end
+            end --mode
+        end --for
+    
+        --Other buttons
+        page:add(_G.language:getText("wordMainMenu"), function() run("/extreme-reactors-control/start/menu.lua") end, 2, 23, 17, 23)
+    end
 
     page:draw()
 end
@@ -961,24 +1007,24 @@ function clickEvent()
 end
 
 function maintainSpeedMaxInAuto()
-    for i = 0, amountTurbines, 1 do
-        local lTurbine = turbines[i]
-        local currentRPM = lTurbine:rotorSpeed()
-        if currentRPM < _G.turbineTargetSpeed+20 and currentRPM > _G.turbineTargetSpeed-20 then
-            -- do nothing
-            -- speed is good
-        else
-            while currentRPM > _G.turbineTargetSpeed do
-                local newSteamAmount = lTurbine:steamIn() - lTurbine:decrementAmount()
-                if(newSteamAmount > 0) then
-                    lTurbine:setSteamIn(newSteamAmount)
-                else
-                    --cant go any lower will be lower then 0 and cant have that
-                    break
-                end
-            end
-        end
-    end
+    --for i = 0, amountTurbines, 1 do
+    --    local lTurbine = turbines[i]
+    --    local currentRPM = lTurbine:rotorSpeed()
+    --    if currentRPM < _G.turbineTargetSpeed+20 and currentRPM > _G.turbineTargetSpeed-20 then
+    --       -- do nothing
+    --        -- speed iso good
+    --     else
+    --         while currentRPM > _G.turbineTargetSpeed do
+    --            local newSteamAmount = lTurbine:steamIn() - lTurbine:decrementAmount()
+    --            if(newSteamAmount > 0) then
+    --                lTurbine:setSteamIn(newSteamAmount)
+    --            else
+    --                --cant go any lower will be lower then 0 and cant have that
+    --                break
+    --            end
+    --        end
+    --    end
+    --end
 end
 
 --displays all info on the screen (auto mode)

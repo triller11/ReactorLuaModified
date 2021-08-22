@@ -17,7 +17,7 @@ The following list shows the features of the program:
     
 *** Mod Packs Tested Against ***
 
-- FTB Revelations (v3.4)
+- FTB Revelations (v3.5) w/ Mekanisms
 - All The Mods (v6)
 
 ## How To Install
@@ -26,7 +26,7 @@ The following list shows the features of the program:
 - Type in the following into the computer:
 
     ```
-    pastebin get Ge9yhF1K git
+    pastebin get iV1cfHwB git
     git
     ```
         

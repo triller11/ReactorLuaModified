@@ -9,20 +9,48 @@ local selectInstaller = ""
 
 --Branch & Relative paths to the url and path
 local installLang = "en"
-local branch = ""
-local relUrl = ""
 local relPath = "/extreme-reactors-control/"
 local repoUrl = "https://gitlab.com/seekerscomputercraft/extremereactorcontrol/-/raw/"
+local branch = "develop"
+local relUrl = repoUrl..branch.."/"
+local selectedLang = {}
+
+function getLanguage()
+	languages = downloadAndRead("supportedLanguages.txt")
+	downloadAndExecuteClass("Language.lua")
+
+	for k, v in pairs(languages) do
+		print(k..") "..v)
+	end
+
+	term.write("Language? (example: en): ")
+
+	installLang = read()
+
+	if installLang == "" or installLang == nil then
+		installLang = "en"
+	end
+
+	if languages[installLang] == nil then
+		error("Language not found!")
+	else
+		writeFile("lang/"..installLang..".txt")
+		selectedLang = _G.newLanguageById(installLang)
+	end
+
+	print(selectedLang:getText("language"))
+	--selectedLang:dumpText()
+end
 
 --Select the github branch to download
 function selectBranch()
 	clearTerm()
 
-	print("Which version should be downloaded?")
-	print("Available:")
-	print("1) main (Stable Release)")
-	print("2) develop (Unstable Release)")
-	term.write("Input (1-2): ")
+	print(selectedLang:getText("selectBranchLineOne"))
+	print(selectedLang:getText("selectBranchLineTwo"))
+	print(selectedLang:getText("selectBranchLineThree"))
+	print(selectedLang:getText("selectBranchLineFour"))
+	print(selectedLang:getText("selectBranchLineFive"))
 
 	local input = read()
 	if input == "1" then
@@ -42,7 +70,7 @@ end
 
 --Removes old installations
 function removeAll()
-	print("Removing old files...")
+	print(selectedLang:getText("removingOldFiles"))
 	if fs.exists(relPath) then
 		shell.run("rm "..relPath)
 	end
@@ -52,9 +80,10 @@ function removeAll()
 end
 
 --Writes the files to the computer
-function writeFile(url,path)
+function writeFile(path)
 	local file = fs.open("/extreme-reactors-control/"..path,"w")
-	file.write(url)
+	local content = getURL(path);
+	file.write(content)
 	file.close()
 end
 
@@ -69,40 +98,43 @@ function getURL(path)
 	end
 end
 
+function downloadAndExecuteClass(fileName)	
+	writeFile("classes/"..fileName)
+	shell.run("/extreme-reactors-control/classes/"..fileName)
+end
+
+function downloadAndRead(fileName)
+	writeFile(fileName)
+	local fileData = fs.open("/extreme-reactors-control/"..fileName,"r")
+	local list = fileData.readAll()
+	fileData.close()
+
+	return textutils.unserialise(list)
+end
+
+function getAllFiles()
+	local fileEntries = downloadAndRead("files.txt")
+
+	for k, v in pairs(fileEntries) do
+	  print(v.name.." files...")
+
+	  for fileCount = 1, #v.files do
+		local fileName = v.files[fileCount]
+		writeFile(fileName)
+	  end
+
+	  print(selectedLang:getText("done"))
+	end
+end
+
 --Gets all the files from github
 function getFiles()
 	clearTerm()
-	print("Getting new files...")
-	--Config
-	print("Config files...")
-	writeFile(getURL("config/input.lua"),"config/input.lua")
-	writeFile(getURL("config/options.txt"),"config/options.txt")
-	writeFile(getURL("config/touchpoint.lua"),"config/touchpoint.lua")
-	--Install
-	print("Install files...")
-	writeFile(getURL("install/installer.lua"),"install/installer.lua")
+	print(selectedLang:getText("installerGettingNewFiles"))
+	getAllFiles()
 
-	--Classes
-	print("Install Classes...")
-	writeFile(getURL("classes/Peripherals.lua"),"classes/Peripherals.lua")
-	writeFile(getURL("classes/base/EnergyStorage.lua"),"classes/base/EnergyStorage.lua")
-	writeFile(getURL("classes/base/Reactor.lua"),"classes/base/Reactor.lua")
-	writeFile(getURL("classes/base/Turbine.lua"),"classes/base/Turbine.lua")
-	writeFile(getURL("classes/mekanism/EnergyStorage.lua"),"classes/mekanism/EnergyStorage.lua")
-	writeFile(getURL("classes/bigger_reactors/Reactor.lua"),"classes/bigger_reactors/Reactor.lua")
-	writeFile(getURL("classes/bigger_reactors/Turbine.lua"),"classes/bigger_reactors/Turbine.lua")
-
-	--Program
-	print("Program files...")
-	writeFile(getURL("program/editOptions.lua"),"program/editOptions.lua")
-	writeFile(getURL("program/reactorControl.lua"),"program/reactorControl.lua")
-	writeFile(getURL("program/turbineControl.lua"),"program/turbineControl.lua")
-	--Start
-	print("Start files...")
-	writeFile(getURL("start/menu.lua"),"start/menu.lua")
-	writeFile(getURL("start/start.lua"),"start/start.lua")
 	--Startup
-	print("Startup file...")
+	print(selectedLang:getText("updatingStartup"))
 	local file = fs.open("startup","w")
   	file.writeLine("shell.run(\"/extreme-reactors-control/start/start.lua\")")
 	file.close()
@@ -118,7 +150,7 @@ function releaseVersion()
 	removeAll()
 
 	--Downloads the installer
-	writeFile(getURL("install/installer.lua"),"install/installer.lua")
+	writeFile("install/installer.lua")
 
 	--execute installer
 	shell.run("/extreme-reactors-control/install/installer.lua")
@@ -127,9 +159,9 @@ end
 function betaVersion()
 	removeAll()
 	getFiles()
-	print("Done!")
+	print(selectedLang:getText("done"))
 	sleep(2)
 end
-
+getLanguage()
 selectBranch()
 os.reboot()
