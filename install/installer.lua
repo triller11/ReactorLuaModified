@@ -1,6 +1,6 @@
 -- Extreme Reactors Control by SeekerOfHonjo --
 -- Original work by Thor_s_Crafter on https://github.com/ThorsCrafter/Reactor-and-Turbine-control-program -- 
--- Version 1.0 --
+-- Version 2.6 --
 -- Installer (English) --
 
 
@@ -10,6 +10,8 @@ local arg = {... }
 local update
 local branch = ""
 local repoUrl = "https://gitlab.com/seekerscomputercraft/extremereactorcontrol/-/raw/"
+local selectedLang = {}
+local installLang = "en"
 
 --Program arguments for updates
 if #arg == 0 then
@@ -47,45 +49,108 @@ local relUrl = repoUrl..branch.."/"
 
 --===== Functions =====
 
+function getLanguage()
+  if not update or _G.lang == nil then    
+    languages = downloadAndRead("supportedLanguages.txt")
+    downloadAndExecuteClass("Language.lua")
+    for k, v in pairs(languages) do
+      print(k..") "..v)
+    end
+
+    term.write("Language? (example: en): ")
+  
+    installLang = read()
+  
+    if installLang == "" or installLang == nil then
+      installLang = "en"
+    end
+    
+    if languages[installLang] == nil then
+      error("Language not found!")
+    else
+      writeFile("lang/"..installLang..".txt")
+      selectedLang = _G.newLanguageById(installLang)
+    end
+  else
+    installLang = _G.lang
+    downloadAndExecuteClass("Language.lua")
+    writeFile("lang/"..installLang..".txt")
+    selectedLang = _G.newLanguageById(_G.lang)
+  end
+
+	print(selectedLang:getText("language"))
+end
+
 --Writes the files to the computer
-function writeFile(url,path)
-  local file = fs.open("/extreme-reactors-control/"..path,"w")
-  file.write(url)
-  file.close()
+function writeFile(path)
+	local file = fs.open("/extreme-reactors-control/"..path,"w")
+	local content = getURL(path);
+	file.write(content)
+	file.close()
 end
 
 --Resolve the right url
 function getURL(path)
-  local gotUrl = http.get(relUrl..path)
-  if gotUrl == nil then
+	local gotUrl = http.get(relUrl..path)
+	if gotUrl == nil then
     term.clear()
-    term.setCursorPos(1,1)
-    error("File not found! Please check!\nFailed at "..relUrl..path)
-  else
-    return gotUrl.readAll()
-  end
+		error("File not found! Please check!\nFailed at "..relUrl..path)
+	else
+		return gotUrl.readAll()
+	end
 end
 
+function downloadAndRead(fileName)
+	writeFile(fileName)
+	local fileData = fs.open("/extreme-reactors-control/"..fileName,"r")
+	local list = fileData.readAll()
+	fileData.close()
+
+	return textutils.unserialise(list)
+end
+
+function downloadAndExecuteClass(fileName)	
+	writeFile("classes/"..fileName)
+  shell.run("/extreme-reactors-control/classes/"..fileName)
+end
+
+function getAllFiles()
+	local fileEntries = downloadAndRead("files.txt")
+
+	for k, v in pairs(fileEntries) do
+	  print(v.name.." files...")
+
+	  for fileCount = 1, #v.files do
+      local fileName = v.files[fileCount]
+      writeFile(fileName)
+	  end
+
+	  print(selectedLang:getText("done"))
+	end
+end
 
 --===== Run installation =====
+
+--load language data
+getLanguage()
 
 --First time installation
 if not update then
   --Description
   term.clear()
   term.setCursorPos(1,1)
-  print("Extreme Reactors Control by SeekerOfHonjo")
-  print("Version 1.0")
+  print(selectedLang:getText("installerIntroLineOne"))
+  print(selectedLang:getText("installerIntroLineTwo"))
   print()
-  print("About this program:")
-  print("The program controls one ExtremeReactors reactor.")
-  print("You can also attach up to 32 turbines.")
-  print("You must connect the computer with Wired Modems to the reactor (and the turbines).")
-  print("Additionally some kind of Energy Storage and a monitor is required.")
-  print("The size of the monitor has to be at least 8 wide and 6 high.")
-  print("If set up with turbines, the reactor must be able to produce at least 2000mb/t of steam per turbine.")
+  print(selectedLang:getText("installerIntroLineThree"))
+  print(selectedLang:getText("installerIntroLineFour"))
+  print(selectedLang:getText("installerIntroLineFive"))
+  print(selectedLang:getText("installerIntroLineSix"))
+  print(selectedLang:getText("installerIntroLineSeven"))
+  print(selectedLang:getText("installerIntroLineEight"))
+  print(selectedLang:getText("installerIntroLineNine"))
   print()
-  write("Press Enter...")
+  write(selectedLang:getText("pressEnter"))
   leer = read()
 
   --Computer label
@@ -93,22 +158,22 @@ if not update then
   while out do
     term.clear()
     term.setCursorPos(1,1)
-    print("It is recommended to label the computer.")
-    term.write("Do you want to label the computer? (y/n): ")
+    print(selectedLang:getText("installerLabelLineOne"))
+    term.write(selectedLang:getText("installerLabelLineTwo"))
 
     local input = read()
-    if input == "y" then
+    if selectedLang:yesCheck(input) then
       print()
       shell.run("label set \"ReactorControlComputer\"")
       print()
-      print("ComputerLabel set to \"ReactorControlComputer\".")
+      print(selectedLang:getText("installerLabelSet"))
       print()
       sleep(2)
       out = false
 
-    elseif input == "n" then
+    elseif selectedLang:noCheck(input) then
       print()
-      print("ComputerLabel not set.")
+      print(selectedLang:getText("installerLabelNotSet"))
       print()
       out = false
     end
@@ -119,23 +184,23 @@ if not update then
   while out2 do
     term.clear()
     term.setCursorPos(1,1)
-    print("It is recommended to add the program to the computers' startup.")
-    print("If you add the program to the startup, the program will automatically run when the computer is started.")
-    term.write("Add startup? (y/n): ")
+    print(selectedLang:getText("installerStartupLineOne"))
+    print(selectedLang:getText("installerStartupLineTwo"))
+    term.write(selectedLang:getText("installerStartupLineThree"))
 
     local input = read()
-    if input == "y" then
+    if selectedLang:yesCheck(input) then
       local file = fs.open("startup","w")
       file.writeLine("shell.run(\"/extreme-reactors-control/start/start.lua\")")
       file.close()
       print()
-      print("Startup installed.")
+      print(selectedLang:getText("installerStartupInstalled"))
       print()
       out2 = false
     end
-    if input == "n" then
+    if selectedLang:noCheck(input) then
       print()
-      print("Startup not installed.")
+      print(selectedLang:getText("installerStartupUninstalled"))
       print()
       out2 = false
     end
@@ -147,50 +212,19 @@ end --update
 term.clear()
 term.setCursorPos(1,1)
 
-print("Checking and deleting existing files...")
+print(selectedLang:getText("installerFileCheck"))
 --Removes old files
 if fs.exists("/extreme-reactors-control/program/") then
   shell.run("rm /extreme-reactors-control/")
 end
 
---Download all program parts
-print("Getting new files...")
---Config
-term.write("Config files...")
-writeFile(getURL("config/input.lua"),"config/input.lua")
-writeFile(getURL("config/options.txt"),"config/options.txt")
-writeFile(getURL("config/touchpoint.lua"),"config/touchpoint.lua")
-print("     Done.")
-
---Classes
-print("Classes files...")
-writeFile(getURL("classes/Peripherals.lua"),"classes/Peripherals.lua")
-writeFile(getURL("classes/base/EnergyStorage.lua"),"classes/base/EnergyStorage.lua")
-writeFile(getURL("classes/base/Reactor.lua"),"classes/base/Reactor.lua")
-writeFile(getURL("classes/base/Turbine.lua"),"classes/base/Turbine.lua")
-writeFile(getURL("classes/mekanism/EnergyStorage.lua"),"classes/mekanism/EnergyStorage.lua")
-writeFile(getURL("classes/bigger_reactors/Reactor.lua"),"classes/bigger_reactors/Reactor.lua")
-writeFile(getURL("classes/bigger_reactors/Turbine.lua"),"classes/bigger_reactors/Turbine.lua")
-
---Install
-term.write("Install files...")
-writeFile(getURL("install/installer.lua"),"install/installer.lua")
-print("     Done.")
---Program
-term.write("Program files...")
-writeFile(getURL("program/editOptions.lua"),"program/editOptions.lua")
-writeFile(getURL("program/reactorControl.lua"),"program/reactorControl.lua")
-writeFile(getURL("program/turbineControl.lua"),"program/turbineControl.lua")
-print("     Done.")
---Start
-term.write("Start files...")
-writeFile(getURL("start/menu.lua"),"start/menu.lua")
-writeFile(getURL("start/start.lua"),"start/start.lua")
-print("     Done.")
+print(selectedLang:getText("installerGettingNewFiles"))
+getAllFiles()
 
 term.clear()
 term.setCursorPos(1,1)
 
+print(selectedLang:getText("updatingStartup"))
 --Refresh startup (if installed)
 if fs.exists("startup") then
   shell.run("rm startup")
@@ -204,13 +238,13 @@ term.clear()
 term.setCursorPos(1,1)
 
 if not update then
-  print("Installation successful!")
-  print("The program is now ready to run!")
+  print(selectedLang:getText("installerOutroLineOne"))
+  print(selectedLang:getText("installerOutroLineTwo"))
   print()
   term.setTextColor(colors.green)
   print()
-  print("Thanks for using my program! ;)")
-  print("I hope you like it.")
+  print(selectedLang:getText("installerOutroLineThree").." ;)")
+  print(selectedLang:getText("installerOutroLineFour"))
   print()
   print("SeekerOfHonjo")
   print("(c) 2021")

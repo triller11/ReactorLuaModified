@@ -43,35 +43,35 @@ end
 --Creates all buttons
 function createAllButtons()
   --Overview buttons
-  touch1:add("Background",setBackground,3,4,19,4)
-  touch1:add("Text",setText,3,6,19,6)
-  touch1:add("Reactor Off",setOffAt,3,8,19,8)
-  touch1:add("Reactor On",setOnAt,3,10,19,10)
-  touch1:add("Turbine Speed",setTurbineSpeed,3,12,19,12)
-  touch1:add("Steam Input",setTurbineSteamRate,3,14,19,14)
-  touch1:add("Turbine On/Off",changeTurbineBehaviour,3,16,19,16)
-  touch1:add("Delete Config",resetConfig,3,18,19,18)
-  touch1:add("Save",saveConfigFile,3,21,19,21)
-  touch1:add("Main menu",displayMenu,3,23,19,23)
+  touch1:add(_G.language:getText("wordBackground"),setBackground,3,4,19,4)
+  touch1:add(_G.language:getText("wordText"),setText,3,6,19,6)
+  touch1:add(_G.language:getText("reactorOff"),setOffAt,3,8,19,8)
+  touch1:add(_G.language:getText("reactorOn"),setOnAt,3,10,19,10)
+  touch1:add(_G.language:getText("turbineSpeed"),setTurbineSpeed,3,12,19,12)
+  touch1:add(_G.language:getText("steamInput"),setTurbineSteamRate,3,14,19,14)
+  touch1:add(_G.language:getText("turbineOnOff"),changeTurbineBehaviour,3,16,19,16)
+  touch1:add(_G.language:getText("deleteConfig"),resetConfig,3,18,19,18)
+  touch1:add(_G.language:getText("wordSave"),saveConfigFile,3,21,19,21)
+  touch1:add(_G.language:getText("wordMainMenu"),displayMenu,3,23,19,23)
 
   --Color buttons
-  touch2:add("White",function() setColor(1) end,35,5,48,5)
-  touch2:add("Orange",function() setColor(2) end,50,5,63,5)
-  touch2:add("Magenta",function() setColor(4) end,35,7,48,7)
-  touch2:add("Lightblue",function() setColor(8) end,50,7,63,7)
-  touch2:add("Yellow",function() setColor(16) end,35,9,48,9)
-  touch2:add("Lime",function() setColor(32) end,50,9,63,9)
-  touch2:add("Pink",function() setColor(64) end,35,11,48,11)
-  touch2:add("Gray",function() setColor(128) end,50,11,63,11)
-  touch2:add("Lightgray",function() setColor(256) end,35,13,48,13)
-  touch2:add("Cyan",function() setColor(512) end,50,13,63,13)
-  touch2:add("Purple",function() setColor(1024) end,35,15,48,15)
-  touch2:add("Blue",function() setColor(2048) end,50,15,63,15)
-  touch2:add("Brown",function() setColor(4096) end,35,17,48,17)
-  touch2:add("Green",function() setColor(8192) end,50,17,63,17)
-  touch2:add("Red",function() setColor(16384) end,35,19,48,19)
-  touch2:add("Black",function() setColor(32768) end,50,19,63,19)
-  touch2:add("Back",backToMainMenu,3,8,19,8)
+  touch2:add(_G.language:getText("wordWhite"),function() setColor(1) end,35,5,48,5)
+  touch2:add(_G.language:getText("wordOrange"),function() setColor(2) end,50,5,63,5)
+  touch2:add(_G.language:getText("wordMagenta"),function() setColor(4) end,35,7,48,7)
+  touch2:add(_G.language:getText("wordLightBlue"),function() setColor(8) end,50,7,63,7)
+  touch2:add(_G.language:getText("wordYellow"),function() setColor(16) end,35,9,48,9)
+  touch2:add(_G.language:getText("wordLime"),function() setColor(32) end,50,9,63,9)
+  touch2:add(_G.language:getText("wordPink"),function() setColor(64) end,35,11,48,11)
+  touch2:add(_G.language:getText("wordGray"),function() setColor(128) end,50,11,63,11)
+  touch2:add(_G.language:getText("wordLightGray"),function() setColor(256) end,35,13,48,13)
+  touch2:add(_G.language:getText("wordCyan"),function() setColor(512) end,50,13,63,13)
+  touch2:add(_G.language:getText("wordPurple"),function() setColor(1024) end,35,15,48,15)
+  touch2:add(_G.language:getText("wordBlue"),function() setColor(2048) end,50,15,63,15)
+  touch2:add(_G.language:getText("wordBrown"),function() setColor(4096) end,35,17,48,17)
+  touch2:add(_G.language:getText("wordGreen"),function() setColor(8192) end,50,17,63,17)
+  touch2:add(_G.language:getText("wordRed"),function() setColor(16384) end,35,19,48,19)
+  touch2:add(_G.language:getText("wordBlack"),function() setColor(32768) end,50,19,63,19)
+  touch2:add(_G.language:getText("wordBack"),backToMainMenu,3,8,19,8)
 
   --+/- buttons (1-100)
   touch3:add("-1",function() setOnOffAt("-",1) end,3,8,6,8)
@@ -80,7 +80,7 @@ function createAllButtons()
   touch3:add("+1", function() setOnOffAt("+",1) end,3,10,6,10)
   touch3:add("+10",function() setOnOffAt("+",10) end,8,10,12,10)
   touch3:add("+100",function() setOnOffAt("+",100) end,14,10,19,10)
-  touch3:add("Back",backToMainMenu,3,13,19,13)
+  touch3:add(_G.language:getText("wordBack"),backToMainMenu,3,13,19,13)
 
   --+/- buttons (1-1000)
   touch4:add("-1",function() setOnOffAt("-",1) end,3,8,6,8)
@@ -91,7 +91,7 @@ function createAllButtons()
   touch4:add("+10",function() setOnOffAt("+",10) end,8,10,12,10)
   touch4:add("+100",function() setOnOffAt("+",100) end,14,10,19,10)
   touch4:add("+1000",function() setOnOffAt("+",1000) end,21,10,28,10)
-  touch4:add("Back",backToMainMenu,3,13,19,13)
+  touch4:add(_G.language:getText("wordBack"),backToMainMenu,3,13,19,13)
 end
 
 --Display the overwiew
@@ -104,7 +104,7 @@ function backToMainMenu()
   controlMonitor.setBackgroundColor(backgroundColor)
   controlMonitor.setCursorPos(4,2)
 
-  controlMonitor.write("-- Options --")
+  controlMonitor.write("-- ".._G.language:getText("wordOptions").." --")
 
   --Set text of all the options
   controlMonitor.setCursorPos(24,4)
@@ -112,81 +112,82 @@ function backToMainMenu()
   local col2 = printColor(backgroundColor)
   if tonumber(_G.optionList["backgroundColor"]) ~= backgroundColor then
 
-      controlMonitor.write("BackgroundColor: "..col.." -> "..col2.."   ")
+      controlMonitor.write(_G.language:getText("wordBackgroundColor")..": "..col.." -> "..col2.."   ")
 
   else
-      controlMonitor.write("BackgroundColor: "..col2.."    ")
+      controlMonitor.write(_G.language:getText("wordBackgroundColor")..": "..col2.."    ")
   end
 
   controlMonitor.setCursorPos(24,6)
   local col3 = printColor(tonumber(_G.optionList["textColor"]))
   local col4 = printColor(textColor)
   if tonumber(_G.optionList["textColor"]) ~= textColor then
-      controlMonitor.write("TextColor: "..col3.." -> "..col4.."   ")
+      controlMonitor.write(_G.language:getText("wordTextColor")..": "..col3.." -> "..col4.."   ")
   else
-      controlMonitor.write("TextColor: "..col4.."   ")
+      controlMonitor.write(_G.language:getText("wordTextColor")..": "..col4.."   ")
   end
 
   controlMonitor.setCursorPos(24,8)
   if math.floor(tonumber(_G.optionList["reactorOffAt"])) ~= math.floor(reactorOffAt) then
-      controlMonitor.write("Reactor off above "..math.floor(tonumber(_G.optionList["reactorOffAt"])).."% -> "..math.floor(reactorOffAt).."%   ")
+      controlMonitor.write(_G.language:getText("reactorOffAbove")..math.floor(tonumber(_G.optionList["reactorOffAt"])).."% -> "..math.floor(reactorOffAt).."%   ")
   else
-      controlMonitor.write("Reactor off above "..math.floor(reactorOffAt).."%   ")
+      controlMonitor.write(_G.language:getText("reactorOffAbove")..math.floor(reactorOffAt).."%   ")
   end
 
   controlMonitor.setCursorPos(24,10)
   if math.floor(tonumber(_G.optionList["reactorOnAt"])) ~= math.floor(reactorOnAt) then
-      controlMonitor.write("Reactor on below "..math.floor(tonumber(_G.optionList["reactorOnAt"])).."% -> "..math.floor(reactorOnAt).."%   ")
+      controlMonitor.write(_G.language:getText("reactorOnBelow")..math.floor(tonumber(_G.optionList["reactorOnAt"])).."% -> "..math.floor(reactorOnAt).."%   ")
 
   else
-      controlMonitor.write("Reactor on below "..math.floor(reactorOnAt).."%   ")
+      controlMonitor.write(_G.language:getText("reactorOnBelow")..math.floor(reactorOnAt).."%   ")
   end
   
   controlMonitor.setCursorPos(24,12)
   if tonumber(_G.optionList["turbineTargetSpeed"]) ~= turbineTargetSpeed then
-      controlMonitor.write("Turbines Max. Speed: "..(input.formatNumberComma(math.floor(tonumber(_G.optionList["turbineTargetSpeed"])))).." -> "..(input.formatNumberComma(turbineTargetSpeed)).."RPM      ")
+      controlMonitor.write(_G.language:getText("turbineMaxSpeed")..(input.formatNumberComma(math.floor(tonumber(_G.optionList["turbineTargetSpeed"])))).." -> "..(input.formatNumberComma(turbineTargetSpeed)).."RPM      ")
 
   else
-      controlMonitor.write("Turbines Max. Speed: "..(input.formatNumberComma(turbineTargetSpeed)).."RPM     ")
+      controlMonitor.write(_G.language:getText("turbineMaxSpeed")..(input.formatNumberComma(turbineTargetSpeed)).."RPM     ")
 
   end
 
   controlMonitor.setCursorPos(24,14)
   if tonumber(_G.optionList["targetSteam"]) ~= targetSteam then
-      controlMonitor.write("Turbines Steam Input: "..(input.formatNumberComma(math.floor(tonumber(_G.optionList["targetSteam"])))).." -> "..(input.formatNumberComma(targetSteam)).."mb/t      ")
+      controlMonitor.write(_G.language:getText("turbineSteamInput")..(input.formatNumberComma(math.floor(tonumber(_G.optionList["targetSteam"])))).." -> "..(input.formatNumberComma(targetSteam)).."mb/t      ")
 
 
   else
-      controlMonitor.write("Turbines Steam Input: "..(input.formatNumberComma(targetSteam)).."mb/t     ")
+      controlMonitor.write(_G.language:getText("turbineSteamInput")..(input.formatNumberComma(targetSteam)).."mb/t     ")
 
   end
 
   controlMonitor.setCursorPos(24,16)
   local turbineOnOffString1 = ""
   local turbineOnOffString2 = ""
+  local outputPreString = string.gsub(_G.language:getText("turbineDisableAt"),"{reactorOffAt}",reactorOffAt)
   if _G.optionList["turbineOnOff"] ~= turbineOnOff then
       if _G.optionList["turbineOnOff"] == "off" then
-        turbineOnOffString1 = "no   "
-        turbineOnOffString2 = "yes"
+        turbineOnOffString1 = _G.language:getText("wordNo")
+        turbineOnOffString2 = _G.language:getText("wordYes")
       elseif _G.optionList["turbineOnOff"] == "on" then
-        turbineOnOffString1 = "yes   "
-        turbineOnOffString2 = "no"
+        turbineOnOffString1 = _G.language:getText("wordYes")
+        turbineOnOffString2 = _G.language:getText("wordNo")
       end
-      controlMonitor.write("Disable turbine at "..reactorOffAt.."%: "..turbineOnOffString2.." -> "..turbineOnOffString1)
+      controlMonitor.write(outputPreString..turbineOnOffString2.." -> "..turbineOnOffString1)
 
   else
-      if _G.optionList["turbineOnOff"] == "off" then _G.turbineOnOffString2 = "yes"
-      elseif _G.optionList["turbineOnOff"] == "on" then _G.turbineOnOffString2 = "no" end
-      controlMonitor.write("Disable turbine at "..reactorOffAt.."%: "..turbineOnOffString2.."   ")
+      if _G.optionList["turbineOnOff"] == "off" then _G.turbineOnOffString2 = _G.language:getText("wordYes")
+      elseif _G.optionList["turbineOnOff"] == "on" then _G.turbineOnOffString2 = _G.language:getText("wordNo") end
+      controlMonitor.write(outputPreString..turbineOnOffString2.."   ")
 
   end
 
   controlMonitor.setCursorPos(24,18)
   controlMonitor.write("Config available: ")
   if _G.optionList["version"] == "" then
-    controlMonitor.write("no     ")
+    controlMonitor.write(_G.language:getText("wordNo"))
   else
-    controlMonitor.write("yes     ")
+    controlMonitor.write(_G.language:getText("wordYes"))
   end
   getClick(backToMainMenu)
 end
@@ -274,22 +275,22 @@ function printColor(which)
   --	local which
   --	if mode == "background" then which = backgroundColor
   --	elseif mode == "text" then which = textColor end
-  if which == 1 then return "White"
-  elseif which == 2 then return "Orange"
-  elseif which == 4 then return "Magenta"
-  elseif which == 8 then return "Lightblue"
-  elseif which == 16 then return "Yellow"
-  elseif which == 32 then return "Lime"
-  elseif which == 64 then return "Pink"
-  elseif which == 128 then return "Gray"
-  elseif which == 256 then return "Lightgray"
-  elseif which == 512 then return "Cyan"
-  elseif which == 1024 then return "Purple"
-  elseif which == 2048 then return "Blue"
-  elseif which == 4096 then return "Brown"
-  elseif which == 8192 then return "Green"
-  elseif which == 16384 then return "Red"
-  elseif which == 32768 then return "Black"
+  if which == 1 then return _G.language:getText("wordWhite")
+  elseif which == 2 then return _G.language:getText("wordOrange")
+  elseif which == 4 then return _G.language:getText("wordMagenta")
+  elseif which == 8 then return _G.language:getText("wordLightBlue")
+  elseif which == 16 then return _G.language:getText("wordYellow")
+  elseif which == 32 then return _G.language:getText("wordLime")
+  elseif which == 64 then return _G.language:getText("wordPink")
+  elseif which == 128 then return _G.language:getText("wordGray")
+  elseif which == 256 then return _G.language:getText("wordLightGray")
+  elseif which == 512 then return _G.language:getText("wordCyan")
+  elseif which == 1024 then return _G.language:getText("wordPurple")
+  elseif which == 2048 then return _G.language:getText("wordBlue")
+  elseif which == 4096 then return _G.language:getText("wordBrown")
+  elseif which == 8192 then return _G.language:getText("wordGreen")
+  elseif which == 16384 then return _G.language:getText("wordRed")
+  elseif which == 32768 then return _G.language:getText("wordBlack")
   end
 end
 

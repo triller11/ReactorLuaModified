@@ -22,6 +22,7 @@ _G.targetSteam = 0
 _G.turbineOnOff = ""
 _G.debug = 0
 _G.skipControlRodCheck = 0
+_G.language = {}
 
 --TouchpointLocation (same as the monitor)
 _G.touchpointLocation = {}
@@ -64,6 +65,7 @@ function _G.loadOptionFile()
 	_G.turbineOnOff = optionList["turbineOnOff"]
 	_G.debug = optionList["debug"]
 	_G.skipControlRodCheck = optionList["skipControlRodCheck"]
+	_G.lang = optionList["language"]
 end
 
 --Refreshes the options list
@@ -95,6 +97,8 @@ function _G.refreshOptionList()
 	optionList["turbineOnOff"] = turbineOnOff
 	debugOutput("Variable: skipControlRodCheck")
 	optionList["skipControlRodCheck"] = skipControlRodCheck
+	debugOutput("Variable: lang")
+	optionList["language"] = lang
 end
 
 --Saves all data basck to the options.txt file
@@ -176,24 +180,24 @@ function _G.doUpdate(toVer,branch)
 	controlMonitor.setTextColor(colors.white)
 
 	controlMonitor.setCursorPos(x2-9,y1+1)
-	controlMonitor.write("Update available!") --17 chars
+	controlMonitor.write(_G.language:getText("updateAvailableLineOne")) --17 chars
 
 	controlMonitor.setCursorPos(x2-(math.ceil(string.len(toVer)/2)),y1+3)
 	controlMonitor.write(toVer)
 
 	controlMonitor.setCursorPos(x2-8,y1+5)
-	controlMonitor.write("To install look") --15 chars
+	controlMonitor.write(_G.language:getText("updateAvailableLineTwo")) --15 chars
 
 	controlMonitor.setCursorPos(x2-12,y1+6)
-	controlMonitor.write("at the computer terminal") --24 chars
+	controlMonitor.write(_G.language:getText("updateAvailableLineThree")) --24 chars
 
 	--Print install instructions to the terminal
 	term.clear()
 	term.setCursorPos(1,1)
 	local tx,ty = term.getSize()
 
-		print("Do you want to install the update (y/n)?")
-		term.write("Input: ")
+	print(_G.language:getText("updateProgram"))
+	term.write("Input: ")
 
 	--Run Counter for installation skipping
 	local count = 10
@@ -274,6 +278,7 @@ function initClasses()
     shell.run(binPath.."bigger_reactors/Turbine.lua")
     shell.run(binPath.."mekanism/EnergyStorage.lua")
     shell.run(binPath.."Peripherals.lua")
+    shell.run(binPath.."Language.lua")
 end
 
 --=========== Run the program ==========
@@ -285,6 +290,9 @@ loadOptionFile()
 
 debugOutput("Initializing Classes")
 initClasses()
+
+debugOutput("Initializing Language")
+_G.language = _G.newLanguageById(_G.lang)
 
 debugOutput("Initializing Network Devices")
 _G.initPeripherals()
