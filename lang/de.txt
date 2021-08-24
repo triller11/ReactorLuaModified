@@ -1,6 +1,10 @@
 {
   language = "Ausgewähltes Deutsch",
-  loadedLanguage = "Deutsche Sprache geladen!",
+  loadedLanguage = "Deutsche Sprache geladen!",  
+
+  fractionDelimiter = ",",
+  thousandsDelimiter = ".",
+
   startProgram = "Programm starten",
   reactorOnly = "Nur Reaktor",
   quitProgram = "Programm beenden",
@@ -27,6 +31,32 @@
   changeBackgroundColor = "Hintergrundfarbe aendern",
   changeTextColor = "Textfarbe aendern",
   maxTurbineSpeed = "Maximale Turbinengeschwindigkeit",
+  pleaseWait = "Bitte warten...",
+  fuelConsumption = "Reaktor-Verbrauch: ",
+  internalEnergy = "Interne Energie: ",
+  rfProduction = "RF-Produktion: ",
+  currentTurbine = "Aktuelle Turbine: ",
+  allTurbines = "Alle Turbines: ",
+
+  gettingTurbinesTo = "Bringe Turbinen auf ",
+  findingOptimalFuelRodLevel = "Finde optimales FuelRod Level...",
+  calculatingLevel = "Berechne Level...",
+  targetSteamOutput = "Target Steam-Output: ",
+  targetRodLevel = "Target RodLevel: ",
+  fuelRodLevel = "FuelRod Level: ",
+  currentSteamOutput = "Aktueller Steam-Output: ",
+  coolingReactor = "Bringe Reaktor unter 99 Grad...",
+  coreTemp = "CoreTemp: ",
+  casingTemp = "CasingTemp: ",
+
+  rodLevelSuccess = "RodLevel calculation successful!",
+  rodLevelFailed = "RodLevel-Berechnung fehlgeschlagen!",
+  calculationLessThenZero = "Berechnung waere < 0!",
+  pleaseCheckSteamWaterIO = "Bitte Steam/Wasser-Input pruefen!",
+
+  turbinesNotFound = "Turbinen nicht gefunden! Bitte pruefen und den Computer neu starten (Strg+R gedrueckt halten)", 
+  reactorsNotFound = "Reaktor nicht gefunden! Bitte pruefen und den Computer neu starten (Strg+R gedrueckt halten)",
+  capicitorsNotFound = "Energiespeicher nicht gefunden! Bitte pruefen und den Computer neu starten (Strg+R gedrueckt halten)",
 
   noMonitor = "Monitor nicht gefunden!\nBitte pruefen und den Computer neu starten (Strg+R gedrueckt halten)",
   monitorSize = "Monitor zu klein.\nBitte min. 7 breit und 4 hoch bauen und den Computer neu starten\n(Strg+R gedrueckt halten)",
@@ -40,6 +70,17 @@
   wordOptions = "Optionen",
   wordReboot = "Neu starten",
   wordTurbines = "Mit Turbinen",
+  wordTurbine = "Turbine",
+  wordReactor = "Reaktor",
+  wordReactors = "Reactors",
+  wordEnergy = "Energie",
+  wordEfficiency = "Efficiency",
+  wordSteam = "Steam",
+  wordCoils = "Coils",
+  wordVersion = "Version",
+
+  wordEngaged = "eingehaengt",
+  wordDisengaged = "ausgehaengt",
 
   wordBackgroundColor = "Hintergrundfarbe",
   wordBackground = "Hintergrund",
@@ -79,7 +120,6 @@
   selectBranchLineFive = "Eingabe  (1-2):",
   
   installerIntroLineOne = "Reaktor- und Turbinenprogramm von SeekerOfHonjo",
-  installerIntroLineTwo = "Version 2.6",
   installerIntroLineThree = "Ueber das Programm:",
   installerIntroLineFour = "Das Programm kontrolliert einen Reaktors.",
   installerIntroLineFive = "Es koennen auch bis zu 384 Turbinen angeschlossen werden.",
@@ -89,7 +129,7 @@
   installerIntroLineNine = "Wird das Programm mit Turbinen betrieben, sollte der Reaktor pro Turbine mindestens 2000mb/t Steam produzieren koennen.",
     
   installerLabelLineOne = "Es wird empfohlen den Computer zu labeln.",
-  installerLabelLineTwo = "Computer labeln? (y/n):",
+  installerLabelLineTwo = "Computer labeln? (j/n):",
   installerLabelSet = "ComputerLabel auf  \"ReactorControlComputer\" gesetzt.",
   installerLabelNotSet = "ComputerLabel wurde nicht gesetzt.",
 

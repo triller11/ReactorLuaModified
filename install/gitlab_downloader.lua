@@ -56,11 +56,11 @@ function selectBranch()
 	if input == "1" then
 		branch = "main"
 		relUrl = repoUrl..branch.."/"
-		releaseVersion()
+		install(branch)
 	elseif input == "2" then
 		branch = "develop"
 		relUrl = repoUrl..branch.."/"
-		betaVersion()
+		install(branch)
 	else
 		print("Invalid input!")
 		sleep(2)
@@ -112,56 +112,22 @@ function downloadAndRead(fileName)
 	return textutils.unserialise(list)
 end
 
-function getAllFiles()
-	local fileEntries = downloadAndRead("files.txt")
-
-	for k, v in pairs(fileEntries) do
-	  print(v.name.." files...")
-
-	  for fileCount = 1, #v.files do
-		local fileName = v.files[fileCount]
-		writeFile(fileName)
-	  end
-
-	  print(selectedLang:getText("done"))
-	end
-end
-
---Gets all the files from github
-function getFiles()
-	clearTerm()
-	print(selectedLang:getText("installerGettingNewFiles"))
-	getAllFiles()
-
-	--Startup
-	print(selectedLang:getText("updatingStartup"))
-	local file = fs.open("startup","w")
-  	file.writeLine("shell.run(\"/extreme-reactors-control/start/start.lua\")")
-	file.close()
-end
-
 --Clears the terminal
 function clearTerm()
 	shell.run("clear")
 	term.setCursorPos(1,1)
 end
 
-function releaseVersion()
+function install(version)
 	removeAll()
 
 	--Downloads the installer
 	writeFile("install/installer.lua")
 
 	--execute installer
-	shell.run("/extreme-reactors-control/install/installer.lua")
+	shell.run("/extreme-reactors-control/install/installer.lua install "..version.. " "..installLang)
 end
 
-function betaVersion()
-	removeAll()
-	getFiles()
-	print(selectedLang:getText("done"))
-	sleep(2)
-end
 getLanguage()
 selectBranch()
 os.reboot()

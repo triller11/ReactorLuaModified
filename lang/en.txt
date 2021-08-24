@@ -1,6 +1,9 @@
 {
   language = "Selected English",
   loadedLanguage = "English language loaded!",
+  fractionDelimiter = ".",
+  thousandsDelimiter = ",",
+
   startProgram = "Start program",
   reactorOnly = "Reactor only",
   quitProgram = "Quit Program",
@@ -27,6 +30,32 @@
   changeBackgroundColor = "Change BackgroundColor",
   changeTextColor = "Change TextColor",
   maxTurbineSpeed = "Maximum Turbine speed",
+  pleaseWait = "Please Wait...",
+  fuelConsumption = "Fuel Consumption: ",
+  internalEnergy = "Internal Energy: ",
+  rfProduction = "RF-Production: ",
+  currentTurbine = "Current Turbine: ",
+  allTurbines = "All Turbines: ",
+
+  gettingTurbinesTo = "Getting Turbines to ",
+  findingOptimalFuelRodLevel = "Finding optimal FuelRod Level...",
+  calculatingLevel = "Calculating Level...",
+  targetSteamOutput = "Target Steam-Output: ",
+  targetRodLevel = "Target RodLevel: ",
+  fuelRodLevel = "FuelRod Level: ",
+  currentSteamOutput = "Current Steam-Output: ",
+  coolingReactor = "Getting Reactor below 99c ...",
+  coreTemp = "CoreTemp: ",
+  casingTemp = "CasingTemp: ",
+
+  rodLevelSuccess = "RodLevel calculation successful!",
+  rodLevelFailed = "RodLevel calculation failed!",
+  calculationLessThenZero = "Calculation would be < 0!",
+  pleaseCheckSteamWaterIO = "Please check Steam/Water input!",
+
+  turbinesNotFound = "Turbines not found! Please check and reboot the computer (Press and hold Ctrl+R)",
+  reactorsNotFound = "Reactor not found! Please check and reboot the computer (Press and hold Ctrl+R)",
+  capicitorsNotFound = "Energy Storage not found! Please check and reboot the computer (Press and hold Ctrl+R)",
 
   noMonitor = "Monitor not found!\nPlease check and reboot the computer (Press and hold Ctrl+R)",
   monitorSize = "Monitor too small\n Must be at least 7 in length and 4 in height.\nPlease check and reboot the computer (Press and hold Ctrl+R)",
@@ -40,6 +69,17 @@
   wordOptions = "Options",
   wordReboot = "Reboot",
   wordTurbines = "Turbines",
+  wordTurbine = "Turbine",
+  wordReactor = "Reactor",
+  wordReactors = "Reactors",
+  wordEnergy = "Energy",
+  wordEfficiency = "Efficiency",
+  wordSteam = "Steam",
+  wordCoils = "Coils",
+  wordVersion = "Version",
+
+  wordEngaged = "engaged",
+  wordDisengaged = "disengaged",
 
   wordBackgroundColor = "BackgroundColor",
   wordBackground = "Background",
@@ -68,6 +108,9 @@
   wordYes = "Yes",
   wordNo = "No",
 
+  wordOn = "On",
+  wordOff = "Off",
+
   updateAvailableLineOne = "Update available!",
   updateAvailableLineTwo = "To install look",
   updateAvailableLineThree = "at the computer terminal",
@@ -79,7 +122,6 @@
   selectBranchLineFive = "Input (1-2):",
   
   installerIntroLineOne = "Reactor and Turbine Control Program by SeekerOfHonjo",
-  installerIntroLineTwo = "Version 2.6",
   installerIntroLineThree = "About this program:",
   installerIntroLineFour = "The program controls reactors.",
   installerIntroLineFive = "You can also attach up to 384 turbines.",

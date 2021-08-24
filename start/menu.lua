@@ -27,8 +27,8 @@ function _G.createButtons()
   page:add(_G.language:getText("quitProgram"),exit,3,17,20,17)
   page:add(_G.language:getText("wordReboot"),reboot,3,18,20,18)
   page:add("menuOn",nil,39,7,49,7)
-  startOn = {"   On    ",label = "menuOn"}
-  startOff = {"   Off   ",label = "menuOn"}
+  startOn = {"   ".._G.language:getText("wordOn").."    ",label = "menuOn"}
+  startOff = {"   ".._G.language:getText("wordOff").."   ",label = "menuOn"}
   page:toggleButton("English")
 
   if program == "turbine" then
