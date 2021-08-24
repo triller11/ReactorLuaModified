@@ -72,8 +72,8 @@ function checkPeripherals()
     term.setCursorPos(1, 1)
     term.setTextColor(colors.red)
     if r == "" then
-        controlMonitor.write("Reactor not found! Please check and reboot the computer (Press and hold Ctrl+R)")
-        error("Reactor not found! Please check and reboot the computer (Press and hold Ctrl+R)")
+        controlMonitor.write(_G.language:getText("reactorsNotFound"))
+        error(_G.language:getText("reactorsNotFound"))
     end
     if v == "" then
         v = r
@@ -293,7 +293,7 @@ function displayDataAuto()
     --Print the energy bar
     controlMonitor.setCursorPos(2, 2)
 
-    controlMonitor.write("Energy: " .. enPer .. "%  ")
+    controlMonitor.write(_G.language:getText("wordEnergy")..": " .. enPer .. "%  ")
 
     controlMonitor.setCursorPos(2, 3)
     local part1 = enPer / 5
@@ -311,7 +311,7 @@ function displayDataAuto()
 
     --Print the reactor energy bar
     controlMonitor.setCursorPos(2, 5)
-    controlMonitor.write("Energy (Reactor): " .. enPerR .. "%  ")
+    controlMonitor.write(_G.language:getText("wordEnergy").." (".._G.language:getText("wordReactor").."): " .. enPerR .. "%  ")
 
     controlMonitor.setCursorPos(2, 6)
     local part2 = enPerR / 5
@@ -329,7 +329,7 @@ function displayDataAuto()
 
     --Print the RodLevel bar
     controlMonitor.setCursorPos(30, 2)
-    controlMonitor.write("RodLevel: " .. rodLevel .. "  ")
+    controlMonitor.write(_G.language:getText("fuelRodLevel").. rodLevel .. "  ")
     controlMonitor.setCursorPos(30, 3)
 
     local part3 = rodLevel / 5
@@ -347,11 +347,15 @@ function displayDataAuto()
 
     controlMonitor.setCursorPos(2, 8)
     
-    controlMonitor.write("RF-Production: " .. input.formatNumberComma(math.floor(rfGen)) .. " RF/t      ")
+    controlMonitor.write(_G.language:getText("rfProduction") .. input.formatNumberComma(math.floor(rfGen)) .. " RF/t      ")
 
     controlMonitor.setCursorPos(2, 10)
-    
-    controlMonitor.write((amountReactors + 1) .. " Reactors: ")
+    if (amountReactors > 0) then        
+        controlMonitor.write((amountReactors + 1) .. " ".._G.language:getText("wordReactors")..": ")
+    else
+        controlMonitor.write("1 ".._G.language:getText("wordReactor")..": ")
+    end  
+
     if getReactorsActive() then
         controlMonitor.setTextColor(colors.green)
         controlMonitor.write("on ")
@@ -367,7 +371,7 @@ function displayDataAuto()
     controlMonitor.setCursorPos(2, 12)
     local fuelCons2 = string.sub(fuelCons, 0, 4)
 
-    controlMonitor.write("Fuel Consumption: " .. fuelCons2 .. "mb/t     ")
+    controlMonitor.write(_G.language:getText("fuelConsumption") ..  fuelCons2 .. "mb/t     ")
 
     --Display Reactor Efficiency (RF/mb)
     controlMonitor.setCursorPos(2, 14)
@@ -377,7 +381,7 @@ function displayDataAuto()
     if tonumber(fuelCons) == 0 then fuelEfficiency = 0 end
     local fuelEfficiency2 = math.floor(fuelEfficiency)
 
-    controlMonitor.write("Efficiency: " .. input.formatNumberComma(fuelEfficiency2) .. " RF/mb    ")
+    controlMonitor.write(_G.language:getText("wordEfficiency")..": " .. input.formatNumberComma(fuelEfficiency2) .. " RF/mb    ")
 
     --Display the current Casing/Core Temperature
     local caT = tostring(reactors[0]:casingTemp())
@@ -387,12 +391,12 @@ function displayDataAuto()
 
     controlMonitor.setCursorPos(2, 16)
 
-    controlMonitor.write("Casing Temperature: " .. caseTemp .. "C    ")
+    controlMonitor.write(_G.language:getText("casingTemp") .. caseTemp .. "C    ")
     controlMonitor.setCursorPos(2, 17)
-    controlMonitor.write("Core Temperature: " .. coreTemp .. "C    ")
+    controlMonitor.write(_G.language:getText("coreTemp") .. coreTemp .. "C    ")
 
     controlMonitor.setCursorPos(2, 25)
-    controlMonitor.write("Version " .. version)
+    controlMonitor.write(_G.language:getText("wordVersion").." " .. version)
 end
 
 --Displays the data on the screen (manual mode)
@@ -418,7 +422,7 @@ function displayDataMan()
     --Print the energy bar
     controlMonitor.setCursorPos(2, 2)
 
-    controlMonitor.write("Energy: " .. enPer .. "%  ")
+    controlMonitor.write(_G.language:getText("wordEnergy")..": " .. enPer .. "%  ")
 
     controlMonitor.setCursorPos(2, 3)
     local part1 = enPer / 5
@@ -437,7 +441,7 @@ function displayDataMan()
     --Print the reactor energy bar
     controlMonitor.setCursorPos(2, 5)
     
-    controlMonitor.write("Energy (Reactor): " .. enPerR .. "%  ")
+    controlMonitor.write(_G.language:getText("wordEnergy").." (".._G.language:getText("wordReactor").."): " .. enPerR .. "%  ")
 
     controlMonitor.setCursorPos(2, 6)
     local part2 = enPerR / 5
@@ -455,7 +459,7 @@ function displayDataMan()
 
     --Print the RodLevel bar
     controlMonitor.setCursorPos(30, 2)
-    controlMonitor.write("RodLevel: " .. rodLevel .. "  ")
+    controlMonitor.write(_G.language:getText("fuelRodLevel") .. rodLevel .. "  ")
     controlMonitor.setCursorPos(30, 3)
 
     local part3 = rodLevel / 5
@@ -474,12 +478,12 @@ function displayDataMan()
     --Print the current RF Production of the reactor
     controlMonitor.setCursorPos(2, 8)
     
-    controlMonitor.write("RF-Production: " .. input.formatNumberComma(math.floor(rfGen)) .. " RF/t      ")
+    controlMonitor.write(_G.language:getText("rfProduction").. input.formatNumberComma(math.floor(rfGen)) .. " RF/t      ")
 
     --Print the current status of the reactor
     controlMonitor.setCursorPos(2, 10)
 
-    controlMonitor.write("Reactor: ")        
+    controlMonitor.write(_G.language:getText("wordReactor")..": ")        
 
     controlMonitor.setTextColor(tonumber(textColor))
 
@@ -487,7 +491,7 @@ function displayDataMan()
     controlMonitor.setCursorPos(2, 12)
     local fuelCons2 = string.sub(tostring(fuelCons), 0, 4)
 
-    controlMonitor.write("Fuel Consumption: " .. fuelCons2 .. "mb/t     ")
+    controlMonitor.write(_G.language:getText("fuelConsumption") .. fuelCons2 .. "mb/t     ")
 
     --Display Reactor Efficiency (RF/mb)
     controlMonitor.setCursorPos(2, 14)
@@ -497,7 +501,7 @@ function displayDataMan()
     if tonumber(fuelCons) == 0 then fuelEfficiency = 0 end
     local fuelEfficiency2 = math.floor(fuelEfficiency)
 
-    controlMonitor.write("Efficiency: " .. input.formatNumberComma(fuelEfficiency2) .. " RF/mb    ")
+    controlMonitor.write(_G.language:getText("wordEfficiency") .. ": " .. input.formatNumberComma(fuelEfficiency2) .. " RF/mb    ")
 
     --Display the current Casing/Core temperature of the reactor
     local caT = tostring(reactors[0]:casingTemp())
@@ -507,13 +511,13 @@ function displayDataMan()
 
     controlMonitor.setCursorPos(2, 16)
 
-    controlMonitor.write("Casing Temperature: " .. caseTemp .. "C    ")
+    controlMonitor.write(_G.language:getText("casingTemp") .. caseTemp .. "C    ")
     controlMonitor.setCursorPos(2, 17)
-    controlMonitor.write("Core Temperature: " .. coreTemp .. "C    ")
+    controlMonitor.write(_G.language:getText("coreTemp") .. coreTemp .. "C    ")
 
     --Print the current version
     controlMonitor.setCursorPos(2, 25)
-    controlMonitor.write("Version " .. version)
+    controlMonitor.write(_G.language:getText("wordVersion").." " .. version)
 end
 
 --Runs another program

@@ -11,7 +11,7 @@ local update
 local branch = ""
 local repoUrl = "https://gitlab.com/seekerscomputercraft/extremereactorcontrol/-/raw/"
 local selectedLang = {}
-local installLang = "en"
+local installLang = nil
 
 --Program arguments for updates
 if #arg == 0 then
@@ -20,7 +20,7 @@ if #arg == 0 then
   update = false
   branch = "main"
 
-elseif #arg == 2 then
+elseif #arg == 2 or #arg == 3 then
 
  --Select branch
  if arg[2] == "stable" then branch = "main"
@@ -38,19 +38,32 @@ elseif #arg == 2 then
   else
     error("Invalid 1st argument!")
   end
-
+  if #arg == 3 then
+    installLang = arg[3]
+  end
 else
-  error("0 or 2 arguments required!")
+  error("0, 2, or 3 arguments required!")
 end
 
 --Url for file downloads
 local relUrl = repoUrl..branch.."/"
 
-
 --===== Functions =====
 
 function getLanguage()
-  if not update or _G.lang == nil then    
+  local pickLang = true
+
+  if _G.lang == nil then
+  else
+    --global lang 
+    if installLang == nil then
+      installLang = _G.lang
+    end
+  end
+
+  pickLang = installLang == nil    
+
+  if pickLang then    
     languages = downloadAndRead("supportedLanguages.txt")
     downloadAndExecuteClass("Language.lua")
     for k, v in pairs(languages) do
@@ -72,10 +85,9 @@ function getLanguage()
       selectedLang = _G.newLanguageById(installLang)
     end
   else
-    installLang = _G.lang
     downloadAndExecuteClass("Language.lua")
     writeFile("lang/"..installLang..".txt")
-    selectedLang = _G.newLanguageById(_G.lang)
+    selectedLang = _G.newLanguageById(installLang)
   end
 
 	print(selectedLang:getText("language"))
@@ -98,6 +110,24 @@ function getURL(path)
 	else
 		return gotUrl.readAll()
 	end
+end
+
+--Saves all data basck to the options.txt file
+function updateOptionFileWithLanguage()
+
+    local fileRead = fs.open("/extreme-reactors-control/config/options.txt","r")
+    local optionList = textutils.unserialise(fileRead.readAll())
+    fileRead.close()
+    
+    optionList["language"] = installLang
+
+    --Serialise the table
+    local optList = textutils.serialise(optionList)
+
+	  --Save optionList to the config file
+	  local fileSave = fs.open("/extreme-reactors-control/config/options.txt","w")
+    fileSave.writeLine(optList)
+	  fileSave.close()
 end
 
 function downloadAndRead(fileName)
@@ -129,6 +159,15 @@ function getAllFiles()
 	end
 end
 
+function getVersion()
+  writeFile("main.ver")
+	local fileData = fs.open("/extreme-reactors-control/main.ver","r")
+	local list = fileData.readAll()
+	fileData.close()
+
+  return list
+end
+
 --===== Run installation =====
 
 --load language data
@@ -140,7 +179,7 @@ if not update then
   term.clear()
   term.setCursorPos(1,1)
   print(selectedLang:getText("installerIntroLineOne"))
-  print(selectedLang:getText("installerIntroLineTwo"))
+  print(selectedLang:getText("wordVersion").." "..getVersion())
   print()
   print(selectedLang:getText("installerIntroLineThree"))
   print(selectedLang:getText("installerIntroLineFour"))
@@ -220,7 +259,6 @@ end
 
 print(selectedLang:getText("installerGettingNewFiles"))
 getAllFiles()
-
 term.clear()
 term.setCursorPos(1,1)
 
@@ -232,6 +270,11 @@ if fs.exists("startup") then
   file.writeLine("shell.run(\"/extreme-reactors-control/start/start.lua\")")
   file.close()
 end
+
+--settings language
+term.clear()
+term.setCursorPos(1,1)
+updateOptionFileWithLanguage()
 
 --Install complete
 term.clear()
