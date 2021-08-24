@@ -30,7 +30,8 @@
     name = "Language",
     files = {
       "lang/en.txt",
-      "lang/de.txt"
+      "lang/de.txt",
+      "lang/pt-br.txt"
     }
   },
   program = {
