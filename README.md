@@ -42,3 +42,8 @@ The following list shows the features of the program:
 - Report bugs and send me suggestions for new features
 
 ## 
+
+## Thank You ##
+
+- @Sxigames for the Portuguese (Brazil) translation file
+- All the people who report bugs and test develop on Discord

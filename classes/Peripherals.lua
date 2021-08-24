@@ -52,21 +52,22 @@ local function searchPeripherals()
 			end
         else
             local successGetEnergyStored, errGetEnergyStored = pcall(function() peri.getEnergyStored() end)
-            local successGetEnergy, errGetEnergy = pcall(function() peri.getEnergy() end)
-
-            if successGetEnergyStored and (successGetEnergy == false) then
+            local isMekanism = periType == "inductionMatrix" or periType == "mekanismMachine"
+            if successGetEnergyStored and not isMekanism then
 			    --Capacitorbank / Energycell / Energy Core
                 print("getEnergyStored() device - "..peripheralList[i])
                 _G.capacitors[amountCapacitors] = newEnergyStorage("e" .. tostring(amountCapacitors), peri, periItem, periType)
                 _G.amountCapacitors = amountCapacitors + 1
             end
 
-            if successGetEnergy then
-			    --Mekanism / others
-                print("getEnergy() device - "..peripheralList[i])
+            if isMekanism then
+			    --Mekanism V10plus 
+                print("Mekanism Energy Storage device - "..peripheralList[i])
                 _G.capacitors[amountCapacitors] = newMekanismEnergyStorage("e" .. tostring(amountCapacitors), peri, periItem, periType)
                 _G.amountCapacitors = amountCapacitors + 1
             end
+
+            
 
         end
     end
