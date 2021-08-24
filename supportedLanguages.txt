@@ -1,5 +1,5 @@
 {
-  en = "English",
-  de = "Deutsch",
-  "pt-br" = "Português (Brasil)"
+  ["en"] = "English",
+  ["de"] = "Deutsch",
+  ["pt-br"] = "Português (Brasil)"
 }

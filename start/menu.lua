@@ -15,8 +15,6 @@ local startOn = {}
 local startOff = {}
 
 function _G.createButtons()
-  page:add("Deutsch",nil,39,11,49,11)
-  page:add("English",nil,39,13,49,13)
 
   page:add(_G.language:getText("startProgram"),startTC,3,5,20,5)
   page:add(_G.language:getText("reactorOnly"),function() switchProgram("Reactor") end,3,9,20,9)
@@ -29,7 +27,6 @@ function _G.createButtons()
   page:add("menuOn",nil,39,7,49,7)
   startOn = {"   ".._G.language:getText("wordOn").."    ",label = "menuOn"}
   startOff = {"   ".._G.language:getText("wordOff").."   ",label = "menuOn"}
-  page:toggleButton("English")
 
   if program == "turbine" then
     page:toggleButton(_G.language:getText("wordTurbines"))
@@ -108,19 +105,15 @@ local function getClick(funct)
   local event,but = page:handleEvents(os.pullEvent())
   if event == "button_click" then
     if but == "menuOn" then
-      print("menuOn")
       if not mainMenu then
-        mainMenu = true
-        saveOptionFile()
+        _G.mainMenu = true
         page:rename("menuOn",startOn,true)
       elseif mainMenu then
-        mainMenu = false
-        saveOptionFile()
+        _G.mainMenu = false
         page:rename("menuOn",startOff,true)
       end
-      page:toggleButton(but)
+      saveOptionFile()
       funct()
-
     elseif but == "Automatic" then
       if page.buttonList[but].active == false then
         page:toggleButton(_G.language:getText("wordAutomatic"))
@@ -128,7 +121,7 @@ local function getClick(funct)
       if overallMode == "manual" then
         page:toggleButton(_G.language:getText("wordManual"))
       end
-      overallMode = "auto"
+      _G.overallMode = "auto"
       saveOptionFile()
       funct()
 
@@ -141,7 +134,7 @@ local function getClick(funct)
         page:toggleButton(_G.language:getText("wordAutomatic"))
       end
 
-      overallMode = "manual"
+      _G.overallMode = "manual"
       saveOptionFile()
       funct()
     else

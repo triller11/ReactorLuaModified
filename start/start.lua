@@ -101,7 +101,7 @@ function _G.refreshOptionList()
 	optionList["language"] = lang
 end
 
---Saves all data basck to the options.txt file
+--Saves all data back to the options.txt file
 function _G.saveOptionFile()
 	debugOutput("Saving Option File")
 	--Refresh option list
@@ -276,7 +276,7 @@ function initClasses()
     shell.run(binPath.."base/EnergyStorage.lua")
     shell.run(binPath.."bigger_reactors/Reactor.lua")
     shell.run(binPath.."bigger_reactors/Turbine.lua")
-    shell.run(binPath.."mekanism/EnergyStorage.lua")
+    shell.run(binPath.."mekanism/MekanismEnergyStorage.lua")
     shell.run(binPath.."Peripherals.lua")
     shell.run(binPath.."Language.lua")
 end

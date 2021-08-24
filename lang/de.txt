@@ -109,6 +109,9 @@
   wordYes = "Jawohl",
   wordNo = "Nein",
 
+  wordOn = "Ein",
+  wordOff = "Aus",
+
   updateAvailableLineOne = "Update verfuegbar!",
   updateAvailableLineTwo = "Zum installieren",
   updateAvailableLineThree = "in den Computer schauen",

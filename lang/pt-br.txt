@@ -24,7 +24,7 @@
   reactorOnBelow = "Ligar Reator abaixo de: ",
   turbineMaxSpeed = "Velocidade Maxima da Turbina: ",
   turbineSteamInput = "Entrada de Vapor da Turbina: ",
-  turbineDisableAt = "Desligando Turbina em: {reactorOffAt}%",
+  turbineDisableAt = "Desligando Turbina em {reactorOffAt}%: ",
   configAvailable = "Configuração Disponivel: ",
   changeBackgroundColor = "Trocar cor do Fundo",
   changeTextColor = "Trocar cor do Texto",
