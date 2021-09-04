@@ -14,6 +14,7 @@
       "classes/bigger_reactors/Reactor.lua",
       "classes/bigger_reactors/Turbine.lua",
       "classes/mekanism/MekanismEnergyStorage.lua",
+      "classes/thermal_expansion/ThermalExpansionEnergyStorage.lua",
       "classes/Language.lua",
       "classes/Peripherals.lua"
     }

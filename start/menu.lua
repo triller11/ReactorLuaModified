@@ -103,6 +103,7 @@ end
 
 local function getClick(funct)
   local event,but = page:handleEvents(os.pullEvent())
+  
   if event == "button_click" then
     if but == "menuOn" then
       if not mainMenu then
