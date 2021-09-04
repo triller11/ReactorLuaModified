@@ -52,8 +52,11 @@ local function searchPeripherals()
 			end
         else
             local successGetEnergyStored, errGetEnergyStored = pcall(function() peri.getEnergyStored() end)
-            local isMekanism = periType == "inductionMatrix" or periType == "mekanismMachine"
-            if successGetEnergyStored and not isMekanism then
+            local isMekanism = periType == "inductionMatrix" or periType == "mekanismMachine" or periType == "Induction Matrix"
+            local isThermalExpansion = periType == "thermalexpansion:storage_cell"
+            local isBase = (not isMekanism and not isThermalExpansion) and successGetEnergyStored
+
+            if isBase then
 			    --Capacitorbank / Energycell / Energy Core
                 print("getEnergyStored() device - "..peripheralList[i])
                 _G.capacitors[amountCapacitors] = newEnergyStorage("e" .. tostring(amountCapacitors), peri, periItem, periType)
@@ -67,8 +70,12 @@ local function searchPeripherals()
                 _G.amountCapacitors = amountCapacitors + 1
             end
 
-            
-
+            if isThermalExpansion then
+			    --Thermal Expansion
+                print("Thermal Expansion Energy Storage device - "..peripheralList[i])
+                _G.capacitors[amountCapacitors] = newThermalExpansionEnergyStorage("e" .. tostring(amountCapacitors), peri, periItem, periType)
+                _G.amountCapacitors = amountCapacitors + 1
+            end
         end
     end
 
