@@ -1,4 +1,4 @@
--- Extreme Reactors Control by SeekerOfHonjo --
+    -- Extreme Reactors Control by SeekerOfHonjo --
 -- Original work by Thor_s_Crafter on https://github.com/ThorsCrafter/Reactor-and-Turbine-control-program --
 -- Version 1.0 --
 -- Turbine control --
@@ -1042,11 +1042,8 @@ function printStatsAuto(turbine)
         end
     end
 
-    --gets overall energy production
-    local rfGen = 0
-    for i = 0, amountTurbines, 1 do
-        rfGen = rfGen + turbines[i]:energyProduction()
-    end
+    local data = getReactorInfo();
+    emitMessage(data)
 
     --prints the energy level (in %)
     controlMonitor.setBackgroundColor(tonumber(backgroundColor))
@@ -1073,7 +1070,7 @@ function printStatsAuto(turbine)
 
     controlMonitor.setCursorPos(2, 5)
 
-    controlMonitor.write(_G.language:getText("rfProduction") .. (input.formatNumberComma(math.floor(rfGen/1000))) .. " KRF/t      ")
+    controlMonitor.write(_G.language:getText("rfProduction") .. (input.formatNumberComma(data.rfProduced)) .. " KRF/t      ")
 
     --Reactor status (on/off)
     controlMonitor.setCursorPos(2, 7)
@@ -1087,8 +1084,7 @@ function printStatsAuto(turbine)
     if getReactorsActive() then
         controlMonitor.setTextColor(colors.green)
         controlMonitor.write("on ")
-    end
-    if not getReactorsActive() then
+    else
         controlMonitor.setTextColor(colors.red)
         controlMonitor.write("off")
     end
@@ -1096,18 +1092,12 @@ function printStatsAuto(turbine)
     --Prints all other informations (fuel consumption,steam,turbine amount,mode)
     controlMonitor.setTextColor(tonumber(textColor))
     controlMonitor.setCursorPos(2, 9)
-    local fuelCons = tostring(getFuelUsed())
-    local fuelCons2 = string.sub(fuelCons, 0, 4)
-    local eff = math.floor(rfGen / getFuelUsed())
-    if not getReactorsActive() then
-        eff = 0
-    end
 
-    controlMonitor.write(_G.language:getText("fuelConsumption") .. fuelCons2 .. "mb/t     ")
+    controlMonitor.write(_G.language:getText("fuelConsumption") .. data.fuelConsumed .. "mb/t     ")
     controlMonitor.setCursorPos(2, 10)
-    controlMonitor.write(_G.language:getText("wordSteam")..": " .. (input.formatNumberComma(math.floor(getSteamProduced()/1000))) .. "B/t    ")
+    controlMonitor.write(_G.language:getText("wordSteam")..": " .. (input.formatNumberComma(data.steam)) .. "B/t    ")
     controlMonitor.setCursorPos(2, 11)
-    controlMonitor.write(_G.language:getText("wordEfficiency")..": " .. (input.formatNumberComma(math.floor(eff/1000))) .. " KRF/mb       ")
+    controlMonitor.write(_G.language:getText("wordEfficiency")..": " .. (input.formatNumberComma(data.efficiency)) .. " KRF/mb       ")
     controlMonitor.setCursorPos(30, 2)
     controlMonitor.write(_G.language:getText("wordTurbines")..": " .. (amountTurbines + 1) .. "  ")
     controlMonitor.setCursorPos(2, 13)
@@ -1152,6 +1142,59 @@ function printStatsAuto(turbine)
 
     --refreshes the last turbine id
     lastStat = turbine
+end
+
+function emitStartUpMessage(message) 
+    _G.newMessage("startUp", _G.newStartUpMessage(message), _G.location)
+end
+
+function emitMessage(data)
+    if _G.enableWireless then
+        local transmitMessage = _G.newMessage("rtMessage", data, _G.location)
+        _G.wirelessModem.transmit(_G.modemChannel,_G.modemChannel+1,transmitMessage)
+    end    
+end
+
+function getReactorInfo() 
+    local reactorInfo = _G.newReactorTurbineMessage(amountTurbines)
+
+    local rfGen = 0
+
+    for i = 0, amountTurbines, 1 do
+        rfGen = rfGen + turbines[i]:energyProduction()
+        
+        if turbines[i]:coilsEngaged() then
+            reactorInfo.turbines[i].engaged = _G.language:getText("wordEngaged")
+        end
+        if turbines[i]:coilsEngaged() == false then            
+            reactorInfo.turbines[i].engaged = _G.language:getText("wordDisengaged")
+        end
+
+        reactorInfo.turbines[i].turbineSpeed = math.floor(turbines[i]:rotorSpeed())
+        reactorInfo.turbines[i].rfProduction = math.floor(turbines[i]:energyProduction()/1000)
+        reactorInfo.turbines[i].turbineEnergy = math.floor(getTurbineEnergy(i))
+    end
+    
+    reactorInfo.turbineData = textutils.serialise(reactorInfo.turbines)
+    reactorInfo.energyStored = math.floor(getEnergy())
+    reactorInfo.energyMax = math.floor(getEnergyMax())
+    reactorInfo.reactorCount = (amountReactors + 1)
+    reactorInfo.active = getReactorsActive()
+    reactorInfo.steam = math.floor(getSteamProduced()/1000)
+
+    local fuelCons = tostring(getFuelUsed())
+    local fuelCons2 = string.sub(fuelCons, 0, 4)
+    reactorInfo.fuelConsumed = fuelCons2;
+    
+    local eff = math.floor(rfGen / getFuelUsed())
+    reactorInfo.efficiency = math.floor(eff/1000)
+    reactorInfo.rfProduced = rfGen;
+
+    reactorInfo.casing = 0
+    reactorInfo.core = 0
+    reactorInfo.rodLevel = 0
+
+    return reactorInfo
 end
 
 --printStats (manual)

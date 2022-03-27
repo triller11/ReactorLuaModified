@@ -15,6 +15,10 @@
       "classes/bigger_reactors/Turbine.lua",
       "classes/mekanism/MekanismEnergyStorage.lua",
       "classes/thermal_expansion/ThermalExpansionEnergyStorage.lua",
+      "classes/transport/wrapper.lua",
+      "classes/transport/startup.lua",
+      "classes/transport/reactorTurbine.lua",
+      "classes/transport/reactoronly.lua",
       "classes/Language.lua",
       "classes/Peripherals.lua"
     }
@@ -40,7 +44,8 @@
     files = {
       "program/editOptions.lua",
       "program/reactorControl.lua",
-      "program/turbineControl.lua"
+      "program/turbineControl.lua",
+      "program/monitor.lua"
     }
   },  
   start = {

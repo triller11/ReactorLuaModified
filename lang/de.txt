@@ -1,5 +1,5 @@
 {
-  language = "Ausgewähltes Deutsch",
+  language = "Ausgewaehltes Deutsch",
   loadedLanguage = "Deutsche Sprache geladen!",  
 
   fractionDelimiter = ",",
@@ -8,7 +8,7 @@
   startProgram = "Programm starten",
   reactorOnly = "Nur Reaktor",
   quitProgram = "Programm beenden",
-  pressEnter = "Drücken Sie Enter",
+  pressEnter = "Druecken Sie Enter",
   showOnStartup = "Hauptmenue zeigen",
   terminatedProgram = "Programm beendet!",
   updateProgram = "Soll das Update installiert werden? (j/n)",

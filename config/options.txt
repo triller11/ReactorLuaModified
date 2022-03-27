@@ -16,4 +16,6 @@
   controlMonitor = "",
   language = "en",
   debug = 0,
+  location = "mainReactor",
+  modemChannel = 5
 }

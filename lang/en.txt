@@ -60,6 +60,8 @@
   noMonitor = "Monitor not found!\nPlease check and reboot the computer (Press and hold Ctrl+R)",
   monitorSize = "Monitor too small\n Must be at least 7 in length and 4 in height.\nPlease check and reboot the computer (Press and hold Ctrl+R)",
 
+  noModemFound = "No Modem Found! Please install one and restart", 
+
   wordLanguage = "Language",
   wordProgram = "Program",
   wordMode = "Mode",

@@ -9,6 +9,8 @@ _G.controlMonitor = "" --Monitor
 _G.reactors = {} --Reactor
 _G.capacitors = {} --Energy Storage
 _G.turbines = {} --Turbines
+_G.wirelessModem = "" --wirelessModem
+_G.enableWireless = false
 
 --Total count of all turbines
 _G.amountTurbines = 0
@@ -44,15 +46,21 @@ local function searchPeripherals()
             print("Monitor - "..periItem)
 			if(peripheralList[i] == controlMonitor) then
 				--add to output monitors
-				_G.monitors[amountMonitors] = peripheral.wrap(peripheralList[i])
+				_G.monitors[amountMonitors] = peri
 				_G.amountMonitors = amountMonitors + 1
 			else
-				_G.controlMonitor = peripheral.wrap(peripheralList[i])
+				_G.controlMonitor = peri
 				_G.touchpointLocation = periItem
 			end
+        elseif periType == "modem" then
+            if peri.isWireless() then
+                print("Wireless Modem - "..periItem)
+                _G.wirelessModem = peri
+                _G.enableWireless = true
+            end
         else
             local successGetEnergyStored, errGetEnergyStored = pcall(function() peri.getEnergyStored() end)
-            local isMekanism = periType == "inductionMatrix" or periType == "mekanismMachine" or periType == "Induction Matrix"
+            local isMekanism = periType == "inductionMatrix" or periType == "mekanismMachine" or periType == "Induction Matrix" or periType == "mekanism:induction_port" or periType == "inductionPort"
             local isThermalExpansion = periType == "thermalexpansion:storage_cell"
             local isBase = (not isMekanism and not isThermalExpansion) and successGetEnergyStored
 
@@ -89,9 +97,6 @@ function _G.checkPeripherals()
 	term.clear()
 	term.setCursorPos(1,1)
 
-    if _G.reactors[0] == nil then
-        error("No reactor found!")
-    end
 	if controlMonitor == "" then
         error("Monitor not found!\nPlease check and reboot the computer (Press and hold Ctrl+R)")
 	end
@@ -104,8 +109,10 @@ function _G.checkPeripherals()
     
 	--Monitor too small
 	local monX,monY = controlMonitor.getSize()
-
-    if amountTurbines < 33 then
+    
+    if amountReactors < 1 then           
+        -- do no check monitor is controlled by user for wireless stats 
+    elseif amountTurbines < 33 then
         _G.smallMonitor = 1
         if monX < 71 or monY < 26 then
             local messageOut = string.gsub(string.gsub(_G.language:getText("monitorSize"), "8","7"),"6","4")

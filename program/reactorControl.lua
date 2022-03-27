@@ -520,6 +520,14 @@ function displayDataMan()
     controlMonitor.write(_G.language:getText("wordVersion").." " .. version)
 end
 
+function emitStartUpMessage(message) 
+    _G.newMessage("startUp", _G.newStartUpMessage(message), _G.location)
+end
+
+function emitMessage(data)
+    _G.newMessage("reactorMessage", data, _G.location)
+end
+
 --Runs another program
 function run(program)
     shell.run(program)
