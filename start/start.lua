@@ -22,6 +22,9 @@ _G.targetSteam = 0
 _G.turbineOnOff = ""
 _G.debug = 0
 _G.skipControlRodCheck = 0
+_G.location = ""
+_G.modemChannel = 0
+_G.wirelessModemLocation = "top"
 _G.language = {}
 
 --TouchpointLocation (same as the monitor)
@@ -34,7 +37,7 @@ _G.touchpointLocation = {}
 local repoUrl = "https://gitlab.com/seekerscomputercraft/extremereactorcontrol/-/raw/"
 
 function _G.debugOutput(message) 
-	if debug == 1 then
+	if _G.debug == 1 then
 		print(message)
 	end
 end
@@ -66,6 +69,8 @@ function _G.loadOptionFile()
 	_G.debug = optionList["debug"]
 	_G.skipControlRodCheck = optionList["skipControlRodCheck"]
 	_G.lang = optionList["language"]
+	_G.location = optionList["location"]
+	_G.modemChannel = optionList["modemChannel"]
 end
 
 --Refreshes the options list
@@ -99,6 +104,11 @@ function _G.refreshOptionList()
 	optionList["skipControlRodCheck"] = skipControlRodCheck
 	debugOutput("Variable: lang")
 	optionList["language"] = lang
+	debugOutput("Variable: location")
+	optionList["location"] = location
+	debugOutput("Variable: modemChannel")
+	optionList["modemChannel"] = modemChannel
+	optionList["debug"] = debug
 end
 
 --Saves all data back to the options.txt file
@@ -280,6 +290,10 @@ function initClasses()
     shell.run(binPath.."thermal_expansion/ThermalExpansionEnergyStorage.lua")
     shell.run(binPath.."Peripherals.lua")
     shell.run(binPath.."Language.lua")
+	shell.run(binPath.."transport/reactoronly.lua")
+	shell.run(binPath.."transport/reactorTurbine.lua")
+	shell.run(binPath.."transport/startup.lua")
+    shell.run(binPath.."transport/wrapper.lua")
 end
 
 --=========== Run the program ==========
@@ -302,7 +316,10 @@ debugOutput("Checking for Updates")
 checkUpdates()
 
 --Run program or main menu, based on the settings
-if mainMenu then
+if  amountReactors < 0 then
+	--this is a monitor only we do show anything with the menu
+	shell.run("/extreme-reactors-control/program/monitor.lua")
+elseif mainMenu then
 	shell.run("/extreme-reactors-control/start/menu.lua")
 	shell.completeProgram("/extreme-reactors-control/start/start.lua")
 else
@@ -310,6 +327,8 @@ else
 		shell.run("/extreme-reactors-control/program/turbineControl.lua")
 	elseif program == "reactor" then
 		shell.run("/extreme-reactors-control/program/reactorControl.lua")
+	elseif program == "monitor" then
+		shell.run("/extreme-reactors-control/program/monitor.lua")
 	end
 	shell.completeProgram("/extreme-reactors-control/start/start.lua")
 end
