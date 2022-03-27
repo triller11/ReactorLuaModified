@@ -46,4 +46,5 @@ The following list shows the features of the program:
 ## Thank You ##
 
 - @Sxigames for the Portuguese (Brazil) translation file
+- @MPThLee Added Support for New Class name of Induction Port in Mekanism
 - All the people who report bugs and test develop on Discord
