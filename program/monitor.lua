@@ -88,6 +88,8 @@ function start()
     
     if _G.wirelessModem == nil then              
         controlMonitor.write(_G.language:getText("noModemFound"))
+        -- exit we don't have a modem
+        return
     end   
 
     --Reset terminal
