@@ -44,14 +44,14 @@ local function searchPeripherals()
             _G.amountTurbines = amountTurbines + 1
         elseif periType == "monitor" then
             print("Monitor - "..periItem)
-			if(peripheralList[i] == controlMonitor) then
-				--add to output monitors
-				_G.monitors[amountMonitors] = peri
-				_G.amountMonitors = amountMonitors + 1
-			else
-				_G.controlMonitor = peri
-				_G.touchpointLocation = periItem
-			end
+            if(peripheralList[i] == controlMonitor) then
+                --add to output monitors
+                _G.monitors[amountMonitors] = peri
+                _G.amountMonitors = amountMonitors + 1
+            else
+                _G.controlMonitor = peri
+                _G.touchpointLocation = periItem
+            end
         elseif periType == "modem" then
             if peri.isWireless() then
                 print("Wireless Modem - "..periItem)
@@ -60,26 +60,34 @@ local function searchPeripherals()
             end
         else
             local successGetEnergyStored, errGetEnergyStored = pcall(function() peri.getEnergyStored() end)
-            local isMekanism = periType == "inductionMatrix" or periType == "mekanismMachine" or periType == "Induction Matrix" or periType == "mekanism:induction_port" or periType == "inductionPort"
-            local isThermalExpansion = periType == "thermalexpansion:storage_cell"
+            local isMekanism = periType == "inductionMatrix" 
+                or periType == "mekanismMachine" 
+                or periType == "Induction Matrix" 
+                or periType == "mekanism:induction_port" 
+                or periType == "inductionPort"
+                or string.find(periType, "rftoolspower:cell")
+                or string.find(periType, "Energy Cube")
+                or string.find(periType, "EnergyCube")
+
+            local isThermalExpansion = periType == "thermalexpansion:storage_cell" or "periType == "thermal:energy_cell"
             local isBase = (not isMekanism and not isThermalExpansion) and successGetEnergyStored
 
             if isBase then
-			    --Capacitorbank / Energycell / Energy Core
+                --Capacitorbank / Energycell / Energy Core
                 print("getEnergyStored() device - "..peripheralList[i])
                 _G.capacitors[amountCapacitors] = newEnergyStorage("e" .. tostring(amountCapacitors), peri, periItem, periType)
                 _G.amountCapacitors = amountCapacitors + 1
             end
 
             if isMekanism then
-			    --Mekanism V10plus 
+                --Mekanism V10plus 
                 print("Mekanism Energy Storage device - "..peripheralList[i])
                 _G.capacitors[amountCapacitors] = newMekanismEnergyStorage("e" .. tostring(amountCapacitors), peri, periItem, periType)
                 _G.amountCapacitors = amountCapacitors + 1
             end
 
             if isThermalExpansion then
-			    --Thermal Expansion
+                --Thermal Expansion
                 print("Thermal Expansion Energy Storage device - "..peripheralList[i])
                 _G.capacitors[amountCapacitors] = newThermalExpansionEnergyStorage("e" .. tostring(amountCapacitors), peri, periItem, periType)
                 _G.amountCapacitors = amountCapacitors + 1
@@ -87,28 +95,28 @@ local function searchPeripherals()
         end
     end
 
-	_G.amountReactors = amountReactors - 1
-	_G.amountTurbines = amountTurbines - 1
-	_G.amountCapacitors = amountCapacitors - 1
+    _G.amountReactors = amountReactors - 1
+    _G.amountTurbines = amountTurbines - 1
+    _G.amountCapacitors = amountCapacitors - 1
 end
 
 function _G.checkPeripherals()
-	--Check for errors
-	term.clear()
-	term.setCursorPos(1,1)
+    --Check for errors
+    term.clear()
+    term.setCursorPos(1,1)
 
-	if controlMonitor == "" then
+    if controlMonitor == "" then
         error("Monitor not found!\nPlease check and reboot the computer (Press and hold Ctrl+R)")
-	end
+    end
 
     --Monitor clear
-	controlMonitor.setBackgroundColor(colors.black)
-	controlMonitor.setTextColor(colors.red)
-	controlMonitor.clear()
-	controlMonitor.setCursorPos(1,1)
+    controlMonitor.setBackgroundColor(colors.black)
+    controlMonitor.setTextColor(colors.red)
+    controlMonitor.clear()
+    controlMonitor.setCursorPos(1,1)
     
-	--Monitor too small
-	local monX,monY = controlMonitor.getSize()
+    --Monitor too small
+    local monX,monY = controlMonitor.getSize()
     
     if amountReactors < 1 then           
         -- do no check monitor is controlled by user for wireless stats 
@@ -134,5 +142,4 @@ function _G.initPeripherals()
     searchPeripherals()
     _G.checkPeripherals()
 end
-
 
