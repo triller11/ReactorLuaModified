@@ -147,17 +147,22 @@ function _G.checkUpdates()
 	local file = fs.open(currBranch..".ver","r")
 	local remoteVer = file.readLine()
 	file.close()
-
-	print("remoteVer: "..remoteVer)
-	print("localVer: "..version)
-	print("Update? -> "..tostring(remoteVer > version))
-	print("Cells: "..(#capacitors + 1))
 	
-	--Update if available
-	if remoteVer > version then
-		print("Update...")
-		sleep(2)
-		doUpdate(remoteVer,currBranch)
+	print("Energy Storage Devices: "..(#capacitors + 1))
+	print("localVer: "..version)
+	
+    if remoteVer == nil then
+		print("Couldn't get remote version from gitlab.")
+	else
+		print("remoteVer: "..remoteVer)
+		print("Update? -> "..tostring(remoteVer > version))
+	
+	    --Update if available
+	    if remoteVer > version then
+		    print("Update...")
+		    sleep(2)
+		    doUpdate(remoteVer,currBranch)
+	    end
 	end
 
 	--Remove remote version file
