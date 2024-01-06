@@ -1,5 +1,7 @@
 {
   ["en"] = "English",
   ["de"] = "Deutsch",
+  ["fr"] = "Français",
+  ["pl"] = "Polski"
   ["pt-br"] = "Portugues (Brasil)"
 }
