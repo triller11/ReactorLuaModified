@@ -2,6 +2,6 @@
   ["en"] = "English",
   ["de"] = "Deutsch",
   ["fr"] = "Français",
-  ["pl"] = "Polski"
+  ["pl"] = "Polski",
   ["pt-br"] = "Portugues (Brasil)"
 }

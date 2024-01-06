@@ -10,7 +10,7 @@
   pressEnter = "Pressez Entrer",
   showOnStartup = "Voir au démarrage",
   terminatedProgram = "Programme stoppé!",
-  updateProgram = "Voulez-vous installer la mise à jour? (y/n)",
+  updateProgram = "Voulez-vous installer la mise à jour? (O/n)",
   updatingStartup = "Mise à jour en cours...",
   removingOldFiles = "Suppression des anciens fichiers...",
   done = "Terminé!",
