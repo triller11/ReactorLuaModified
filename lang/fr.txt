@@ -133,13 +133,13 @@
   installerIntroLineNine = "S'il est équipé de turbines, le réacteur doit être capable de produire au moins 2 000 Mb/t de vapeur par turbine.",
     
   installerLabelLineOne = "Il est recommandé de renommer l'ordinateur.",
-  installerLabelLineTwo = "Voulez-vous renommer l'ordinateur ? (y/n) ::",
+  installerLabelLineTwo = "Voulez-vous renommer l'ordinateur ? (O/n) ::",
   installerLabelSet = "Nom de l'ordinateur modifié en \"ReactorControlComputer\".",
   installerLabelNotSet = "Nom de l'ordinateur non défini.",
 
   installerStartupLineOne = "Il est recommandé d'ajouter le programme au démarrage des ordinateurs.",
   installerStartupLineTwo = "Si vous ajoutez le programme au démarrage, le programme s'exécutera automatiquement au démarrage de l'ordinateur.",
-  installerStartupLineThree = "Ajouter script de démarrage? (y/n): ",
+  installerStartupLineThree = "Ajouter script de démarrage? (O/n): ",
   installerStartupInstalled = "Script de démarrage installé.",
   installerStartupUninstalled = "Script de démarrage non installé.",
 
