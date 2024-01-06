@@ -4,9 +4,9 @@
   fractionDelimiter = ".",
   thousandsDelimiter = ",",
 
-  startProgram = "Wystartuj program",
+  startProgram = "Uruchom",
   reactorOnly = "Tylko reaktor",
-  quitProgram = "Wyjdz z Program",
+  quitProgram = "Usun",
   pressEnter = "Nacisnij Enter",
   showOnStartup = "Pokazuj przy uruchomieniu",
   terminatedProgram = "Program usunieto!",
@@ -24,12 +24,12 @@
   reactorOffAbove = "Wylacz reaktor powyzej: ",
   reactorOnBelow = "Wlacz reaktor ponizej: ",
   turbineMaxSpeed = "Maksymalna predkosc turbiny: ",
-  turbineSteamInput = "Turbines Steam Input: ",
+  turbineSteamInput = "Zuzycie pary przez turbine: ",
   turbineDisableAt = "Wylacz turbine na {wylaczreaktorna}%: ",
   configAvailable = "Dostepny config: ",
   changeBackgroundColor = "Zmien kolor tla",
   changeTextColor = "Zmien kolor tekstu",
-  maxTurbineSpeed = "Maksymalna prędkosc turbiny",
+  maxTurbineSpeed = "Maksymalna predkosc turbiny",
   pleaseWait = "Prosze poczekac...",
   fuelConsumption = "Zuzycie paliwa: ",
   internalEnergy = "Wewnetrzna energia: ",
@@ -58,7 +58,7 @@
   capicitorsNotFound = "Nie znaleziono Baterii! Prosze sprawdz i zrestartuj komputer (Wcisnij i przytrzymaj Ctrl+R)",
 
   noMonitor = "Nie znaleziono monitora!\nProsze sprawdz i zrestartuj komputer (Wcisnij i przytrzymaj Ctrl+R)",
-  monitorSize = "Za maly monitor\nMusi być przynajmniej dlugi na 7 kratki wysoki na 4 .\nProsze sprawdz i zrestartuj komputer (Wcisnij i przytrzymaj Ctrl+R)",
+  monitorSize = "Za maly monitor\nMusi byc przynajmniej dlugi na 7 kratki wysoki na 4 .\nProsze sprawdz i zrestartuj komputer (Wcisnij i przytrzymaj Ctrl+R)",
 
   noModemFound = "Nie znaleziono modemu! Prosze podlacz jeden i zrestartuj program", 
 
@@ -66,10 +66,10 @@
   wordProgram = "Program",
   wordMode = "Tryb",
   wordInput = "Wejscie",
-  wordAutomatic = "Automatyczny",
+  wordAutomatic = "Automat",
   wordManual = "Manualny",
   wordOptions = "Opcje",
-  wordReboot = "Ponowne uruchomienie",
+  wordReboot = "Restart",
   wordTurbines = "Turbiny",
   wordTurbine = "Turbina",
   wordReactor = "Reaktor",
@@ -83,9 +83,9 @@
   wordEngaged = "Podlaczone",
   wordDisengaged = "Odlaczone",
 
-  wordBackgroundColor = "KolorTla",
+  wordBackgroundColor = "Kolor Tla",
   wordBackground = "Tlo",
-  wordTextColor = "Kolortekstu",
+  wordTextColor = "Kolor tekstu",
   wordText = "Tekst",
   wordSave = "Zapisz",
   wordMainMenu = "Glowne menu",
@@ -118,7 +118,7 @@
   updateAvailableLineThree = "na terminal komputera",
  
   selectBranchLineOne = "Ktora wersja powinna byc zainstalowana?",
-  selectBranchLineTwo = "Dostępne są:",
+  selectBranchLineTwo = "Dostepne sa:",
   selectBranchLineThree = "1) Glowna (Stabilna wersja)",
   selectBranchLineFour = "2) Developerska (Niestabilne wersja)",
   selectBranchLineFive = "Wybierz (1-2):",
@@ -126,7 +126,7 @@
   installerIntroLineOne = "Program kontrolujacy turbiny i reaktory zostal wykonany przez SeekerOfHonjo",
   installerIntroLineThree = "O programie:",
   installerIntroLineFour = "Program kontroluje reaktory.",
-  installerIntroLineFive = "Mozesz podłączyć do 384 turbin.",
+  installerIntroLineFive = "Mozesz podlaczyc do 384 turbin.",
   installerIntroLineSix = "Musisz podlaczyc komputer Wired modemami do reaktora (i turbiny).",
   installerIntroLineSeven = "Dodatkowo wymagana jest bateria przechowywujaca energie i monitor.",
   installerIntroLineEight = "Rozmiar monitora musi byc przynajmniej 7 kratek szerokosci i 4 wysokosci.",
@@ -138,7 +138,7 @@
   installerLabelNotSet = "Nie ustawiono nazwy komputera.",
 
   installerStartupLineOne = "Zalecane jest dodanie programu do komputera' Automatyczne uruchamianie.",
-  installerStartupLineTwo = "Jeśli dodasz program do startu, to program zacznie automatycznie sie uruchamiac gdy komputer zostanie wlaczony.",
+  installerStartupLineTwo = "Jesli dodasz automatyczne uruchamianie program bedzie odpalac sie automatycznie wraz z wlaczeniem komputera.",
   installerStartupLineThree = "Dodac automatyczne uruchamianie? (t/n): ",
   installerStartupInstalled = "Zainstalowano automatyczne uruchamianie.",
   installerStartupUninstalled = "Nie zainstalowano automatycznego uruchamiania.",
@@ -148,6 +148,6 @@
 
   installerOutroLineOne = "Instalacja przebiegla pomyslnie!",
   installerOutroLineTwo = "Program jest gotowy do dzialania!",
-  installerOutroLineThree = "Dzieki za używanie mojego programu! ;)",
-  installerOutroLineFour = "Mam nadzieje że sie spodoba."
+  installerOutroLineThree = "Dzieki za uzywanie mojego programu! ;)",
+  installerOutroLineFour = "Mam nadzieje ze sie spodoba."
 }
