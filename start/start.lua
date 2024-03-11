@@ -20,7 +20,7 @@ _G.program = ""
 _G.turbineTargetSpeed = 0
 _G.targetSteam = 0
 _G.turbineOnOff = ""
-_G.debug = 0
+ _G.debugEnabled = 0
 _G.skipControlRodCheck = 0
 _G.location = ""
 _G.modemChannel = 0
@@ -36,8 +36,8 @@ _G.touchpointLocation = {}
 
 local repoUrl = "https://gitlab.com/seekerscomputercraft/extremereactorcontrol/-/raw/"
 
-function _G.debugOutput(message) 
-	if _G.debug == 1 then
+function  _G.debugOutput(message) 
+	if  _G.debugEnabled == 1 then
 		print(message)
 	end
 end
@@ -66,7 +66,7 @@ function _G.loadOptionFile()
 	_G.turbineTargetSpeed = optionList["turbineTargetSpeed"]
 	_G.targetSteam  = optionList["targetSteam"]
 	_G.turbineOnOff = optionList["turbineOnOff"]
-	_G.debug = optionList["debug"]
+	_G.debugEnabled = optionList["debug"]
 	_G.skipControlRodCheck = optionList["skipControlRodCheck"]
 	_G.lang = optionList["language"]
 	_G.location = optionList["location"]
