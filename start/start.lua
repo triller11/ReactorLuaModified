@@ -6,7 +6,7 @@
 --========== Global variables for all program parts ==========
 
 --All options
-_G.optionList = {}
+_G.CoreOptionList = {}
 _G.version = 0
 _G.rodLevel = 0
 _G.backgroundColor = 0
@@ -20,7 +20,7 @@ _G.program = ""
 _G.turbineTargetSpeed = 0
 _G.targetSteam = 0
 _G.turbineOnOff = ""
- _G.debugEnabled = 0
+_G.debugEnabled = 0
 _G.skipControlRodCheck = 0
 _G.location = ""
 _G.modemChannel = 0
@@ -51,64 +51,64 @@ function _G.loadOptionFile()
 	file.close()
 
     --Insert Elements and assign values
-    _G.optionList = textutils.unserialise(list)
+    _G.CoreOptionList = textutils.unserialise(list)
 
 	--Assign values to variables
-	_G.version = optionList["version"]
-	_G.rodLevel = optionList["rodLevel"]
-	_G.backgroundColor = tonumber(optionList["backgroundColor"])
-	_G.textColor = tonumber(optionList["textColor"])
-	_G.reactorOffAt = optionList["reactorOffAt"]
-	_G.reactorOnAt = optionList["reactorOnAt"]
-	_G.mainMenu = optionList["mainMenu"]
-	_G.overallMode = optionList["overallMode"]
-	_G.program = optionList["program"]
-	_G.turbineTargetSpeed = optionList["turbineTargetSpeed"]
-	_G.targetSteam  = optionList["targetSteam"]
-	_G.turbineOnOff = optionList["turbineOnOff"]
-	_G.debugEnabled = optionList["debug"]
-	_G.skipControlRodCheck = optionList["skipControlRodCheck"]
-	_G.lang = optionList["language"]
-	_G.location = optionList["location"]
-	_G.modemChannel = optionList["modemChannel"]
+	_G.version = _G.CoreOptionList["version"]
+	_G.rodLevel = _G.CoreOptionList["rodLevel"]
+	_G.backgroundColor = tonumber(_G.CoreOptionList["backgroundColor"])
+	_G.textColor = tonumber(_G.CoreOptionList["textColor"])
+	_G.reactorOffAt = _G.CoreOptionList["reactorOffAt"]
+	_G.reactorOnAt = _G.CoreOptionList["reactorOnAt"]
+	_G.mainMenu = _G.CoreOptionList["mainMenu"]
+	_G.overallMode = _G.CoreOptionList["overallMode"]
+	_G.program = _G.CoreOptionList["program"]
+	_G.turbineTargetSpeed = _G.CoreOptionList["turbineTargetSpeed"]
+	_G.targetSteam  = _G.CoreOptionList["targetSteam"]
+	_G.turbineOnOff = _G.CoreOptionList["turbineOnOff"]
+	_G.debugEnabled = _G.CoreOptionList["debug"]
+	_G.skipControlRodCheck = _G.CoreOptionList["skipControlRodCheck"]
+	_G.lang = _G.CoreOptionList["language"]
+	_G.location = _G.CoreOptionList["location"]
+	_G.modemChannel = _G.CoreOptionList["modemChannel"]
 end
 
 --Refreshes the options list
 function _G.refreshOptionList()
 	debugOutput("Refreshing Option List")
 	debugOutput("Variable: version")
-	optionList["version"] = version
+	_G.CoreOptionList["version"] = version
 	debugOutput("Variable: rodLevel")
-	optionList["rodLevel"] = rodLevel
+	_G.CoreOptionList["rodLevel"] = rodLevel
 	debugOutput("Variable: backgroundColor"..backgroundColor)
-	optionList["backgroundColor"] = backgroundColor
+	_G.CoreOptionList["backgroundColor"] = backgroundColor
 	debugOutput("Variable: textColor = "..textColor)
-	optionList["textColor"] = textColor
+	_G.CoreOptionList["textColor"] = textColor
 	debugOutput("Variable: reactorOffAt")
-	optionList["reactorOffAt"] = reactorOffAt
+	_G.CoreOptionList["reactorOffAt"] = reactorOffAt
 	debugOutput("Variable: reactorOnAt")
-	optionList["reactorOnAt"] = reactorOnAt
+	_G.CoreOptionList["reactorOnAt"] = reactorOnAt
 	debugOutput("Variable: mainMenu")
-	optionList["mainMenu"] = mainMenu
+	_G.CoreOptionList["mainMenu"] = mainMenu
 	debugOutput("Variable: overallMode")
-	optionList["overallMode"] = overallMode
+	_G.CoreOptionList["overallMode"] = overallMode
 	debugOutput("Variable: program")
-	optionList["program"] = program
+	_G.CoreOptionList["program"] = program
 	debugOutput("Variable: turbineTargetSpeed")
-	optionList["turbineTargetSpeed"] = turbineTargetSpeed
+	_G.CoreOptionList["turbineTargetSpeed"] = turbineTargetSpeed
 	debugOutput("Variable: targetSteam")
-	optionList["targetSteam"] = targetSteam
+	_G.CoreOptionList["targetSteam"] = targetSteam
 	debugOutput("Variable: turbineOnOff")
-	optionList["turbineOnOff"] = turbineOnOff
+	_G.CoreOptionList["turbineOnOff"] = turbineOnOff
 	debugOutput("Variable: skipControlRodCheck")
-	optionList["skipControlRodCheck"] = skipControlRodCheck
+	_G.CoreOptionList["skipControlRodCheck"] = skipControlRodCheck
 	debugOutput("Variable: lang")
-	optionList["language"] = lang
+	_G.CoreOptionList["language"] = lang
 	debugOutput("Variable: location")
-	optionList["location"] = location
+	_G.CoreOptionList["location"] = location
 	debugOutput("Variable: modemChannel")
-	optionList["modemChannel"] = modemChannel
-	optionList["debug"] = debug
+	_G.CoreOptionList["modemChannel"] = modemChannel
+	_G.CoreOptionList["debug"] = debug
 end
 
 --Saves all data back to the options.txt file
@@ -117,7 +117,7 @@ function _G.saveOptionFile()
 	--Refresh option list
 	refreshOptionList()
     --Serialise the table
-    local list = textutils.serialise(optionList)
+    local list = textutils.serialise(_G.CoreOptionList)
 	--Save optionList to the config file
 	local file = fs.open("/extreme-reactors-control/config/options.txt","w")
     file.writeLine(list)
@@ -130,43 +130,8 @@ end
 
 --Check for updates
 function _G.checkUpdates()
-
-	--Check current branch (release or beta)
-	local currBranch = ""
-	local tmpString = string.sub(version,5,5)
-	if tmpString == "" or tmpString == nil or tmpString == "r" then
-		currBranch = "main"
-	elseif tmpString == "b" then
-		currBranch = "develop"
-	end
-
-	--Get Remote version file
-	downloadFile(repoUrl..currBranch.."/",currBranch..".ver")
-
-	--Compare local and remote version
-	local file = fs.open(currBranch..".ver","r")
-	local remoteVer = file.readLine()
-	file.close()
-	
 	print("Energy Storage Devices: "..(#capacitors + 1))
 	print("localVer: "..version)
-	
-    if remoteVer == nil then
-		print("Couldn't get remote version from gitlab.")
-	else
-		print("remoteVer: "..remoteVer)
-		print("Update? -> "..tostring(remoteVer > version))
-	
-	    --Update if available
-	    if remoteVer > version then
-		    print("Update...")
-		    sleep(2)
-		    doUpdate(remoteVer,currBranch)
-	    end
-	end
-
-	--Remove remote version file
-	shell.run("rm "..currBranch..".ver")
 end
 
 
