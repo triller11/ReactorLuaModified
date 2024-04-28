@@ -293,11 +293,11 @@ elseif mainMenu then
 	shell.run("/extreme-reactors-control/start/menu.lua")
 	shell.completeProgram("/extreme-reactors-control/start/start.lua")
 else
-	if program == "turbine" then
+	if _G.mainProgram == "turbine" then
 		shell.run("/extreme-reactors-control/program/turbineControl.lua")
-	elseif program == "reactor" then
+	elseif _G.mainProgram == "reactor" then
 		shell.run("/extreme-reactors-control/program/reactorControl.lua")
-	elseif program == "monitor" then
+	elseif _G.mainProgram == "monitor" then
 		shell.run("/extreme-reactors-control/program/monitor.lua")
 	end
 	shell.completeProgram("/extreme-reactors-control/start/start.lua")
