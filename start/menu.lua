@@ -28,9 +28,9 @@ function _G.createButtons()
   startOn = {"   ".._G.language:getText("wordOn").."    ",label = "menuOn"}
   startOff = {"   ".._G.language:getText("wordOff").."   ",label = "menuOn"}
 
-  if program == "turbine" then
+  if _G.mainProgram == "turbine" then
     page:toggleButton(_G.language:getText("wordTurbines"))
-  elseif program == "reactor" then
+  elseif _G.mainProgram == "reactor" then
     page:toggleButton(_G.language:getText("reactorOnly"))
   end
   
@@ -58,8 +58,8 @@ function _G.exit()
 end
 
 function _G.switchProgram(currBut)
-  if program == "turbine" and currBut == "Reactor" then
-    program = "reactor"
+  if _G.mainProgram == "turbine" and currBut == "Reactor" then
+    _G.mainProgram = "reactor"
 
     if not page.buttonList[_G.language:getText("reactorOnly")].active then
       page:toggleButton(_G.language:getText("reactorOnly"))
@@ -68,8 +68,8 @@ function _G.switchProgram(currBut)
       page:toggleButton(_G.language:getText("wordTurbines"))
     end
 
-  elseif program == "reactor" and currBut == "Turbine" then
-    program = "turbine"
+  elseif _G.mainProgram  == "reactor" and currBut == "Turbine" then
+    _G.mainProgram = "turbine"
         
     if page.buttonList["Reactor only"].active then
       page:toggleButton(_G.language:getText("reactorOnly"))
@@ -86,9 +86,9 @@ function _G.switchProgram(currBut)
 end
 
 function _G.startTC()
-  if program == "turbine" then
+  if _G.mainProgram == "turbine" then
     shell.run("/extreme-reactors-control/program/turbineControl.lua")
-  elseif program == "reactor" then
+  elseif _G.mainProgram == "reactor" then
     shell.run("/extreme-reactors-control/program/reactorControl.lua")
   end
 end
