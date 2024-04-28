@@ -7,9 +7,9 @@ local list = file.readAll()
 file.close()
 
 --Insert Elements and assign values
-_G.optionList = textutils.unserialise(list)
-backgroundColor = tonumber(_G.optionList["backgroundColor"])
-textColor = tonumber(_G.optionList["textColor"])
+optionList = textutils.unserialise(list)
+backgroundColor = tonumber(optionList["backgroundColor"])
+textColor = tonumber(optionList["textColor"])
 
 local function setupLabel(buttonLen, minY, maxY, name)
 	local labelTable = {}

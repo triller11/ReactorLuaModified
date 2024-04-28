@@ -20,7 +20,7 @@ _G.program = ""
 _G.turbineTargetSpeed = 0
 _G.targetSteam = 0
 _G.turbineOnOff = ""
-_G.debugEnabled = 0
+ _G.debugEnabled = 0
 _G.skipControlRodCheck = 0
 _G.location = ""
 _G.modemChannel = 0
@@ -77,38 +77,38 @@ end
 function _G.refreshOptionList()
 	debugOutput("Refreshing Option List")
 	debugOutput("Variable: version")
-	_G.optionList["version"] = version
+	optionList["version"] = version
 	debugOutput("Variable: rodLevel")
-	_G.optionList["rodLevel"] = rodLevel
+	optionList["rodLevel"] = rodLevel
 	debugOutput("Variable: backgroundColor"..backgroundColor)
-	_G.optionList["backgroundColor"] = backgroundColor
+	optionList["backgroundColor"] = backgroundColor
 	debugOutput("Variable: textColor = "..textColor)
-	_G.optionList["textColor"] = textColor
+	optionList["textColor"] = textColor
 	debugOutput("Variable: reactorOffAt")
-	_G.optionList["reactorOffAt"] = reactorOffAt
+	optionList["reactorOffAt"] = reactorOffAt
 	debugOutput("Variable: reactorOnAt")
-	_G.optionList["reactorOnAt"] = reactorOnAt
+	optionList["reactorOnAt"] = reactorOnAt
 	debugOutput("Variable: mainMenu")
-	_G.optionList["mainMenu"] = mainMenu
+	optionList["mainMenu"] = mainMenu
 	debugOutput("Variable: overallMode")
-	_G.optionList["overallMode"] = overallMode
+	optionList["overallMode"] = overallMode
 	debugOutput("Variable: program")
-	_G.optionList["program"] = program
+	optionList["program"] = program
 	debugOutput("Variable: turbineTargetSpeed")
-	_G.optionList["turbineTargetSpeed"] = turbineTargetSpeed
+	optionList["turbineTargetSpeed"] = turbineTargetSpeed
 	debugOutput("Variable: targetSteam")
-	_G.optionList["targetSteam"] = targetSteam
+	optionList["targetSteam"] = targetSteam
 	debugOutput("Variable: turbineOnOff")
-	_G.optionList["turbineOnOff"] = turbineOnOff
+	optionList["turbineOnOff"] = turbineOnOff
 	debugOutput("Variable: skipControlRodCheck")
-	_G.optionList["skipControlRodCheck"] = skipControlRodCheck
+	optionList["skipControlRodCheck"] = skipControlRodCheck
 	debugOutput("Variable: lang")
-	_G.optionList["language"] = lang
+	optionList["language"] = lang
 	debugOutput("Variable: location")
-	_G.optionList["location"] = location
+	optionList["location"] = location
 	debugOutput("Variable: modemChannel")
-	_G.optionList["modemChannel"] = modemChannel
-	_G.optionList["debug"] = debug
+	optionList["modemChannel"] = modemChannel
+	optionList["debug"] = debug
 end
 
 --Saves all data back to the options.txt file
@@ -117,7 +117,7 @@ function _G.saveOptionFile()
 	--Refresh option list
 	refreshOptionList()
     --Serialise the table
-    local list = textutils.serialise(_G.optionList)
+    local list = textutils.serialise(optionList)
 	--Save optionList to the config file
 	local file = fs.open("/extreme-reactors-control/config/options.txt","w")
     file.writeLine(list)
