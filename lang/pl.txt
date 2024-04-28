@@ -81,7 +81,7 @@
   wordVersion = "Wersja",
 
   wordEngaged = "Podlaczone",
-  wordDisengaged = "Odlaczone",
+  wordDisengaged = "Odlaczonee",
 
   wordBackgroundColor = "Kolor Tla",
   wordBackground = "Tlo",
