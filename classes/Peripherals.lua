@@ -71,7 +71,8 @@ local function searchPeripherals()
                 or periType == "thermal:energy_cell"
 
             local isThermalExpansion = periType == "thermalexpansion:storage_cell"
-            local isBase = (not isMekanism and not isThermalExpansion) and successGetEnergyStored
+            local isDraconicEvolution = periType == "draconicevolution:energy_pylon"
+            local isBase = (not isMekanism and not isThermalExpansion and not isDraconicEvolution) and successGetEnergyStored
 
             if isBase then
                 --Capacitorbank / Energycell / Energy Core
@@ -91,6 +92,13 @@ local function searchPeripherals()
                 --Thermal Expansion
                 print("Thermal Expansion Energy Storage device - "..peripheralList[i])
                 _G.capacitors[amountCapacitors] = newThermalExpansionEnergyStorage("e" .. tostring(amountCapacitors), peri, periItem, periType)
+                _G.amountCapacitors = amountCapacitors + 1
+            end
+
+            if isDraconicEvolution then
+                --Draconic Evolution
+                print("Draconic Evolution Energy Storage device - "..peripheralList[i])
+                _G.capacitors[amountCapacitors] = newDraconicEvolutionEnergyStorage("e" .. tostring(amountCapacitors), peri, periItem, periType)
                 _G.amountCapacitors = amountCapacitors + 1
             end
         end
