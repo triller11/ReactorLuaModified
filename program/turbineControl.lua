@@ -617,38 +617,26 @@ end
 --Checks the current energy level and controlls turbines/reactor
 --based on user settings (reactorOn, reactorOff)
 function checkEnergyLevel()
-    -- Ensure dynamicTank is available
-    if not dynamicTank then
-        dynamicTank = peripheral.find("dynamicValve")
-        if not dynamicTank then
-            error("Dynamic Tank not found on the network. Ensure it is connected.")
-        end
-    end
-
-    local tankFill = dynamicTank.getFilledPercentage() * 100
-    local energyPer = getEnergyPer()
-
-    -- Control reactor and turbines based on both tank and energy logic
-    if tankFill < 10 then
-        print("Tank fill below 10%. Turning reactor ON.")
-        allReactorsOn()
-    elseif tankFill > 90 then
-        print("Tank fill above 90%. Turning reactor OFF.")
-        allReactorsOff()
+    -- TURBINE CONTROL LOGIC
+    local energyPercentage = getEnergyPer() -- Percentage of energy in capacitors
+    if energyPercentage >= reactorOffAt then
+        -- Turn off turbines if energy is above the threshold
         allTurbinesOff()
-    elseif energyPer >= reactorOffAt then
-        print("Energy >= reactorOffAt. Turning reactor OFF.")
-        allReactorsOff()
-        if turbineOnOff == "on" then
-            allTurbinesOn()
-        elseif turbineOnOff == "off" then
-            allTurbinesOff()
-        end
-    elseif energyPer <= reactorOnAt then
-        print("Energy <= reactorOnAt. Turning reactor ON.")
-        allReactorsOn()
+    elseif energyPercentage <= reactorOnAt then
+        -- Turn on turbines and adjust steam input if energy is below the threshold
+        allTurbinesOn()
         for i = 0, amountTurbines do
             turbines[i]:setSteamIn(targetSteam)
+            if turbines[i]:rotorSpeed() < turbineTargetSpeed * 0.98 then
+                turbines[i]:setCoils(false) -- Speed up the turbines
+            end
+            if turbines[i]:rotorSpeed() > turbineTargetSpeed * 1.02 then
+                turbines[i]:setCoils(true) -- Engage coils for energy production
+            end
+        end
+    else
+        -- Maintain turbine state while balancing speed
+        for i = 0, amountTurbines do
             if turbines[i]:rotorSpeed() < turbineTargetSpeed * 0.98 then
                 turbines[i]:setCoils(false)
             end
@@ -656,20 +644,26 @@ function checkEnergyLevel()
                 turbines[i]:setCoils(true)
             end
         end
-    else
-        -- Manage turbines when reactor is active
-        if getReactorsActive() then
-            for i = 0, amountTurbines do
-                if turbines[i]:rotorSpeed() < turbineTargetSpeed * 0.98 then
-                    turbines[i]:setCoils(false)
-                end
-                if turbines[i]:rotorSpeed() > turbineTargetSpeed * 1.02 then
-                    turbines[i]:setCoils(true)
-                end
-            end
-        end
     end
+
+    -- REACTOR CONTROL LOGIC
+    if dynamicTank then
+        local tankFill = math.floor(dynamicTank.getFilledPercentage() * 100)
+        if tankFill < 10 then
+            -- Turn the reactor on if the tank is below 10%
+            allReactorsOn()
+        elseif tankFill > 90 then
+            -- Turn the reactor off if the tank is above 90%
+            allReactorsOff()
+        end
+    else
+        print("Dynamic Tank not found. Reactor control skipped.")
+    end
+
+    -- Update monitor display
+    printStatsAuto(currStat)
 end
+
 
 
 --Sets the tables for checking the current turbineSpeeds
@@ -1161,10 +1155,23 @@ function printStatsAuto(turbine)
 
     --refreshes the last turbine id
     lastStat = turbine
+
+    -- prints the tank fill amount
+    -- Ensure the tank is connected and get the fill percentage
+    local tankFill = 0
+    if dynamicTank then
+        tankFill = math.floor(dynamicTank.getFilledPercentage() * 100)
+    end
+
+    -- Add the tank fill display to the monitor
+    controlMonitor.setCursorPos(2, 18) -- Adjust the row based on availability
+    controlMonitor.setTextColor(colors.white)
+    controlMonitor.setBackgroundColor(colors.black)
+    controlMonitor.write("Tank Fill: " .. tankFill .. "%")
 end
 
-function emitStartUpMessage(message) 
-    _G.newMessage("startUp", _G.newStartUpMessage(message), _G.location)
+    function emitStartUpMessage(message) 
+        _G.newMessage("startUp", _G.newStartUpMessage(message), _G.location)
 end
 
 function emitMessage(data)
