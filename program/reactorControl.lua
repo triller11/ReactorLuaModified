@@ -173,7 +173,7 @@ end
 function getEnergyPer()
     local en = getEnergy()
     local enMax = getEnergyMax()
-    print(en .. " of " .. enMax)
+    -- print(en .. " of " .. enMax)
     local enPer = math.floor(en / enMax * 100)
     return enPer
 end
@@ -263,7 +263,7 @@ function getClick()
         while true do
             --gets the event
             local event, p1 = page:handleEvents(os.pullEvent())
-            print(event .. ", " .. p1)
+            -- print(event .. ", " .. p1)
 
             --execute a buttons function if clicked
             if event == "button_click" then
@@ -289,12 +289,14 @@ function displayDataAuto()
     end
 
     -- Get the tank's fill percentage
-    local tankFill = math.floor(dynamicTank.getFilledPercentage())
+    local tankFill = dynamicTank.getFilledPercentage() * 100
 
-    -- Reactor control logic
-    if tankFill <= 10 then
+    -- Control reactor based on returned tank amount
+    if tankFill < 10 then
+        print("Tank fill is below 10%. Turning reactor ON.")
         allReactorsOn()
     elseif tankFill > 90 then
+        print("Tank fill is above 90%. Turning reactor OFF.")
         allReactorsOff()
     end
 
