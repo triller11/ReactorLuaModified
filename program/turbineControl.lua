@@ -617,18 +617,35 @@ end
 --Checks the current energy level and controlls turbines/reactor
 --based on user settings (reactorOn, reactorOff)
 function checkEnergyLevel()
-    printStatsAuto(currStat)
-    --Level > user setting (default: 90%)
-    if getEnergyPer() >= reactorOffAt then
-        --Level < user setting (default: 50%)
-        print("Energy >= reactorOffAt")
+    -- Ensure dynamicTank is available
+    if not dynamicTank then
+        dynamicTank = peripheral.find("dynamicValve")
+        if not dynamicTank then
+            error("Dynamic Tank not found on the network. Ensure it is connected.")
+        end
+    end
+
+    local tankFill = dynamicTank.getFilledPercentage() * 100
+    local energyPer = getEnergyPer()
+
+    -- Control reactor and turbines based on both tank and energy logic
+    if tankFill < 10 then
+        print("Tank fill below 10%. Turning reactor ON.")
+        allReactorsOn()
+    elseif tankFill > 90 then
+        print("Tank fill above 90%. Turning reactor OFF.")
+        allReactorsOff()
+        allTurbinesOff()
+    elseif energyPer >= reactorOffAt then
+        print("Energy >= reactorOffAt. Turning reactor OFF.")
+        allReactorsOff()
         if turbineOnOff == "on" then
             allTurbinesOn()
         elseif turbineOnOff == "off" then
             allTurbinesOff()
         end
-        allReactorsOff()
-    elseif getEnergyPer() <= reactorOnAt then
+    elseif energyPer <= reactorOnAt then
+        print("Energy <= reactorOnAt. Turning reactor ON.")
         allReactorsOn()
         for i = 0, amountTurbines do
             turbines[i]:setSteamIn(targetSteam)
@@ -640,6 +657,7 @@ function checkEnergyLevel()
             end
         end
     else
+        -- Manage turbines when reactor is active
         if getReactorsActive() then
             for i = 0, amountTurbines do
                 if turbines[i]:rotorSpeed() < turbineTargetSpeed * 0.98 then
@@ -648,10 +666,11 @@ function checkEnergyLevel()
                 if turbines[i]:rotorSpeed() > turbineTargetSpeed * 1.02 then
                     turbines[i]:setCoils(true)
                 end
-            end --for
-        end --if
-    end --else
+            end
+        end
+    end
 end
+
 
 --Sets the tables for checking the current turbineSpeeds
 function initSpeedTable()
