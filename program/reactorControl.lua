@@ -280,16 +280,21 @@ end
 --Displays the data on the screen (auto mode)
 function displayDataAuto()
 
-    -- Ensure dynamicTank is available
+    local width, height = controlMonitor.getSize()
+    print("Monitor Size: " .. width .. "x" .. height)
+
     if not dynamicTank then
         dynamicTank = peripheral.find("dynamicValve")
         if not dynamicTank then
-            error("Dynamic Tank not found on the network. Ensure it is connected.")
+            print("Dynamic Tank not found!")
+            return
         end
+        print("Dynamic tank found!")
     end
 
     -- Get the tank's fill percentage
     local tankFill = dynamicTank.getFilledPercentage() * 100
+    print("Tank Fill Percentage: " .. tankFill .. "%")
 
     -- Control reactor based on returned tank amount
     if tankFill < 10 then

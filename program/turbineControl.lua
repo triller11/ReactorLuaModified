@@ -233,7 +233,7 @@ end
 function getEnergyPer()
     local en = getEnergy()
     local enMax = getEnergyMax()
-    print(en .. " of " .. enMax)
+    -- print(en .. " of " .. enMax)
     local enPer = math.floor(en / enMax * 100)
     return enPer
 end
