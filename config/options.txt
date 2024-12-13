@@ -8,7 +8,7 @@
   backgroundColor = 128,
   reactorOnAt = 50,
   targetSteam = 50000,
-  turbineTargetSpeed = 1820,
+  turbineTargetSpeed = 920,
   version = "2.17-release",
   textColor = 1,
   program = "turbine",
