@@ -14,6 +14,7 @@ shell.run("rm input")
 
 --Some variables
 local page = touchpoint.new(touchpointLocation)
+local dynamicTank = peripheral.find("dynamicValve")
 local rodLevel
 local enPer
 local fuel
@@ -278,9 +279,22 @@ end
 
 --Displays the data on the screen (auto mode)
 function displayDataAuto()
-    if enPer <= reactorOnAt then
+
+    -- Ensure dynamicTank is available
+    if not dynamicTank then
+        dynamicTank = peripheral.find("dynamicValve")
+        if not dynamicTank then
+            error("Dynamic Tank not found on the network. Ensure it is connected.")
+        end
+    end
+
+    -- Get the tank's fill percentage
+    local tankFill = math.floor(dynamicTank.getFilledPercentage())
+
+    -- Reactor control logic
+    if tankFill <= 10 then
         allReactorsOn()
-    elseif enPer > reactorOffAt then
+    elseif tankFill > 90 then
         allReactorsOff()
     end
 
@@ -397,6 +411,10 @@ function displayDataAuto()
 
     controlMonitor.setCursorPos(2, 25)
     controlMonitor.write(_G.language:getText("wordVersion").." " .. version)
+
+    --Display the output coolant external tank fill percentage
+    controlMonitor.setCursorPos(2, 20) -- Adjust 20 to match the bottom row of your monitor
+    controlMonitor.write("Tank Fill: " .. tankFill .. "%")
 end
 
 --Displays the data on the screen (manual mode)
