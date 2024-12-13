@@ -54,6 +54,17 @@ function createAllButtons()
   touch1:add(_G.language:getText("wordSave"),saveConfigFile,3,21,19,21)
   touch1:add(_G.language:getText("wordMainMenu"),displayMenu,3,23,19,23)
 
+  -- Tank Fill Target Controls
+  touch1:add("<<", function() adjustTankFill("low", -10) end, 30, 20, 33, 20)
+  touch1:add("<", function() adjustTankFill("low", -1) end, 35, 20, 37, 20)
+  touch1:add(">", function() adjustTankFill("low", 1) end, 39, 20, 41, 20)
+  touch1:add(">>", function() adjustTankFill("low", 10) end, 43, 20, 46, 20)
+
+  touch1:add("<<", function() adjustTankFill("high", -10) end, 30, 22, 33, 22)
+  touch1:add("<", function() adjustTankFill("high", -1) end, 35, 22, 37, 22)
+  touch1:add(">", function() adjustTankFill("high", 1) end, 39, 22, 41, 22)
+  touch1:add(">>", function() adjustTankFill("high", 10) end, 43, 22, 46, 22)
+
   --Color buttons
   touch2:add(_G.language:getText("wordWhite"),function() setColor(1) end,35,5,48,5)
   touch2:add(_G.language:getText("wordOrange"),function() setColor(2) end,50,5,63,5)
@@ -93,6 +104,17 @@ function createAllButtons()
   touch4:add("+1000",function() setOnOffAt("+",1000) end,21,10,28,10)
   touch4:add(_G.language:getText("wordBack"),backToMainMenu,3,13,19,13)
 end
+
+
+function adjustTankFill(target, delta)
+  if target == "low" then
+      _G.tankFillLow = math.max(0, math.min(100, tankFillLow + delta))
+  elseif target == "high" then
+      _G.tankFillHigh = math.max(0, math.min(100, tankFillHigh + delta))
+  end
+  backToMainMenu() -- Redraw the menu to reflect changes
+end
+
 
 --Display the overwiew
 function backToMainMenu()
@@ -140,7 +162,7 @@ function backToMainMenu()
   else
       controlMonitor.write(_G.language:getText("reactorOnBelow")..math.floor(reactorOnAt).."%   ")
   end
-  
+
   controlMonitor.setCursorPos(24,12)
   if tonumber(_G.CoreOptionList["turbineTargetSpeed"]) ~= turbineTargetSpeed then
       controlMonitor.write(_G.language:getText("turbineMaxSpeed")..(input.formatNumberComma(math.floor(tonumber(_G.CoreOptionList["turbineTargetSpeed"])))).." -> "..(input.formatNumberComma(turbineTargetSpeed)).."RPM      ")
@@ -188,6 +210,14 @@ function backToMainMenu()
   else
     controlMonitor.write(_G.language:getText("wordYes"))
   end
+
+  -- Add Tank Fill Target Display
+  controlMonitor.setCursorPos(24,20)
+  controlMonitor.write("Tank Fill Low: " .. math.floor(tankFillLow) .. "%")
+
+  controlMonitor.setCursorPos(24,22)
+  controlMonitor.write("Tank Fill High: " .. math.floor(tankFillHigh) .. "%")
+
   getClick(backToMainMenu)
 end
 

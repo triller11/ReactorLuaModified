@@ -44,71 +44,59 @@ end
 
 --Loads the options.txt file and adds values to the global variables
 function _G.loadOptionFile()
-	debugOutput("Loading Option File")
-	--Loads the file
-	local file = fs.open("/extreme-reactors-control/config/options.txt","r")
-	local list = file.readAll()
-	file.close()
+    debugOutput("Loading Option File")
+    -- Loads the file
+    local file = fs.open("/extreme-reactors-control/config/options.txt", "r")
+    local list = file.readAll()
+    file.close()
 
-    --Insert Elements and assign values
+    -- Insert Elements and assign values
     _G.CoreOptionList = textutils.unserialise(list)
 
-	--Assign values to variables
-	_G.version = _G.CoreOptionList["version"]
-	_G.rodLevel = _G.CoreOptionList["rodLevel"]
-	_G.backgroundColor = tonumber(_G.CoreOptionList["backgroundColor"])
-	_G.textColor = tonumber(_G.CoreOptionList["textColor"])
-	_G.reactorOffAt = _G.CoreOptionList["reactorOffAt"]
-	_G.reactorOnAt = _G.CoreOptionList["reactorOnAt"]
-	_G.mainMenu = _G.CoreOptionList["mainMenu"]
-	_G.overallMode = _G.CoreOptionList["overallMode"]
-	_G.mainProgram = _G.CoreOptionList["program"]
-	_G.turbineTargetSpeed = _G.CoreOptionList["turbineTargetSpeed"]
-	_G.targetSteam  = _G.CoreOptionList["targetSteam"]
-	_G.turbineOnOff = _G.CoreOptionList["turbineOnOff"]
-	_G.debugEnabled = _G.CoreOptionList["debug"]
-	_G.skipControlRodCheck = _G.CoreOptionList["skipControlRodCheck"]
-	_G.lang = _G.CoreOptionList["language"]
-	_G.location = _G.CoreOptionList["location"]
-	_G.modemChannel = _G.CoreOptionList["modemChannel"]
+    -- Assign values to variables
+    _G.version = _G.CoreOptionList["version"]
+    _G.rodLevel = _G.CoreOptionList["rodLevel"]
+    _G.backgroundColor = tonumber(_G.CoreOptionList["backgroundColor"])
+    _G.textColor = tonumber(_G.CoreOptionList["textColor"])
+    _G.reactorOffAt = _G.CoreOptionList["reactorOffAt"]
+    _G.reactorOnAt = _G.CoreOptionList["reactorOnAt"]
+    _G.tankFillLow = _G.CoreOptionList["tankFillLow"] or 10 
+    _G.tankFillHigh = _G.CoreOptionList["tankFillHigh"] or 90 
+    _G.mainMenu = _G.CoreOptionList["mainMenu"]
+    _G.overallMode = _G.CoreOptionList["overallMode"]
+    _G.mainProgram = _G.CoreOptionList["program"]
+    _G.turbineTargetSpeed = _G.CoreOptionList["turbineTargetSpeed"]
+    _G.targetSteam = _G.CoreOptionList["targetSteam"]
+    _G.turbineOnOff = _G.CoreOptionList["turbineOnOff"]
+    _G.debugEnabled = _G.CoreOptionList["debug"]
+    _G.skipControlRodCheck = _G.CoreOptionList["skipControlRodCheck"]
+    _G.lang = _G.CoreOptionList["language"]
+    _G.location = _G.CoreOptionList["location"]
+    _G.modemChannel = _G.CoreOptionList["modemChannel"]
 end
 
---Refreshes the options list
+
 function _G.refreshOptionList()
-	debugOutput("Refreshing Option List")
-	debugOutput("Variable: version")
-	_G.CoreOptionList["version"] = _G.version
-	debugOutput("Variable: rodLevel")
-	_G.CoreOptionList["rodLevel"] = _G.rodLevel
-	debugOutput("Variable: backgroundColor".._G.backgroundColor)
-	_G.CoreOptionList["backgroundColor"] = _G.backgroundColor
-	debugOutput("Variable: textColor = ".._G.textColor)
-	_G.CoreOptionList["textColor"] = _G.textColor
-	debugOutput("Variable: reactorOffAt")
-	_G.CoreOptionList["reactorOffAt"] = _G.reactorOffAt
-	debugOutput("Variable: reactorOnAt")
-	_G.CoreOptionList["reactorOnAt"] = _G.reactorOnAt
-	debugOutput("Variable: mainMenu")
-	_G.CoreOptionList["mainMenu"] = _G.mainMenu
-	debugOutput("Variable: overallMode")
-	_G.CoreOptionList["overallMode"] = _G.overallMode
-	debugOutput("Variable: program")
-	_G.CoreOptionList["program"] = _G.mainProgram
-	debugOutput("Variable: turbineTargetSpeed")
-	_G.CoreOptionList["turbineTargetSpeed"] = _G.turbineTargetSpeed
-	debugOutput("Variable: targetSteam")
-	_G.CoreOptionList["targetSteam"] = _G.targetSteam
-	debugOutput("Variable: turbineOnOff")
-	_G.CoreOptionList["turbineOnOff"] = _G.turbineOnOff
-	debugOutput("Variable: skipControlRodCheck")
-	_G.CoreOptionList["skipControlRodCheck"] = _G.skipControlRodCheck
-	debugOutput("Variable: lang")
-	_G.CoreOptionList["language"] = _G.lang
-	debugOutput("Variable: location")
-	_G.CoreOptionList["location"] = _G.location
-	debugOutput("Variable: modemChannel")
-	_G.CoreOptionList["modemChannel"] = _G.modemChannel
-	_G.CoreOptionList["debug"] = _G.debugEnabled
+    debugOutput("Refreshing Option List")
+    _G.CoreOptionList["version"] = _G.version
+    _G.CoreOptionList["rodLevel"] = _G.rodLevel
+    _G.CoreOptionList["backgroundColor"] = _G.backgroundColor
+    _G.CoreOptionList["textColor"] = _G.textColor
+    _G.CoreOptionList["reactorOffAt"] = _G.reactorOffAt
+    _G.CoreOptionList["reactorOnAt"] = _G.reactorOnAt
+    _G.CoreOptionList["tankFillLow"] = _G.tankFillLow 
+    _G.CoreOptionList["tankFillHigh"] = _G.tankFillHigh 
+    _G.CoreOptionList["mainMenu"] = _G.mainMenu
+    _G.CoreOptionList["overallMode"] = _G.overallMode
+    _G.CoreOptionList["program"] = _G.mainProgram
+    _G.CoreOptionList["turbineTargetSpeed"] = _G.turbineTargetSpeed
+    _G.CoreOptionList["targetSteam"] = _G.targetSteam
+    _G.CoreOptionList["turbineOnOff"] = _G.turbineOnOff
+    _G.CoreOptionList["skipControlRodCheck"] = _G.skipControlRodCheck
+    _G.CoreOptionList["language"] = _G.lang
+    _G.CoreOptionList["location"] = _G.location
+    _G.CoreOptionList["modemChannel"] = _G.modemChannel
+    _G.CoreOptionList["debug"] = _G.debugEnabled
 end
 
 --Saves all data back to the options.txt file
