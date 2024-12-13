@@ -312,6 +312,10 @@ if not update then
     term.write(i)
     sleep(1)
   end
+
+  print("\nRebooting now...")
+  sleep(1) -- Give the message a moment to display
+  os.reboot() -- Trigger the system reboot
 end
 
 shell.completeProgram("/extreme-reactors-control/install/installer.lua")
