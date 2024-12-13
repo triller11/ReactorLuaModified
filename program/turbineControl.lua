@@ -616,7 +616,31 @@ end
 
 --Checks the current energy level and controlls turbines/reactor
 --based on user settings (reactorOn, reactorOff)
+-- includes functionality to use mekanism dynamic tank as buffer for steam
+-- turns reactor on/off based on tank fill levels
 function checkEnergyLevel()
+    -- Ensure the dynamicTank peripheral is initialized
+    if not dynamicTank then
+        dynamicTank = peripheral.find("dynamicValve")
+    end
+
+    if dynamicTank then
+        -- REACTOR CONTROL LOGIC
+        local tankFill = math.floor(dynamicTank.getFilledPercentage() * 100)
+        if tankFill < 10 then
+            -- Turn the reactor on if the tank is below 10%
+            allReactorsOn()
+        elseif tankFill > 90 then
+            -- Turn the reactor off if the tank is above 90%
+            allReactorsOff()
+        end
+    else
+        -- Dynamic Tank not found, skip reactor control
+        print("Dynamic Tank not found. Skipping reactor control.")
+        -- Optionally leave the reactor always on if no dynamic tank is detected
+        allReactorsOn()
+    end
+
     -- TURBINE CONTROL LOGIC
     local energyPercentage = getEnergyPer() -- Percentage of energy in capacitors
     if energyPercentage >= reactorOffAt then
@@ -646,23 +670,10 @@ function checkEnergyLevel()
         end
     end
 
-    -- REACTOR CONTROL LOGIC
-    if dynamicTank then
-        local tankFill = math.floor(dynamicTank.getFilledPercentage() * 100)
-        if tankFill < 10 then
-            -- Turn the reactor on if the tank is below 10%
-            allReactorsOn()
-        elseif tankFill > 90 then
-            -- Turn the reactor off if the tank is above 90%
-            allReactorsOff()
-        end
-    else
-        print("Dynamic Tank not found. Reactor control skipped.")
-    end
-
     -- Update monitor display
     printStatsAuto(currStat)
 end
+
 
 
 
