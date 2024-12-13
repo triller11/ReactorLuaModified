@@ -18,4 +18,6 @@
   debug = 0,
   location = "mainReactor",
   modemChannel = 5
+  tankFillLow = 10,
+  tankFillHigh = 90
 }

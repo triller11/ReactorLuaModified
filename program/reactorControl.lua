@@ -14,7 +14,6 @@ shell.run("rm input")
 
 --Some variables
 local page = touchpoint.new(touchpointLocation)
-local dynamicTank = peripheral.find("dynamicValve")
 local rodLevel
 local enPer
 local fuel
@@ -173,7 +172,7 @@ end
 function getEnergyPer()
     local en = getEnergy()
     local enMax = getEnergyMax()
-    -- print(en .. " of " .. enMax)
+    print(en .. " of " .. enMax)
     local enPer = math.floor(en / enMax * 100)
     return enPer
 end
@@ -263,7 +262,7 @@ function getClick()
         while true do
             --gets the event
             local event, p1 = page:handleEvents(os.pullEvent())
-            -- print(event .. ", " .. p1)
+            print(event .. ", " .. p1)
 
             --execute a buttons function if clicked
             if event == "button_click" then
@@ -279,29 +278,9 @@ end
 
 --Displays the data on the screen (auto mode)
 function displayDataAuto()
-
-    local width, height = controlMonitor.getSize()
-    print("Monitor Size: " .. width .. "x" .. height)
-
-    if not dynamicTank then
-        dynamicTank = peripheral.find("dynamicValve")
-        if not dynamicTank then
-            print("Dynamic Tank not found!")
-            return
-        end
-        print("Dynamic tank found!")
-    end
-
-    -- Get the tank's fill percentage
-    local tankFill = dynamicTank.getFilledPercentage() * 100
-    print("Tank Fill Percentage: " .. tankFill .. "%")
-
-    -- Control reactor based on returned tank amount
-    if tankFill < 10 then
-        print("Tank fill is below 10%. Turning reactor ON.")
+    if enPer <= reactorOnAt then
         allReactorsOn()
-    elseif tankFill > 90 then
-        print("Tank fill is above 90%. Turning reactor OFF.")
+    elseif enPer > reactorOffAt then
         allReactorsOff()
     end
 
@@ -418,10 +397,6 @@ function displayDataAuto()
 
     controlMonitor.setCursorPos(2, 25)
     controlMonitor.write(_G.language:getText("wordVersion").." " .. version)
-
-    --Display the output coolant external tank fill percentage
-    controlMonitor.setCursorPos(2, 20) -- Adjust 20 to match the bottom row of your monitor
-    controlMonitor.write("Tank Fill: " .. tankFill .. "%")
 end
 
 --Displays the data on the screen (manual mode)
