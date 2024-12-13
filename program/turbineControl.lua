@@ -1177,15 +1177,15 @@ function printStatsAuto(turbine)
     controlMonitor.setBackgroundColor(tonumber(backgroundColor)) -- Set the correct background
     controlMonitor.setTextColor(tonumber(textColor)) -- Use the text color from settings
 
-    controlMonitor.setCursorPos(2, 18) -- Adjust to a suitable row
+    controlMonitor.setCursorPos(2, 19) -- Adjust to a suitable row
     controlMonitor.write("Tank Fill: " .. tankFill .. "%")
 
     -- Display the tank fill bar
-    controlMonitor.setCursorPos(2, 19) -- Adjust to the row below the text
+    controlMonitor.setCursorPos(2, 20) -- Adjust to the row below the text
     controlMonitor.setBackgroundColor(colors.lightGray) -- Background for the bar
     controlMonitor.write("                    ") -- Full width of the bar
     controlMonitor.setBackgroundColor(colors.green) -- Color for the filled portion
-    controlMonitor.setCursorPos(2, 19)
+    controlMonitor.setCursorPos(2, 20)
     local barFill = math.floor(tankFill / 5) -- Divide by 5 for a 20-character bar
     for i = 1, barFill do
         controlMonitor.write(" ")
