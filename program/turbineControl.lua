@@ -1173,12 +1173,24 @@ function printStatsAuto(turbine)
     if dynamicTank then
         tankFill = math.floor(dynamicTank.getFilledPercentage() * 100)
     end
+    -- Display the tank fill percentage
+    controlMonitor.setBackgroundColor(tonumber(backgroundColor)) -- Set the correct background
+    controlMonitor.setTextColor(tonumber(textColor)) -- Use the text color from settings
 
-    -- Add the tank fill display to the monitor
-    controlMonitor.setCursorPos(2, 18) -- Adjust the row based on availability
-    controlMonitor.setTextColor(colors.white)
-    controlMonitor.setBackgroundColor(colors.black)
+    controlMonitor.setCursorPos(2, 18) -- Adjust to a suitable row
     controlMonitor.write("Tank Fill: " .. tankFill .. "%")
+
+    -- Display the tank fill bar
+    controlMonitor.setCursorPos(2, 19) -- Adjust to the row below the text
+    controlMonitor.setBackgroundColor(colors.lightGray) -- Background for the bar
+    controlMonitor.write("                    ") -- Full width of the bar
+    controlMonitor.setBackgroundColor(colors.green) -- Color for the filled portion
+    controlMonitor.setCursorPos(2, 19)
+    local barFill = math.floor(tankFill / 5) -- Divide by 5 for a 20-character bar
+    for i = 1, barFill do
+        controlMonitor.write(" ")
+    end
+    controlMonitor.setBackgroundColor(tonumber(backgroundColor)) -- Reset background
 end
 
     function emitStartUpMessage(message) 
