@@ -300,6 +300,7 @@ if not update then
   print(selectedLang:getText("installerOutroLineFour"))
   print()
   print("SeekerOfHonjo")
+  print("Br3akaway")
   print("(c) 2021")
 
   local x,y = term.getSize()
