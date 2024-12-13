@@ -9,7 +9,7 @@
 local arg = {... }
 local update
 local branch = ""
-local repoUrl = "https://gitlab.com/seekerscomputercraft/extremereactorcontrol/-/raw/"
+local repoUrl = "https://raw.githubusercontent.com/triller11/ReactorLuaModified/refs/heads/main/"
 local selectedLang = {}
 local installLang = nil
 
@@ -103,14 +103,15 @@ end
 
 --Resolve the right url
 function getURL(path)
-	local gotUrl = http.get(relUrl..path)
-	if gotUrl == nil then
-    term.clear()
-		error("File not found! Please check!\nFailed at "..relUrl..path)
-	else
-		return gotUrl.readAll()
-	end
+  local fullUrl = repoUrl .. path
+  local response = http.get(fullUrl)
+  if not response then
+      error("Failed to fetch file: " .. fullUrl)
+  end
+  return response.readAll()
 end
+
+
 
 --Saves all data basck to the options.txt file
 function updateOptionFileWithLanguage()
@@ -145,19 +146,28 @@ function downloadAndExecuteClass(fileName)
 end
 
 function getAllFiles()
-	local fileEntries = downloadAndRead("files.txt")
+  local fileListUrl = repoUrl .. "files.txt"
+  local response = http.get(fileListUrl)
 
-	for k, v in pairs(fileEntries) do
-	  print(v.name.." files...")
+  if not response then
+      error("Failed to fetch files.txt from " .. fileListUrl)
+  end
 
-	  for fileCount = 1, #v.files do
-      local fileName = v.files[fileCount]
-      writeFile(fileName)
-	  end
+  local files = textutils.unserialise(response.readAll())
+  response.close()
 
-	  print(selectedLang:getText("done"))
-	end
+  for _, section in pairs(files) do
+      print("Downloading section: " .. section.name)
+      for _, filePath in ipairs(section.files) do
+          local content = getURL(filePath)
+          local file = fs.open("/extreme-reactors-control/" .. filePath, "w")
+          file.write(content)
+          file.close()
+          print("Downloaded: " .. filePath)
+      end
+  end
 end
+
 
 function getVersion()
   writeFile("main.ver")

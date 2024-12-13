@@ -14,6 +14,7 @@
       "classes/bigger_reactors/Reactor.lua",
       "classes/bigger_reactors/Turbine.lua",
       "classes/mekanism/MekanismEnergyStorage.lua",
+      "classes/mekanism/dynamicTank.lua",
       "classes/draconic_evolution/DraconicEvolutionEnergyStorage.lua",
       "classes/thermal_expansion/ThermalExpansionEnergyStorage.lua",
       "classes/transport/wrapper.lua",

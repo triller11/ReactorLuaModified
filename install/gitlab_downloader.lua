@@ -10,7 +10,7 @@ local selectInstaller = ""
 --Branch & Relative paths to the url and path
 local installLang = "en"
 local relPath = "/extreme-reactors-control/"
-local repoUrl = "https://gitlab.com/seekerscomputercraft/extremereactorcontrol/-/raw/"
+local repoUrl = "https://raw.githubusercontent.com/triller11/ReactorLuaModified/refs/heads/main/"
 local branch = "develop"
 local relUrl = repoUrl..branch.."/"
 local selectedLang = {}
