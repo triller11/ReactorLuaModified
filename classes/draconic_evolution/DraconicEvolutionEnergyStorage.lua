@@ -9,10 +9,10 @@ local DraconicEvolutionEnergyStorage = {
     type = "",
     
     energy = function(self)
-        return self.id.getEnergy()
+        return self.id.getEnergyStored()
     end,
     capacity = function(self)
-        return self.id.getEnergyCapacity()
+        return self.id.getMaxEnergyStored()
     end,
     percentage = function(self)
         return math.floor(self:energy()/self:capacity()*100)
