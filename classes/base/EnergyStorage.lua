@@ -12,7 +12,7 @@ local EnergyStorage = {
         return self.id.getEnergyStored()
     end,
     capacity = function(self)
-        return self.id.getEnergyCapacity()
+        return self.id.getMaxEnergyCapacity()
     end,
     percentage = function(self)
         return math.floor(self:energy()/self:capacity()*100)
